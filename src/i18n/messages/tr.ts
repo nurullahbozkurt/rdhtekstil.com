@@ -61,6 +61,8 @@ const tr = {
     projects: "Projeler",
     filterLabel: "Projeleri kategoriye göre filtrele",
     noProjects: "Bu kategoride henüz yayınlanmış proje yok.",
+    logoNotice: "Referans logoları, kullanım izinleri tamamlandıkça eklenecektir.",
+    otherCaseStudies: "Diğer projeler",
     fields: {
       client: "Müşteri / Marka",
       sector: "Sektör",
@@ -112,7 +114,8 @@ const tr = {
       productInterest: "İlgilendiğiniz Ürün",
       quantityRange: "Tahmini Adet",
       message: "Mesaj",
-      privacyConsent: "{link} metnini okudum, kişisel verilerimin talebimin değerlendirilmesi amacıyla işlenmesini kabul ediyorum.",
+      privacyConsent:
+        "{link} metnini okudum, kişisel verilerimin talebimin değerlendirilmesi amacıyla işlenmesini kabul ediyorum.",
       privacyConsentLink: "Aydınlatma Metni",
     },
     errors: {
@@ -147,13 +150,20 @@ const tr = {
     customize: "Tercihleri yönet",
     save: "Tercihleri kaydet",
     necessary: "Zorunlu çerezler",
-    necessaryText: "Sitenin temel işlevleri ve tercihlerinizin hatırlanması için gereklidir. Kapatılamaz.",
+    necessaryText:
+      "Sitenin temel işlevleri ve tercihlerinizin hatırlanması için gereklidir. Kapatılamaz.",
     analytics: "Analitik çerezler",
-    analyticsText: "Google Analytics 4 ile sitenin nasıl kullanıldığını anonim olarak ölçmemize yardımcı olur.",
+    analyticsText:
+      "Google Analytics 4 ile sitenin nasıl kullanıldığını anonim olarak ölçmemize yardımcı olur.",
     marketing: "Pazarlama çerezleri",
     marketingText: "Reklam ve yeniden pazarlama ölçümleri için kullanılır.",
     alwaysOn: "Her zaman açık",
     manage: "Çerez Tercihleri",
+    close: "Kapat",
+  },
+  legal: {
+    version: "Metin sürümü",
+    updated: "Son güncelleme",
   },
   footer: {
     rights: "Tüm hakları saklıdır.",

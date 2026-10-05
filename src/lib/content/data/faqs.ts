@@ -6,7 +6,16 @@ export const faqs: ContentStoreInput["faqs"] = [
   {
     id: "min-order",
     sortOrder: 1,
-    topics: ["general", "beanies", "scarves", "sets", "football-clubs", "corporate", "schools", "private-label"],
+    topics: [
+      "general",
+      "beanies",
+      "scarves",
+      "sets",
+      "football-clubs",
+      "corporate",
+      "schools",
+      "private-label",
+    ],
     question: { tr: "Minimum sipariş adedi nedir?", en: "What is the minimum order quantity?" },
     answer: {
       tr: "Minimum sipariş adedi ürün ve üretim detaylarına göre değişebilir. Ürününüzü ve ihtiyacınız olan adedi paylaştığınızda ekibimiz uygun üretim seçeneklerini iletecektir.",
@@ -27,7 +36,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "private-label",
     sortOrder: 3,
     topics: ["general", "sets", "private-label"],
-    question: { tr: "Kendi markamızla üretim yapabilir misiniz?", en: "Can you produce under our own brand?" },
+    question: {
+      tr: "Kendi markamızla üretim yapabilir misiniz?",
+      en: "Can you produce under our own brand?",
+    },
     answer: {
       tr: "Evet. Private label projelerde ürün ve etiket detayları markanıza göre özelleştirilebilir.",
       en: "Yes. In private label projects, product and label details can be customised for your brand.",
@@ -67,7 +79,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "beanie-models",
     sortOrder: 10,
     topics: ["beanies"],
-    question: { tr: "Hangi bere modellerini üretiyorsunuz?", en: "Which beanie models do you produce?" },
+    question: {
+      tr: "Hangi bere modellerini üretiyorsunuz?",
+      en: "Which beanie models do you produce?",
+    },
     answer: {
       tr: "Klasik, katlamalı, ponponlu, jakarlı ve çocuk berelerinin yanı sıra projenize özel modeller üretiyoruz. Model seçimi kullanım alanına ve tasarıma göre birlikte netleştirilir.",
       en: "We produce classic, cuffed, pompom, jacquard and kids' beanies, as well as models made for your project. The model is finalised together, based on use and design.",
@@ -77,7 +92,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "beanie-logo",
     sortOrder: 11,
     topics: ["beanies"],
-    question: { tr: "Logomuz bereye nasıl uygulanır?", en: "How is our logo applied to the beanie?" },
+    question: {
+      tr: "Logomuz bereye nasıl uygulanır?",
+      en: "How is our logo applied to the beanie?",
+    },
     answer: {
       tr: "Logo; jakarlı örgü, dokuma arma, nakış veya deri etiket gibi farklı yöntemlerle uygulanabilir. Uygun yöntem logonuzun detaylarına ve ürün modeline göre önerilir.",
       en: "Your logo can be applied through jacquard knitting, a woven badge, embroidery or a leather patch. We recommend the right method based on your logo's details and the product model.",
@@ -87,7 +105,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "scarf-size",
     sortOrder: 12,
     topics: ["scarves"],
-    question: { tr: "Atkı ölçüsü ve püskül detayları değiştirilebilir mi?", en: "Can the scarf size and fringe be changed?" },
+    question: {
+      tr: "Atkı ölçüsü ve püskül detayları değiştirilebilir mi?",
+      en: "Can the scarf size and fringe be changed?",
+    },
     answer: {
       tr: "Atkı ölçüsü, püskül ve kenar detayları projenin ihtiyacına göre değerlendirilir. İstediğiniz detayları talep ekranında belirtebilirsiniz.",
       en: "Scarf size, fringe and edge details are assessed according to the project. You can note the details you want on the request screen.",
@@ -97,7 +118,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "scarf-text",
     sortOrder: 13,
     topics: ["scarves"],
-    question: { tr: "Atkıya kulüp adı veya slogan yazılabilir mi?", en: "Can a club name or slogan be added to the scarf?" },
+    question: {
+      tr: "Atkıya kulüp adı veya slogan yazılabilir mi?",
+      en: "Can a club name or slogan be added to the scarf?",
+    },
     answer: {
       tr: "Evet. Kulüp adı, şehir adı veya slogan; renkleriniz ve arma ile birlikte atkı tasarımına uygulanabilir.",
       en: "Yes. A club name, city name or slogan can be worked into the scarf design together with your colours and crest.",
@@ -107,7 +131,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "set-separate",
     sortOrder: 14,
     topics: ["sets"],
-    question: { tr: "Set ürünleri ayrı ayrı sipariş edebilir miyiz?", en: "Can we order set items separately?" },
+    question: {
+      tr: "Set ürünleri ayrı ayrı sipariş edebilir miyiz?",
+      en: "Can we order set items separately?",
+    },
     answer: {
       tr: "Evet. Bere ve atkıyı aynı tasarım diliyle set olarak veya ayrı ürünler olarak planlayabiliriz; adetler projeye göre netleştirilir.",
       en: "Yes. Beanies and scarves can be planned as a matching set or as separate products; quantities are finalised per project.",
@@ -117,7 +144,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "club-colours",
     sortOrder: 20,
     topics: ["football-clubs", "fans"],
-    question: { tr: "Kulüp renklerimizi birebir kullanabilir misiniz?", en: "Can you match our club colours?" },
+    question: {
+      tr: "Kulüp renklerimizi birebir kullanabilir misiniz?",
+      en: "Can you match our club colours?",
+    },
     answer: {
       tr: "Kulüp renklerinizi HEX veya Pantone kodlarıyla paylaşabilirsiniz; tasarım önerisi bu renklere en yakın iplik seçenekleriyle hazırlanır.",
       en: "You can share your club colours as HEX or Pantone codes; the design proposal is prepared with the yarn options closest to them.",
@@ -127,7 +157,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "club-resale",
     sortOrder: 21,
     topics: ["football-clubs", "fans"],
-    question: { tr: "Kulüp mağazamızda satış için üretim yapıyor musunuz?", en: "Do you produce for our club shop?" },
+    question: {
+      tr: "Kulüp mağazamızda satış için üretim yapıyor musunuz?",
+      en: "Do you produce for our club shop?",
+    },
     answer: {
       tr: "Evet. Kulüp mağazaları ve taraftar satışları için koleksiyon ürünleri planlayabiliriz; etiket ve sunum detayları markanıza göre hazırlanır.",
       en: "Yes. We can plan collection products for club shops and fan sales, with label and presentation details prepared for your brand.",
@@ -137,7 +170,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "corporate-gift-pack",
     sortOrder: 22,
     topics: ["corporate"],
-    question: { tr: "Kurumsal hediye projeleri için üretim yapıyor musunuz?", en: "Do you produce for corporate gift projects?" },
+    question: {
+      tr: "Kurumsal hediye projeleri için üretim yapıyor musunuz?",
+      en: "Do you produce for corporate gift projects?",
+    },
     answer: {
       tr: "Evet. Çalışan kitleri, etkinlikler ve kurumsal hediyeler için kurumsal renk ve logolarınızla bere ve atkı üretiyoruz.",
       en: "Yes. We produce beanies and scarves in your corporate colours and logos for employee kits, events and corporate gifts.",
@@ -147,7 +183,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "kids-sizes",
     sortOrder: 23,
     topics: ["schools"],
-    question: { tr: "Çocuk bedenlerinde üretim yapıyor musunuz?", en: "Do you produce in kids' sizes?" },
+    question: {
+      tr: "Çocuk bedenlerinde üretim yapıyor musunuz?",
+      en: "Do you produce in kids' sizes?",
+    },
     answer: {
       tr: "Evet. Okul ve çocuk projeleri için çocuk bedenlerinde bere, atkı ve set üretimi yapıyoruz.",
       en: "Yes. For school and kids' projects, we produce beanies, scarves and sets in kids' sizes.",
@@ -157,7 +196,10 @@ export const faqs: ContentStoreInput["faqs"] = [
     id: "label-options",
     sortOrder: 24,
     topics: ["private-label", "custom-production"],
-    question: { tr: "Hangi etiket seçeneklerini sunuyorsunuz?", en: "Which label options do you offer?" },
+    question: {
+      tr: "Hangi etiket seçeneklerini sunuyorsunuz?",
+      en: "Which label options do you offer?",
+    },
     answer: {
       tr: "Dokuma etiket, deri etiket ve markanıza özel etiket çözümleri sunuyoruz. Etiket seçimi ürün modeline ve marka diline göre birlikte belirlenir.",
       en: "We offer woven labels, leather patches and custom label solutions for your brand. The label is chosen together, based on the product model and your brand language.",

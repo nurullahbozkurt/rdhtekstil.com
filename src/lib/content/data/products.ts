@@ -123,8 +123,16 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "pompom", "cuff", "wovenBadge"],
     images: [
-      img(`${P}/bereler/jets/1.jpg`, "Bordo-sarı ponponlu Troisdorf Jets beresi", "Burgundy and gold Troisdorf Jets pompom beanie"),
-      img(`${P}/setler/jets/2.jpg`, "Troisdorf Jets bere ve atkı birlikte", "Troisdorf Jets beanie shown with the matching scarf"),
+      img(
+        `${P}/bereler/jets/1.jpg`,
+        "Bordo-sarı ponponlu Troisdorf Jets beresi",
+        "Burgundy and gold Troisdorf Jets pompom beanie",
+      ),
+      img(
+        `${P}/setler/jets/2.jpg`,
+        "Troisdorf Jets bere ve atkı birlikte",
+        "Troisdorf Jets beanie shown with the matching scarf",
+      ),
     ],
     caseStudyIds: ["troisdorf-jets"],
     featured: true,
@@ -143,8 +151,16 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "stripes", "cuff", "wovenBadge"],
     images: [
-      img(`${P}/bereler/warriors/1.jpg`, "Yeşil zeminli Warriors Football jakarlı beresi", "Green Warriors Football jacquard beanie"),
-      img(`${P}/mankenler/5.jpg`, "Warriors Football beresini stadyumda takan taraftar", "Fan wearing the Warriors Football beanie at the stadium"),
+      img(
+        `${P}/bereler/warriors/1.jpg`,
+        "Yeşil zeminli Warriors Football jakarlı beresi",
+        "Green Warriors Football jacquard beanie",
+      ),
+      img(
+        `${P}/mankenler/5.jpg`,
+        "Warriors Football beresini stadyumda takan taraftar",
+        "Fan wearing the Warriors Football beanie at the stadium",
+      ),
     ],
     caseStudyIds: ["warriors-football"],
     featured: true,
@@ -163,8 +179,16 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "stripes", "pompom", "cuff", "wovenBadge"],
     images: [
-      img(`${P}/bereler/ecs/1.jpg`, "Yeşil-siyah ECS Crocodiles ponponlu beresi", "Green and black ECS Crocodiles pompom beanie"),
-      img(`${P}/mankenler/6.jpg`, "ECS Crocodiles beresini tribünde takan taraftar", "Fan wearing the ECS Crocodiles beanie in the stands"),
+      img(
+        `${P}/bereler/ecs/1.jpg`,
+        "Yeşil-siyah ECS Crocodiles ponponlu beresi",
+        "Green and black ECS Crocodiles pompom beanie",
+      ),
+      img(
+        `${P}/mankenler/6.jpg`,
+        "ECS Crocodiles beresini tribünde takan taraftar",
+        "Fan wearing the ECS Crocodiles beanie in the stands",
+      ),
     ],
     caseStudyIds: ["ecs-crocodiles"],
   },
@@ -182,7 +206,11 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "stripes", "cuff", "embroidery"],
     images: [
-      img(`${P}/bereler/anna-burg/1.jpg`, "Yeşil-beyaz Grün-Weiss Annaburg kulüp beresi", "Green and white Grün-Weiss Annaburg club beanie"),
+      img(
+        `${P}/bereler/anna-burg/1.jpg`,
+        "Yeşil-beyaz Grün-Weiss Annaburg kulüp beresi",
+        "Green and white Grün-Weiss Annaburg club beanie",
+      ),
     ],
   },
   {
@@ -199,7 +227,11 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "cuff", "embroidery"],
     images: [
-      img(`${P}/bereler/trosel/1.jpg`, "Lacivert Ski-Club Trösel jakarlı beresi", "Navy Ski-Club Trösel jacquard beanie"),
+      img(
+        `${P}/bereler/trosel/1.jpg`,
+        "Lacivert Ski-Club Trösel jakarlı beresi",
+        "Navy Ski-Club Trösel jacquard beanie",
+      ),
     ],
     caseStudyIds: ["ski-club-trosel"],
   },
@@ -217,7 +249,11 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "stripes", "cuff", "embroidery"],
     images: [
-      img(`${P}/bereler/krattigen/1.jpg`, "Siyah-gri Krattigen jakarlı beresi", "Black and grey Krattigen jacquard beanie"),
+      img(
+        `${P}/bereler/krattigen/1.jpg`,
+        "Siyah-gri Krattigen jakarlı beresi",
+        "Black and grey Krattigen jacquard beanie",
+      ),
     ],
   },
   {
@@ -234,8 +270,16 @@ const defs: Def[] = [
     ],
     features: ["allover", "jacquard", "wovenLabel"],
     images: [
-      img(`${P}/bereler/tinder/1.jpg`, "Pembe-turuncu desenli Tinder beresi", "Pink and orange patterned Tinder beanie"),
-      img(`${P}/mankenler/4.jpg`, "Tinder bere ve atkısını takan bir kişi", "A person wearing the Tinder beanie and scarf"),
+      img(
+        `${P}/bereler/tinder/1.jpg`,
+        "Pembe-turuncu desenli Tinder beresi",
+        "Pink and orange patterned Tinder beanie",
+      ),
+      img(
+        `${P}/mankenler/4.jpg`,
+        "Tinder bere ve atkısını takan bir kişi",
+        "A person wearing the Tinder beanie and scarf",
+      ),
     ],
     caseStudyIds: ["tinder"],
     featured: true,
@@ -254,7 +298,11 @@ const defs: Def[] = [
     ],
     features: ["plainKnit", "cuff", "leatherPatch"],
     images: [
-      img(`${P}/bereler/es/1.jpg`, "Deri etiketli gri katlamalı bere", "Grey cuffed beanie with a leather patch"),
+      img(
+        `${P}/bereler/es/1.jpg`,
+        "Deri etiketli gri katlamalı bere",
+        "Grey cuffed beanie with a leather patch",
+      ),
     ],
     caseStudyIds: ["es-private-label"],
   },
@@ -272,7 +320,11 @@ const defs: Def[] = [
     ],
     features: ["rib", "stripes", "pompom", "cuff", "wovenLabel"],
     images: [
-      img(`${P}/bereler/rdh/1.jpg`, "Lacivert-altın çizgili RDH ponponlu beresi", "Navy and gold striped RDH pompom beanie"),
+      img(
+        `${P}/bereler/rdh/1.jpg`,
+        "Lacivert-altın çizgili RDH ponponlu beresi",
+        "Navy and gold striped RDH pompom beanie",
+      ),
     ],
   },
   {
@@ -307,8 +359,16 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "wovenBadge", "fringe"],
     images: [
-      img(`${P}/atkilar/jets/1.jpg`, "Bordo-sarı Troisdorf Jets taraftar atkısı", "Burgundy and gold Troisdorf Jets fan scarf"),
-      img(`${P}/setler/jets/1.jpg`, "Troisdorf Jets atkısı ve beresini takan bir kadın", "A woman wearing the Troisdorf Jets scarf and beanie"),
+      img(
+        `${P}/atkilar/jets/1.jpg`,
+        "Bordo-sarı Troisdorf Jets taraftar atkısı",
+        "Burgundy and gold Troisdorf Jets fan scarf",
+      ),
+      img(
+        `${P}/setler/jets/1.jpg`,
+        "Troisdorf Jets atkısı ve beresini takan bir kadın",
+        "A woman wearing the Troisdorf Jets scarf and beanie",
+      ),
     ],
     caseStudyIds: ["troisdorf-jets"],
     featured: true,
@@ -327,8 +387,16 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "stripes", "wovenBadge", "fringe"],
     images: [
-      img(`${P}/atkilar/warriors/1.jpg`, "Yeşil-sarı Warriors Football atkısı", "Green and gold Warriors Football scarf"),
-      img(`${P}/mankenler/5.jpg`, "Warriors Football atkısını stadyumda takan taraftar", "Fan wearing the Warriors Football scarf at the stadium"),
+      img(
+        `${P}/atkilar/warriors/1.jpg`,
+        "Yeşil-sarı Warriors Football atkısı",
+        "Green and gold Warriors Football scarf",
+      ),
+      img(
+        `${P}/mankenler/5.jpg`,
+        "Warriors Football atkısını stadyumda takan taraftar",
+        "Fan wearing the Warriors Football scarf at the stadium",
+      ),
     ],
     caseStudyIds: ["warriors-football"],
   },
@@ -346,8 +414,16 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "rib", "wovenBadge", "fringe"],
     images: [
-      img(`${P}/atkilar/ecs/1.jpg`, "Yeşil-siyah ECS Crocodiles atkısı", "Green and black ECS Crocodiles scarf"),
-      img(`${P}/mankenler/6.jpg`, "ECS Crocodiles atkısını tribünde takan taraftar", "Fan wearing the ECS Crocodiles scarf in the stands"),
+      img(
+        `${P}/atkilar/ecs/1.jpg`,
+        "Yeşil-siyah ECS Crocodiles atkısı",
+        "Green and black ECS Crocodiles scarf",
+      ),
+      img(
+        `${P}/mankenler/6.jpg`,
+        "ECS Crocodiles atkısını tribünde takan taraftar",
+        "Fan wearing the ECS Crocodiles scarf in the stands",
+      ),
     ],
     caseStudyIds: ["ecs-crocodiles"],
   },
@@ -365,7 +441,11 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "stripes", "embroidery", "fringe"],
     images: [
-      img(`${P}/atkilar/anna-burg/1.jpg`, "Yeşil-beyaz Grün-Weiss Annaburg atkısı", "Green and white Grün-Weiss Annaburg scarf"),
+      img(
+        `${P}/atkilar/anna-burg/1.jpg`,
+        "Yeşil-beyaz Grün-Weiss Annaburg atkısı",
+        "Green and white Grün-Weiss Annaburg scarf",
+      ),
     ],
   },
   {
@@ -382,7 +462,11 @@ const defs: Def[] = [
     ],
     features: ["plainKnit", "stripes", "embroidery", "fringe"],
     images: [
-      img(`${P}/atkilar/trosel/1.jpg`, "Lacivert-beyaz Ski-Club Trösel atkısı", "Navy and white Ski-Club Trösel scarf"),
+      img(
+        `${P}/atkilar/trosel/1.jpg`,
+        "Lacivert-beyaz Ski-Club Trösel atkısı",
+        "Navy and white Ski-Club Trösel scarf",
+      ),
     ],
     caseStudyIds: ["ski-club-trosel"],
   },
@@ -400,7 +484,11 @@ const defs: Def[] = [
     ],
     features: ["jacquard", "textBand", "stripes", "wovenBadge", "fringe"],
     images: [
-      img(`${P}/atkilar/krattigen/1.jpg`, "Siyah-gri Krattigen jakarlı atkısı", "Black and grey Krattigen jacquard scarf"),
+      img(
+        `${P}/atkilar/krattigen/1.jpg`,
+        "Siyah-gri Krattigen jakarlı atkısı",
+        "Black and grey Krattigen jacquard scarf",
+      ),
     ],
   },
   {
@@ -417,7 +505,11 @@ const defs: Def[] = [
     ],
     features: ["allover", "jacquard", "wovenLabel", "fringe"],
     images: [
-      img(`${P}/atkilar/tinder/1.jpg`, "Pembe-turuncu desenli Tinder atkısı", "Pink and orange patterned Tinder scarf"),
+      img(
+        `${P}/atkilar/tinder/1.jpg`,
+        "Pembe-turuncu desenli Tinder atkısı",
+        "Pink and orange patterned Tinder scarf",
+      ),
     ],
     caseStudyIds: ["tinder"],
   },
@@ -435,7 +527,11 @@ const defs: Def[] = [
     ],
     features: ["plainKnit", "leatherPatch", "fringe"],
     images: [
-      img(`${P}/atkilar/es/1.jpg`, "Deri etiketli gri örgü atkı", "Grey knitted scarf with a leather patch"),
+      img(
+        `${P}/atkilar/es/1.jpg`,
+        "Deri etiketli gri örgü atkı",
+        "Grey knitted scarf with a leather patch",
+      ),
     ],
     caseStudyIds: ["es-private-label"],
   },
@@ -453,7 +549,11 @@ const defs: Def[] = [
     ],
     features: ["rib", "stripes", "wovenLabel", "fringe"],
     images: [
-      img(`${P}/atkilar/rdh/1.jpg`, "Lacivert-altın çizgili RDH atkısı", "Navy and gold striped RDH scarf"),
+      img(
+        `${P}/atkilar/rdh/1.jpg`,
+        "Lacivert-altın çizgili RDH atkısı",
+        "Navy and gold striped RDH scarf",
+      ),
     ],
   },
   {
@@ -469,7 +569,11 @@ const defs: Def[] = [
     ],
     features: ["plainKnit", "embroidery", "fringe"],
     images: [
-      img(`${P}/mankenler/2.jpg`, "Koyu gri örgü atkı takan bir erkek", "A man wearing a dark grey knitted scarf"),
+      img(
+        `${P}/mankenler/2.jpg`,
+        "Koyu gri örgü atkı takan bir erkek",
+        "A man wearing a dark grey knitted scarf",
+      ),
     ],
     // TODO(content): Ürün adı ve detayları RDH tarafından teyit edilecek.
     contentStatus: "placeholder",
@@ -487,7 +591,11 @@ const defs: Def[] = [
     ],
     features: ["stripes", "plainKnit", "embroidery", "fringe"],
     images: [
-      img(`${P}/mankenler/3.jpg`, "Yeşil-siyah çizgili taraftar atkısı takan bir kadın", "A woman wearing a green and black striped fan scarf"),
+      img(
+        `${P}/mankenler/3.jpg`,
+        "Yeşil-siyah çizgili taraftar atkısı takan bir kadın",
+        "A woman wearing a green and black striped fan scarf",
+      ),
     ],
     // TODO(content): Ürün adı ve detayları RDH tarafından teyit edilecek.
     contentStatus: "placeholder",
@@ -524,8 +632,16 @@ const defs: Def[] = [
     ],
     features: ["matching", "jacquard", "textBand", "pompom", "wovenBadge", "fringe"],
     images: [
-      img(`${P}/setler/jets/2.jpg`, "Troisdorf Jets bere ve atkı seti", "Troisdorf Jets beanie and scarf set"),
-      img(`${P}/setler/jets/1.jpg`, "Troisdorf Jets setini şehirde takan bir kadın", "A woman wearing the Troisdorf Jets set in the city"),
+      img(
+        `${P}/setler/jets/2.jpg`,
+        "Troisdorf Jets bere ve atkı seti",
+        "Troisdorf Jets beanie and scarf set",
+      ),
+      img(
+        `${P}/setler/jets/1.jpg`,
+        "Troisdorf Jets setini şehirde takan bir kadın",
+        "A woman wearing the Troisdorf Jets set in the city",
+      ),
     ],
     caseStudyIds: ["troisdorf-jets"],
     featured: true,
@@ -544,8 +660,16 @@ const defs: Def[] = [
     ],
     features: ["matching", "jacquard", "textBand", "stripes", "wovenBadge", "fringe"],
     images: [
-      img(`${P}/setler/warriors/1.jpg`, "Warriors Football bere ve atkı seti", "Warriors Football beanie and scarf set"),
-      img(`${P}/setler/warriors/2.jpg`, "Warriors Football seti yakın çekim", "Warriors Football set close-up"),
+      img(
+        `${P}/setler/warriors/1.jpg`,
+        "Warriors Football bere ve atkı seti",
+        "Warriors Football beanie and scarf set",
+      ),
+      img(
+        `${P}/setler/warriors/2.jpg`,
+        "Warriors Football seti yakın çekim",
+        "Warriors Football set close-up",
+      ),
     ],
     caseStudyIds: ["warriors-football"],
   },
@@ -563,7 +687,11 @@ const defs: Def[] = [
     ],
     features: ["matching", "jacquard", "pompom", "wovenBadge", "fringe"],
     images: [
-      img(`${P}/setler/ecs/3.jpg`, "ECS Crocodiles bere ve atkı seti", "ECS Crocodiles beanie and scarf set"),
+      img(
+        `${P}/setler/ecs/3.jpg`,
+        "ECS Crocodiles bere ve atkı seti",
+        "ECS Crocodiles beanie and scarf set",
+      ),
       img(`${P}/setler/ecs/1.jpg`, "ECS Crocodiles seti", "ECS Crocodiles set"),
       img(`${P}/setler/ecs/2.jpg`, "ECS Crocodiles seti detay", "ECS Crocodiles set detail"),
     ],
@@ -583,8 +711,16 @@ const defs: Def[] = [
     ],
     features: ["matching", "jacquard", "textBand", "embroidery", "fringe"],
     images: [
-      img(`${P}/setler/anna-burg/1.jpg`, "Grün-Weiss Annaburg bere ve atkı seti", "Grün-Weiss Annaburg beanie and scarf set"),
-      img(`${P}/setler/anna-burg/2.jpg`, "Grün-Weiss Annaburg seti detay", "Grün-Weiss Annaburg set detail"),
+      img(
+        `${P}/setler/anna-burg/1.jpg`,
+        "Grün-Weiss Annaburg bere ve atkı seti",
+        "Grün-Weiss Annaburg beanie and scarf set",
+      ),
+      img(
+        `${P}/setler/anna-burg/2.jpg`,
+        "Grün-Weiss Annaburg seti detay",
+        "Grün-Weiss Annaburg set detail",
+      ),
     ],
   },
   {
@@ -601,7 +737,11 @@ const defs: Def[] = [
     ],
     features: ["matching", "jacquard", "stripes", "embroidery", "fringe"],
     images: [
-      img(`${P}/setler/trosel/1.jpg`, "Ski-Club Trösel bere ve atkı seti", "Ski-Club Trösel beanie and scarf set"),
+      img(
+        `${P}/setler/trosel/1.jpg`,
+        "Ski-Club Trösel bere ve atkı seti",
+        "Ski-Club Trösel beanie and scarf set",
+      ),
       img(`${P}/setler/trosel/2.jpg`, "Ski-Club Trösel seti detay", "Ski-Club Trösel set detail"),
     ],
     caseStudyIds: ["ski-club-trosel"],
@@ -620,7 +760,11 @@ const defs: Def[] = [
     ],
     features: ["matching", "jacquard", "textBand", "stripes", "fringe"],
     images: [
-      img(`${P}/setler/krattigen/1.jpg`, "Krattigen bere ve atkı seti", "Krattigen beanie and scarf set"),
+      img(
+        `${P}/setler/krattigen/1.jpg`,
+        "Krattigen bere ve atkı seti",
+        "Krattigen beanie and scarf set",
+      ),
       img(`${P}/setler/krattigen/2.jpg`, "Krattigen seti detay", "Krattigen set detail"),
     ],
   },
@@ -640,7 +784,11 @@ const defs: Def[] = [
     images: [
       img(`${P}/setler/tinder/1.jpg`, "Tinder bere ve atkı seti", "Tinder beanie and scarf set"),
       img(`${P}/setler/tinder/2.jpg`, "Tinder seti detay", "Tinder set detail"),
-      img(`${P}/setler/tinder/3.jpg`, "Tinder setini takan bir kadın", "A woman wearing the Tinder set"),
+      img(
+        `${P}/setler/tinder/3.jpg`,
+        "Tinder setini takan bir kadın",
+        "A woman wearing the Tinder set",
+      ),
     ],
     caseStudyIds: ["tinder"],
     featured: true,
@@ -659,7 +807,11 @@ const defs: Def[] = [
     ],
     features: ["matching", "plainKnit", "leatherPatch", "fringe"],
     images: [
-      img(`${P}/setler/es/1.jpg`, "Deri etiketli gri bere ve atkı seti", "Grey beanie and scarf set with leather patches"),
+      img(
+        `${P}/setler/es/1.jpg`,
+        "Deri etiketli gri bere ve atkı seti",
+        "Grey beanie and scarf set with leather patches",
+      ),
       img(`${P}/setler/es/2.jpg`, "ES seti detay", "ES set detail"),
     ],
     caseStudyIds: ["es-private-label"],
@@ -678,7 +830,11 @@ const defs: Def[] = [
     ],
     features: ["matching", "rib", "stripes", "pompom", "wovenLabel", "fringe"],
     images: [
-      img(`${P}/setler/rdh/1.png`, "RDH Tekstil lacivert bere ve atkı seti", "RDH Tekstil navy beanie and scarf set"),
+      img(
+        `${P}/setler/rdh/1.png`,
+        "RDH Tekstil lacivert bere ve atkı seti",
+        "RDH Tekstil navy beanie and scarf set",
+      ),
       img(`${P}/setler/rdh/2.jpg`, "RDH Tekstil seti detay", "RDH Tekstil set detail"),
     ],
   },
@@ -695,9 +851,15 @@ const defs: Def[] = [
     ],
     features: ["matching", "kidsFit", "plainKnit"],
     images: [
-      img(`${P}/mankenler/1.jpg`, "Açık mavi örgü bere ve atkı takan bir çocuk", "A child wearing a light blue knitted beanie and scarf"),
+      img(
+        `${P}/mankenler/1.jpg`,
+        "Açık mavi örgü bere ve atkı takan bir çocuk",
+        "A child wearing a light blue knitted beanie and scarf",
+      ),
     ],
   },
 ];
 
-export const products: ContentStoreInput["products"] = defs.map((def, index) => product(def, index + 1));
+export const products: ContentStoreInput["products"] = defs.map((def, index) =>
+  product(def, index + 1),
+);

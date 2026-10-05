@@ -28,7 +28,7 @@ const en: Messages = {
     all: "All",
     productCount: "{count} products",
     placeholderImage: "Image coming soon",
-    placeholderBadge: "Sample content",
+    placeholderBadge: "Placeholder content",
   },
   catalog: {
     filterLabel: "Filter by product type",
@@ -59,6 +59,8 @@ const en: Messages = {
     projects: "Projects",
     filterLabel: "Filter projects by category",
     noProjects: "No published projects in this category yet.",
+    logoNotice: "Reference logos will be added as usage permissions are confirmed.",
+    otherCaseStudies: "More projects",
     fields: {
       client: "Client / Brand",
       sector: "Sector",
@@ -110,7 +112,8 @@ const en: Messages = {
       productInterest: "Product of Interest",
       quantityRange: "Estimated Quantity",
       message: "Message",
-      privacyConsent: "I have read the {link} and agree to my personal data being processed to evaluate my request.",
+      privacyConsent:
+        "I have read the {link} and agree to my personal data being processed to evaluate my request.",
       privacyConsentLink: "Information Notice",
     },
     errors: {
@@ -145,13 +148,19 @@ const en: Messages = {
     customize: "Manage preferences",
     save: "Save preferences",
     necessary: "Necessary cookies",
-    necessaryText: "Required for core site functions and remembering your preferences. Cannot be disabled.",
+    necessaryText:
+      "Required for core site functions and remembering your preferences. Cannot be disabled.",
     analytics: "Analytics cookies",
     analyticsText: "Help us measure anonymously how the site is used, via Google Analytics 4.",
     marketing: "Marketing cookies",
     marketingText: "Used for advertising and remarketing measurement.",
     alwaysOn: "Always on",
     manage: "Cookie Preferences",
+    close: "Close",
+  },
+  legal: {
+    version: "Text version",
+    updated: "Last updated",
   },
   footer: {
     rights: "All rights reserved.",

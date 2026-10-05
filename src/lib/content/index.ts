@@ -58,7 +58,10 @@ export async function getCategories(locale: Locale): Promise<CategoryView[]> {
   return [...categories].sort(bySort).map((c) => localize(c, locale));
 }
 
-export async function getCategory(id: CategoryId, locale: Locale): Promise<CategoryView | undefined> {
+export async function getCategory(
+  id: CategoryId,
+  locale: Locale,
+): Promise<CategoryView | undefined> {
   return (await getCategories(locale)).find((c) => c.id === id);
 }
 
@@ -109,7 +112,10 @@ export async function getIndustries(locale: Locale): Promise<IndustryView[]> {
   return [...industries].sort(bySort).map((i) => localize(i, locale));
 }
 
-export async function getIndustry(id: IndustryId, locale: Locale): Promise<IndustryView | undefined> {
+export async function getIndustry(
+  id: IndustryId,
+  locale: Locale,
+): Promise<IndustryView | undefined> {
   return (await getIndustries(locale)).find((i) => i.id === id);
 }
 
@@ -120,15 +126,17 @@ export async function getReferences(
   const { references } = await getContentStore();
   return [...references]
     .sort(bySort)
-    .filter(
-      (r) => !filters.categories || r.categories.some((c) => filters.categories?.includes(c)),
-    )
+    .filter((r) => !filters.categories || r.categories.some((c) => filters.categories?.includes(c)))
     .map((r) => localize(r, locale));
 }
 
 export async function getCaseStudies(
   locale: Locale,
-  filters: { categories?: readonly ReferenceCategory[]; productId?: string; ids?: readonly string[] } = {},
+  filters: {
+    categories?: readonly ReferenceCategory[];
+    productId?: string;
+    ids?: readonly string[];
+  } = {},
 ): Promise<CaseStudyView[]> {
   const { caseStudies } = await getContentStore();
   return [...caseStudies]

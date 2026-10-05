@@ -14,8 +14,15 @@ export const CONSENT_EVENT = "rdh:consent-change";
 export function readConsent(): ConsentState | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem(CONSENT_STORAGE_KEY);
-    if (!raw) return null;
+    return parseConsent(window.localStorage.getItem(CONSENT_STORAGE_KEY));
+  } catch {
+    return null;
+  }
+}
+
+export function parseConsent(raw: string | null): ConsentState | null {
+  if (!raw) return null;
+  try {
     const parsed = JSON.parse(raw) as Partial<ConsentState>;
     if (parsed.version !== CONSENT_VERSION) return null;
     return {

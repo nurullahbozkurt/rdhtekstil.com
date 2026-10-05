@@ -16,7 +16,11 @@ export const categories: ContentStoreInput["categories"] = [
       tr: "Klasik, katlamalı, ponponlu ve jakarlı modellerden çocuk berelerine kadar; renk, desen, logo ve etiket detaylarıyla markanıza özel bere üretiyoruz.",
       en: "From classic, cuffed, pompom and jacquard models to kids' beanies, we produce beanies made for your brand with custom colours, patterns, logos and labels.",
     },
-    image: img(`${P}/bereler/jets/1.jpg`, "Bordo-sarı ponponlu jakarlı Troisdorf Jets beresi", "Burgundy and gold pompom jacquard Troisdorf Jets beanie"),
+    image: img(
+      `${P}/bereler/jets/1.jpg`,
+      "Bordo-sarı ponponlu jakarlı Troisdorf Jets beresi",
+      "Burgundy and gold pompom jacquard Troisdorf Jets beanie",
+    ),
     types: [
       { id: "classic", label: { tr: "Klasik", en: "Classic" } },
       { id: "cuffed", label: { tr: "Katlamalı", en: "Cuffed" } },
@@ -57,7 +61,11 @@ export const categories: ContentStoreInput["categories"] = [
       tr: "Örgü ve jakarlı atkılardan taraftar ve kurumsal koleksiyonlara kadar; renk, yazı, arma ve etiket detaylarını projenize göre şekillendiriyoruz.",
       en: "From knitted and jacquard scarves to fan and corporate collections, we shape colours, lettering, crests and labels around your project.",
     },
-    image: img(`${P}/atkilar/warriors/1.jpg`, "Yeşil-sarı jakarlı Warriors Football atkısı", "Green and gold jacquard Warriors Football scarf"),
+    image: img(
+      `${P}/atkilar/warriors/1.jpg`,
+      "Yeşil-sarı jakarlı Warriors Football atkısı",
+      "Green and gold jacquard Warriors Football scarf",
+    ),
     types: [
       { id: "knit", label: { tr: "Örgü", en: "Knitted" } },
       { id: "jacquard", label: { tr: "Jakarlı", en: "Jacquard" } },
@@ -98,7 +106,11 @@ export const categories: ContentStoreInput["categories"] = [
       tr: "Bere ve atkıyı aynı tasarım diliyle bir araya getiriyoruz. Kulüp, taraftar, kurumsal ve çocuk setlerini markanızın renkleri ve detaylarıyla üretiyoruz.",
       en: "We bring beanies and scarves together in one design language, producing club, fan, corporate and kids' sets in your brand colours and details.",
     },
-    image: img(`${P}/setler/jets/2.jpg`, "Troisdorf Jets bere ve atkı seti", "Troisdorf Jets beanie and scarf set"),
+    image: img(
+      `${P}/setler/jets/2.jpg`,
+      "Troisdorf Jets bere ve atkı seti",
+      "Troisdorf Jets beanie and scarf set",
+    ),
     types: [
       { id: "beanie-scarf", label: { tr: "Bere + Atkı", en: "Beanie + Scarf" } },
       { id: "corporate", label: { tr: "Kurumsal", en: "Corporate" } },

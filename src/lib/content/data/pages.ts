@@ -20,11 +20,32 @@ export const pages: ContentStoreInput["pages"] = {
       },
     },
     heroImages: [
-      img(`${P}/mankenler/5.jpg`, "Warriors Football bere ve atkı setini stadyumda takan taraftar", "Fan wearing the Warriors Football beanie and scarf set at the stadium"),
-      img(`${P}/bereler/rdh/1.jpg`, "Lacivert ve altın çizgili, ponponlu RDH Tekstil beresi", "Navy RDH Tekstil pompom beanie with gold stripes"),
-      img(`${P}/atkilar/jets/1.jpg`, "Bordo-sarı Troisdorf Jets jakarlı taraftar atkısı", "Burgundy and gold Troisdorf Jets jacquard fan scarf"),
+      img(
+        `${P}/mankenler/5.jpg`,
+        "Warriors Football bere ve atkı setini stadyumda takan taraftar",
+        "Fan wearing the Warriors Football beanie and scarf set at the stadium",
+      ),
+      img(
+        `${P}/bereler/rdh/1.jpg`,
+        "Lacivert ve altın çizgili, ponponlu RDH Tekstil beresi",
+        "Navy RDH Tekstil pompom beanie with gold stripes",
+      ),
+      img(
+        `${P}/atkilar/jets/1.jpg`,
+        "Bordo-sarı Troisdorf Jets jakarlı taraftar atkısı",
+        "Burgundy and gold Troisdorf Jets jacquard fan scarf",
+      ),
     ],
-    storyImage: img(`${P}/shop/2.jpg`, "RDH Tekstil üretimi kulüp atkılarının raflarda sergilendiği alan", "RDH Tekstil club scarves displayed on shelves"),
+    storyImage: img(
+      `${P}/shop/2.jpg`,
+      "RDH Tekstil üretimi kulüp atkılarının raflarda sergilendiği alan",
+      "RDH Tekstil club scarves displayed on shelves",
+    ),
+    requestImage: img(
+      `${P}/setler/tinder/3.jpg`,
+      "Marka renkleri ve deseniyle üretilmiş Tinder bere ve atkı seti",
+      "Tinder beanie and scarf set produced in the brand's colours and pattern",
+    ),
     content: {
       tr: {
         eyebrow: "YOUR BRAND. YOUR DESIGN. OUR PRODUCTION.",
@@ -149,33 +170,78 @@ export const pages: ContentStoreInput["pages"] = {
         h1: "Made for Your Brand.",
       },
     },
-    image: img(`${P}/setler/ecs/3.jpg`, "ECS Crocodiles için üretilen yeşil-siyah jakarlı bere ve atkı seti", "Green and black jacquard beanie and scarf set made for ECS Crocodiles"),
+    image: img(
+      `${P}/setler/ecs/3.jpg`,
+      "ECS Crocodiles için üretilen yeşil-siyah jakarlı bere ve atkı seti",
+      "Green and black jacquard beanie and scarf set made for ECS Crocodiles",
+    ),
     featureImages: [
-      img(`${P}/setler/tinder/1.jpg`, "Pembe ve turuncu özel renk kombinasyonlu bere ve atkı", "Beanie and scarf in a custom pink and orange colour combination"),
-      img(`${P}/bereler/trosel/1.jpg`, "Dağ silüeti jakarlı desenli Ski-Club Trösel beresi", "Ski-Club Trösel beanie with a jacquard mountain pattern"),
-      img(`${P}/bereler/ecs/1.jpg`, "Dokuma arma uygulamalı ECS Crocodiles beresi", "ECS Crocodiles beanie with a woven crest badge"),
-      img(`${P}/bereler/es/1.jpg`, "Deri etiketli gri katlamalı bere", "Grey cuffed beanie with a leather patch label"),
-      img(`${P}/setler/rdh/1.png`, "RDH Tekstil etiketli lacivert bere ve atkı seti", "Navy beanie and scarf set with RDH Tekstil labels"),
+      img(
+        `${P}/setler/tinder/1.jpg`,
+        "Pembe ve turuncu özel renk kombinasyonlu bere ve atkı",
+        "Beanie and scarf in a custom pink and orange colour combination",
+      ),
+      img(
+        `${P}/bereler/trosel/1.jpg`,
+        "Dağ silüeti jakarlı desenli Ski-Club Trösel beresi",
+        "Ski-Club Trösel beanie with a jacquard mountain pattern",
+      ),
+      img(
+        `${P}/bereler/ecs/1.jpg`,
+        "Dokuma arma uygulamalı ECS Crocodiles beresi",
+        "ECS Crocodiles beanie with a woven crest badge",
+      ),
+      img(
+        `${P}/bereler/es/1.jpg`,
+        "Deri etiketli gri katlamalı bere",
+        "Grey cuffed beanie with a leather patch label",
+      ),
+      img(
+        `${P}/setler/rdh/1.png`,
+        "RDH Tekstil etiketli lacivert bere ve atkı seti",
+        "Navy beanie and scarf set with RDH Tekstil labels",
+      ),
     ],
     content: {
       tr: {
         intro:
           "Hazır bir ürüne logo eklemekten daha fazlasını yapıyoruz. Renk, desen, örgü, etiket ve ürün detaylarını projenizin ihtiyaçlarına göre şekillendiriyoruz.",
         features: [
-          { title: "Renk & İplik", text: "Marka kimliğinize ve tasarımınıza uygun renk kombinasyonları." },
-          { title: "Desen & Örgü", text: "Ürüne ve kullanım alanına uygun farklı örgü ve desen seçenekleri." },
-          { title: "Logo Uygulamaları", text: "Tasarıma ve ürüne uygun farklı marka uygulamaları." },
+          {
+            title: "Renk & İplik",
+            text: "Marka kimliğinize ve tasarımınıza uygun renk kombinasyonları.",
+          },
+          {
+            title: "Desen & Örgü",
+            text: "Ürüne ve kullanım alanına uygun farklı örgü ve desen seçenekleri.",
+          },
+          {
+            title: "Logo Uygulamaları",
+            text: "Tasarıma ve ürüne uygun farklı marka uygulamaları.",
+          },
           { title: "Özel Etiket", text: "Markanıza özel etiket çözümleri." },
-          { title: "Private Label", text: "Ürünlerin müşterinin kendi markası altında hazırlanabilmesi." },
+          {
+            title: "Private Label",
+            text: "Ürünlerin müşterinin kendi markası altında hazırlanabilmesi.",
+          },
         ],
       },
       en: {
         intro:
           "We do more than add a logo to an existing product. We shape colour, pattern, knit, label and product details around the needs of your project.",
         features: [
-          { title: "Colour & Yarn", text: "Colour combinations that match your brand identity and design." },
-          { title: "Pattern & Knit", text: "Knit and pattern options suited to the product and how it will be used." },
-          { title: "Logo Applications", text: "Brand applications suited to the design and the product." },
+          {
+            title: "Colour & Yarn",
+            text: "Colour combinations that match your brand identity and design.",
+          },
+          {
+            title: "Pattern & Knit",
+            text: "Knit and pattern options suited to the product and how it will be used.",
+          },
+          {
+            title: "Logo Applications",
+            text: "Brand applications suited to the design and the product.",
+          },
           { title: "Custom Labels", text: "Label solutions made for your brand." },
           { title: "Private Label", text: "Products prepared under the customer's own brand." },
         ],
@@ -228,9 +294,21 @@ export const pages: ContentStoreInput["pages"] = {
       },
     },
     images: [
-      img(`${P}/shop/3.jpg`, "RDH Tekstil gri bere ve atkı ürünleri", "RDH Tekstil grey beanies and scarves"),
-      img(`${P}/shop/1.jpg`, "RDH Tekstil atkı koleksiyonu ve bereler", "RDH Tekstil scarf collection and beanies"),
-      img(`${P}/shop/4.jpg`, "Askıda sergilenen RDH Tekstil atkıları", "RDH Tekstil scarves displayed on a rail"),
+      img(
+        `${P}/shop/3.jpg`,
+        "RDH Tekstil gri bere ve atkı ürünleri",
+        "RDH Tekstil grey beanies and scarves",
+      ),
+      img(
+        `${P}/shop/1.jpg`,
+        "RDH Tekstil atkı koleksiyonu ve bereler",
+        "RDH Tekstil scarf collection and beanies",
+      ),
+      img(
+        `${P}/shop/4.jpg`,
+        "Askıda sergilenen RDH Tekstil atkıları",
+        "RDH Tekstil scarves displayed on a rail",
+      ),
     ],
     content: {
       tr: {

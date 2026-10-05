@@ -23,7 +23,12 @@ export async function resolveRoute(
   segments: readonly string[],
 ): Promise<RouteEntry | undefined> {
   const table = await getRouteTable();
-  return table.byPath.get(pathKey(locale, segments.map((s) => decodeURIComponent(s))));
+  return table.byPath.get(
+    pathKey(
+      locale,
+      segments.map((s) => decodeURIComponent(s)),
+    ),
+  );
 }
 
 /** Tüm dillerdeki tüm yollar (generateStaticParams ve sitemap için). */
@@ -66,9 +71,10 @@ export type Links = Awaited<ReturnType<typeof getLinks>>;
 export async function getAlternates(key: RouteKey): Promise<Record<Locale, string>> {
   const entry = (await getRouteTable()).byKey.get(routeKeyId(key));
   if (!entry) throw new Error(`Rota bulunamadı: ${routeKeyId(key)}`);
-  return Object.fromEntries(
-    locales.map((l) => [l, buildHref(l, entry.segments[l])]),
-  ) as Record<Locale, string>;
+  return Object.fromEntries(locales.map((l) => [l, buildHref(l, entry.segments[l])])) as Record<
+    Locale,
+    string
+  >;
 }
 
 /** Dil seçici için: her yolun diğer dillerdeki karşılığı. */

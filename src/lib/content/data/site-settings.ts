@@ -67,7 +67,13 @@ export const siteSettings: ContentStoreInput["siteSettings"] = {
     otherProducts: { tr: "Diğer Ürünleri İncele", en: "Browse Other Products" },
   },
   trustLine: {
-    tr: ["Özel Tasarım", "Düşük Minimum Adet", "Private Label", "Hızlı Üretim", "Türkiye'de Üretim"],
+    tr: [
+      "Özel Tasarım",
+      "Düşük Minimum Adet",
+      "Private Label",
+      "Hızlı Üretim",
+      "Türkiye'de Üretim",
+    ],
     en: ["Custom Design", "Low Minimums", "Private Label", "Fast Production", "Made in Türkiye"],
   },
   valueProps: [

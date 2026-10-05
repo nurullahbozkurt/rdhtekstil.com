@@ -281,6 +281,7 @@ export const pagesSchema = z.object({
     ...pageBase,
     heroImages: z.array(imageSchema).min(1),
     storyImage: imageSchema,
+    requestImage: imageSchema,
     content: localized(
       z.object({
         eyebrow: text,
@@ -326,9 +327,7 @@ export const pagesSchema = z.object({
   about: z.object({
     ...pageBase,
     images: z.array(imageSchema).min(1),
-    content: localized(
-      z.object({ text: text, subheading: text, subtext: text }),
-    ),
+    content: localized(z.object({ text: text, subheading: text, subtext: text })),
   }),
   contact: z.object({
     ...pageBase,

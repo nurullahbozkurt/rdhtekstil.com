@@ -27,7 +27,14 @@ describe("seed verisi", () => {
   });
 
   it("benzersiz kimliklere sahiptir", () => {
-    for (const list of [store.products, store.categories, store.industries, store.caseStudies, store.faqs, store.references]) {
+    for (const list of [
+      store.products,
+      store.categories,
+      store.industries,
+      store.caseStudies,
+      store.faqs,
+      store.references,
+    ]) {
       const ids = list.map((item) => item.id);
       expect(new Set(ids).size).toBe(ids.length);
     }
@@ -43,14 +50,19 @@ describe("seed verisi", () => {
       const category = store.categories.find((c) => c.id === product.categoryId);
       expect(category, product.id).toBeDefined();
       for (const typeId of product.typeIds) {
-        expect(category?.types.some((t) => t.id === typeId), `${product.id} → ${typeId}`).toBe(true);
+        expect(
+          category?.types.some((t) => t.id === typeId),
+          `${product.id} → ${typeId}`,
+        ).toBe(true);
       }
-      for (const id of product.caseStudyIds) expect(caseIds.has(id), `${product.id} → ${id}`).toBe(true);
+      for (const id of product.caseStudyIds)
+        expect(caseIds.has(id), `${product.id} → ${id}`).toBe(true);
       for (const id of product.faqIds) expect(faqIds.has(id)).toBe(true);
     }
     for (const caseStudy of store.caseStudies) {
       expect(referenceIds.has(caseStudy.referenceId)).toBe(true);
-      for (const id of caseStudy.productIds) expect(productIds.has(id), `${caseStudy.id} → ${id}`).toBe(true);
+      for (const id of caseStudy.productIds)
+        expect(productIds.has(id), `${caseStudy.id} → ${id}`).toBe(true);
     }
     for (const list of [store.categories, store.industries]) {
       for (const item of list) {
@@ -76,7 +88,10 @@ describe("seed verisi", () => {
       if (Array.isArray(value)) value.forEach(collect);
       else if (value && typeof value === "object") {
         for (const [key, item] of Object.entries(value)) {
-          if ((key === "src" || key === "ogImage" || key === "defaultOgImage") && typeof item === "string") {
+          if (
+            (key === "src" || key === "ogImage" || key === "defaultOgImage") &&
+            typeof item === "string"
+          ) {
             sources.add(item);
           } else collect(item);
         }
@@ -104,7 +119,11 @@ describe("seed verisi", () => {
 
 describe("localize", () => {
   it("çok dilli alanları seçilen dile indirger", () => {
-    const value = { a: { tr: "Merhaba", en: "Hello" }, list: [{ x: { tr: "1", en: "one" } }], n: 3 };
+    const value = {
+      a: { tr: "Merhaba", en: "Hello" },
+      list: [{ x: { tr: "1", en: "one" } }],
+      n: 3,
+    };
     expect(localize(value, "en")).toEqual({ a: "Hello", list: [{ x: "one" }], n: 3 });
     expect(localize(value, "tr")).toEqual({ a: "Merhaba", list: [{ x: "1" }], n: 3 });
   });

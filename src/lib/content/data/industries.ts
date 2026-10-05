@@ -34,7 +34,11 @@ export const industries: ContentStoreInput["industries"] = [
       ],
     },
     cta: { tr: "Kulübünüz İçin Talep Oluşturun", en: "Create a Request for Your Club" },
-    image: img(`${P}/mankenler/5.jpg`, "Warriors Football bere ve atkısıyla stadyumda bir taraftar", "A supporter at the stadium in a Warriors Football beanie and scarf"),
+    image: img(
+      `${P}/mankenler/5.jpg`,
+      "Warriors Football bere ve atkısıyla stadyumda bir taraftar",
+      "A supporter at the stadium in a Warriors Football beanie and scarf",
+    ),
     referenceCategories: ["football"],
     faqIds: ["club-colours", "club-resale", "min-order"],
     seo: {
@@ -84,7 +88,11 @@ export const industries: ContentStoreInput["industries"] = [
       ],
     },
     cta: { tr: "Taraftar Koleksiyonunu Başlatın", en: "Start Your Fan Collection" },
-    image: img(`${P}/mankenler/6.jpg`, "ECS Crocodiles bere ve atkısıyla tribünde bir taraftar", "A fan in the stands wearing an ECS Crocodiles beanie and scarf"),
+    image: img(
+      `${P}/mankenler/6.jpg`,
+      "ECS Crocodiles bere ve atkısıyla tribünde bir taraftar",
+      "A fan in the stands wearing an ECS Crocodiles beanie and scarf",
+    ),
     referenceCategories: ["fan"],
     faqIds: ["club-colours", "club-resale", "production-time"],
     seo: {
@@ -134,7 +142,11 @@ export const industries: ContentStoreInput["industries"] = [
       ],
     },
     cta: { tr: "Kurumsal Projenizi Başlatın", en: "Start Your Corporate Project" },
-    image: img(`${P}/mankenler/4.jpg`, "Tinder için üretilen desenli bere ve atkıyı takan bir kişi", "A person wearing the patterned beanie and scarf produced for Tinder"),
+    image: img(
+      `${P}/mankenler/4.jpg`,
+      "Tinder için üretilen desenli bere ve atkıyı takan bir kişi",
+      "A person wearing the patterned beanie and scarf produced for Tinder",
+    ),
     referenceCategories: ["corporate"],
     faqIds: ["corporate-gift-pack", "own-logo", "min-order"],
     seo: {
@@ -184,7 +196,11 @@ export const industries: ContentStoreInput["industries"] = [
       ],
     },
     cta: { tr: "Okulunuz İçin Talep Oluşturun", en: "Create a Request for Your School" },
-    image: img(`${P}/mankenler/1.jpg`, "Açık mavi örgü bere ve atkı takan gülümseyen bir çocuk", "A smiling child wearing a light blue knitted beanie and scarf"),
+    image: img(
+      `${P}/mankenler/1.jpg`,
+      "Açık mavi örgü bere ve atkı takan gülümseyen bir çocuk",
+      "A smiling child wearing a light blue knitted beanie and scarf",
+    ),
     referenceCategories: ["school"],
     faqIds: ["kids-sizes", "min-order", "no-design"],
     seo: {
@@ -234,7 +250,11 @@ export const industries: ContentStoreInput["industries"] = [
       ],
     },
     cta: { tr: "Koleksiyonunuzu Konuşalım", en: "Let's Talk About Your Collection" },
-    image: img(`${P}/setler/es/1.jpg`, "Deri etiketli gri bere ve atkı seti", "Grey beanie and scarf set with leather labels"),
+    image: img(
+      `${P}/setler/es/1.jpg`,
+      "Deri etiketli gri bere ve atkı seti",
+      "Grey beanie and scarf set with leather labels",
+    ),
     referenceCategories: ["private-label"],
     faqIds: ["private-label", "label-options", "min-order"],
     seo: {
