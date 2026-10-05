@@ -1,7 +1,9 @@
 import { ArrowRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Suspense } from "react";
 import { TrackedLink } from "@/components/analytics/tracked-link";
+import { TrackEvent } from "@/components/analytics/track-event";
 import { ContactForm } from "@/components/forms/contact-form";
+import { RequestForm } from "@/components/forms/request-form";
 import { RequestPrefill } from "@/components/forms/request-prefill";
 import { CtaBand } from "@/components/sections/cta-band";
 import { FaqList, FaqSection } from "@/components/sections/faq-section";
@@ -13,7 +15,8 @@ import { JsonLd } from "@/components/site/json-ld";
 import { Reveal } from "@/components/site/reveal";
 import { Section, SectionHeading } from "@/components/site/section";
 import type { Locale } from "@/i18n/config";
-import { getMessages } from "@/i18n/messages";
+import { redirect } from "next/navigation";
+import { format, getMessages } from "@/i18n/messages";
 import {
   getFaqs,
   getFormOptions,
@@ -24,6 +27,8 @@ import {
   getSiteSettings,
 } from "@/lib/content";
 import type { LegalPageId } from "@/lib/content/schema";
+import { getDbFormOptions } from "@/lib/form-options";
+import { consumeRequestSuccessEmail } from "@/lib/requests/success-cookie";
 import { getLinks, getSeo } from "@/lib/routing";
 import { faqJsonLd } from "@/lib/seo/jsonld";
 
@@ -176,9 +181,9 @@ export async function ContactView({ locale }: { locale: Locale }) {
     getPage("contact", locale),
     getSeo({ type: "page", id: "contact" }, locale),
     getSiteSettings(locale),
-    getFormOptions("country", locale),
+    getDbFormOptions("country", locale),
     getFormOptions("productInterest", locale),
-    getFormOptions("quantity", locale),
+    getDbFormOptions("quantity", locale),
     getLinks(locale),
   ]);
   const { contact } = settings;
@@ -202,6 +207,7 @@ export async function ContactView({ locale }: { locale: Locale }) {
         <div className="container-site grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:gap-16">
           <div className="rounded-[1.75rem] border border-cream-300 bg-cream-50 p-6 sm:p-10">
             <ContactForm
+              locale={locale}
               messages={messages.form}
               options={{
                 countries: toOptions(countries),
@@ -410,12 +416,13 @@ export async function LegalView({ locale, id }: { locale: Locale; id: LegalPageI
 
 export async function RequestView({ locale }: { locale: Locale }) {
   const messages = getMessages(locale);
-  const [page, seo, settings, products, industries, links] = await Promise.all([
+  const [page, seo, products, industries, quantities, countries, links] = await Promise.all([
     getPage("request", locale),
     getSeo({ type: "page", id: "request" }, locale),
-    getSiteSettings(locale),
     getProducts(locale),
     getIndustries(locale),
+    getDbFormOptions("quantity", locale),
+    getDbFormOptions("country", locale),
     getLinks(locale),
   ]);
 
@@ -426,6 +433,7 @@ export async function RequestView({ locale }: { locale: Locale }) {
         className="bg-weave pointer-events-none absolute -top-10 -right-20 h-80 w-80 [mask-image:radial-gradient(closest-side,black,transparent)] opacity-[0.12]"
       />
       <div className="container-site relative max-w-3xl">
+        <TrackEvent event="start_request" />
         <h1 className="text-display font-medium tracking-tight text-navy-900">{seo.h1}</h1>
         <p className="mt-6 text-lg leading-relaxed text-ink-600">{page.content.text}</p>
         <Suspense fallback={null}>
@@ -437,26 +445,26 @@ export async function RequestView({ locale }: { locale: Locale }) {
               industry: messages.request.prefilledIndustry,
             }}
           />
+          <RequestForm
+            locale={locale}
+            messages={messages.request}
+            formMessages={messages.form}
+            privacyHref={links.legal("disclosure")}
+            completeHref={links.page("requestComplete")}
+            products={products.map((p) => ({
+              id: p.id,
+              name: p.name,
+              categoryId: p.categoryId,
+            }))}
+            quantities={quantities}
+            countries={countries}
+            submitLabel={
+              "submitLabel" in page.content
+                ? String(page.content.submitLabel)
+                : messages.request.submit
+            }
+          />
         </Suspense>
-        {/* TODO(phase-2): Adım adım talep formu (ürün, model, renkler, logo, slogan, örnek model, adet, tarih, iletişim, KVKK). */}
-        <div
-          data-testid="request-phase-notice"
-          data-todo="phase-2"
-          className="mt-8 rounded-2xl border-2 border-dashed border-gold-500/60 bg-cream-50 p-6 sm:p-8"
-        >
-          <p className="font-heading text-xl font-medium text-navy-900">
-            {messages.request.phaseNoticeTitle}
-          </p>
-          <p className="mt-2 leading-relaxed text-ink-600">{messages.request.phaseNotice}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <ButtonLink href={links.page("contact")} variant="primary" size="md">
-              {messages.request.contactInstead}
-            </ButtonLink>
-            <ButtonLink href={links.page("products")} variant="outline" size="md">
-              {settings.ctas.browseProducts}
-            </ButtonLink>
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -464,12 +472,15 @@ export async function RequestView({ locale }: { locale: Locale }) {
 
 export async function RequestCompleteView({ locale }: { locale: Locale }) {
   const messages = getMessages(locale);
-  const [page, seo, settings, links] = await Promise.all([
+  const [page, seo, settings, links, email] = await Promise.all([
     getPage("requestComplete", locale),
     getSeo({ type: "page", id: "requestComplete" }, locale),
     getSiteSettings(locale),
     getLinks(locale),
+    consumeRequestSuccessEmail(),
   ]);
+  if (!email) redirect(links.home());
+
   return (
     <section className="bg-cream-100 py-20 sm:py-28">
       <div className="container-site max-w-3xl text-center">
@@ -477,12 +488,8 @@ export async function RequestCompleteView({ locale }: { locale: Locale }) {
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-600">
           {page.content.text}
         </p>
-        {/* TODO(phase-2): Yalnızca başarılı gönderimden sonra erişilebilir olacak; e-posta adresi burada gösterilecek. */}
-        <p
-          data-todo="phase-2"
-          className="mx-auto mt-8 max-w-xl rounded-2xl border-2 border-dashed border-gold-500/60 bg-cream-50 p-5 text-sm text-ink-600"
-        >
-          {messages.request.phaseNoticeTitle}
+        <p className="mx-auto mt-8 max-w-xl rounded-2xl border border-gold-500/40 bg-cream-50 p-5 text-sm text-navy-900">
+          {format(messages.request.emailShown, { email })}
         </p>
         <ButtonLink href={links.page("products")} variant="primary" size="lg" className="mt-10">
           {settings.ctas.otherProducts}

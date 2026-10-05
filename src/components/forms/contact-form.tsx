@@ -4,6 +4,7 @@ import { CheckCircle2, CircleAlert } from "lucide-react";
 import Link from "next/link";
 import { useId, useRef, useState, type ReactNode } from "react";
 import type { Messages } from "@/i18n/messages";
+import { track } from "@/lib/analytics/events";
 import { cn } from "@/lib/utils";
 import {
   contactFormSchema,
@@ -36,11 +37,13 @@ const inputClass =
   "block h-12 w-full rounded-xl border border-input bg-cream-50 px-4 text-base text-navy-900 transition-colors placeholder:text-ink-500 focus-visible:border-navy-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-navy-700 aria-invalid:border-destructive";
 
 export function ContactForm({
+  locale,
   messages,
   options,
   privacyHref,
   submitLabel,
 }: {
+  locale: "tr" | "en";
   messages: Messages["form"];
   options: { countries: Option[]; products: Option[]; quantities: Option[] };
   privacyHref: string;
@@ -51,6 +54,8 @@ export function ContactForm({
   const noticeRef = useRef<HTMLDivElement>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const errorText = (code: string) => {
     const parsed = parseErrorCode(code);
@@ -87,26 +92,46 @@ export function ContactForm({
     return { ok: result.success, errors: next };
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { ok, errors: nextErrors } = validate(event.currentTarget);
+    const form = event.currentTarget;
+    const { ok, errors: nextErrors } = validate(form);
     setErrors(nextErrors);
+    setServerError(null);
     if (!ok) {
       setSubmitted(false);
       const first = FIELD_ORDER.find((f) => nextErrors[f]);
       requestAnimationFrame(() => {
         summaryRef.current?.focus();
         if (first)
-          event.currentTarget
-            ?.querySelector<HTMLElement>(`[name="${first}"]`)
-            ?.scrollIntoView({ block: "center" });
+          form.querySelector<HTMLElement>(`[name="${first}"]`)?.scrollIntoView({
+            block: "center",
+          });
       });
       return;
     }
-    // TODO(phase-2): Sunucu tarafı gönderim (Supabase `contact_messages`, Turnstile, rate limit).
-    // Faz 1'de kullanıcı verisi hiçbir yere gönderilmez.
-    setSubmitted(true);
-    requestAnimationFrame(() => noticeRef.current?.focus());
+
+    setPending(true);
+    try {
+      const payload = { ...readForm(form), locale, website: "", turnstileToken: "" };
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        setServerError(messages.errors.submitFailed);
+        return;
+      }
+      setSubmitted(true);
+      form.reset();
+      track("contact_submit");
+      requestAnimationFrame(() => noticeRef.current?.focus());
+    } catch {
+      setServerError(messages.errors.submitFailed);
+    } finally {
+      setPending(false);
+    }
   };
 
   const onBlurField = (event: React.FocusEvent<HTMLFormElement>) => {
@@ -139,7 +164,7 @@ export function ContactForm({
       noValidate
       onSubmit={onSubmit}
       onBlur={onBlurField}
-      className="space-y-6"
+      className="relative space-y-6"
       aria-describedby={`${formId}-hint`}
     >
       <p id={`${formId}-hint`} className="text-sm text-ink-600">
@@ -161,21 +186,43 @@ export function ContactForm({
         </div>
       ) : null}
 
+      {serverError ? (
+        <div
+          role="alert"
+          className="flex gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+        >
+          <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
+          <p>{serverError}</p>
+        </div>
+      ) : null}
+
       {submitted ? (
         <div
           ref={noticeRef}
           tabIndex={-1}
           role="status"
-          data-testid="contact-phase-notice"
+          data-testid="contact-success"
           className="flex gap-3 rounded-xl border border-gold-500/40 bg-gold-200/40 p-4 text-sm text-navy-900"
         >
           <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0 text-gold-700" />
           <div>
-            <p className="font-semibold">{messages.phaseNoticeTitle}</p>
-            <p className="mt-1 text-ink-600">{messages.phaseNotice}</p>
+            <p className="font-semibold">{messages.successTitle}</p>
+            <p className="mt-1 text-ink-600">{messages.successText}</p>
           </div>
         </div>
       ) : null}
+
+      {/* Honeypot */}
+      <div aria-hidden className="absolute top-auto -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor={`${formId}-website`}>Website</label>
+        <input
+          id={`${formId}-website`}
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
@@ -328,9 +375,10 @@ export function ContactForm({
 
       <button
         type="submit"
+        disabled={pending}
         className={cn(ctaVariants({ variant: "primary", size: "lg" }), "w-full sm:w-auto")}
       >
-        {submitLabel}
+        {pending ? "…" : submitLabel}
       </button>
     </form>
   );
