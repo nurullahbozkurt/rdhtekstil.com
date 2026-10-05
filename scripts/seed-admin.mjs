@@ -26,8 +26,8 @@ if (!url || !serviceKey || !email || !password) {
   process.exit(1);
 }
 
-if (password.length < 12) {
-  console.error("ADMIN_PASSWORD en az 12 karakter olmalı.");
+if (password.length < 8) {
+  console.error("ADMIN_PASSWORD en az 8 karakter olmalı.");
   process.exit(1);
 }
 
