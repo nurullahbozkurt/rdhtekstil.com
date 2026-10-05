@@ -94,7 +94,6 @@ export async function HomeView({ locale }: { locale: Locale }) {
                   image={heroSecond}
                   sizes="(min-width: 1024px) 20vw, 40vw"
                   placeholderLabel={placeholder}
-                  preload
                 />
               </div>
             ) : null}
@@ -104,7 +103,6 @@ export async function HomeView({ locale }: { locale: Locale }) {
                   image={heroThird}
                   sizes="(min-width: 1024px) 20vw, 40vw"
                   placeholderLabel={placeholder}
-                  preload
                 />
               </div>
             ) : null}

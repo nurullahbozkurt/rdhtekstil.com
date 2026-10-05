@@ -33,6 +33,7 @@ const tr = {
     placeholderBadge: "Örnek içerik",
   },
   catalog: {
+    modelsTitle: "Referans Modeller",
     filterLabel: "Ürün tipine göre filtrele",
     noResults: "Bu filtreye uygun ürün bulunamadı.",
     features: "Özellikler",

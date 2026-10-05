@@ -31,6 +31,7 @@ const en: Messages = {
     placeholderBadge: "Placeholder content",
   },
   catalog: {
+    modelsTitle: "Reference Models",
     filterLabel: "Filter by product type",
     noResults: "No products match this filter.",
     features: "Features",

@@ -46,7 +46,6 @@ export function LanguageSwitcher({
               hrefLang={localeSettings[l].hreflang}
               lang={l}
               aria-current={active ? "true" : undefined}
-              aria-label={localeSettings[l].label}
               onClick={() => {
                 document.cookie = `${LOCALE_COOKIE}=${l}; path=/; max-age=31536000; samesite=lax`;
               }}
@@ -62,6 +61,7 @@ export function LanguageSwitcher({
               )}
             >
               {localeSettings[l].short}
+              <span className="sr-only"> {localeSettings[l].label}</span>
             </Link>
           </span>
         );

@@ -157,6 +157,9 @@ export async function CategoryView({ locale, id }: { locale: Locale; id: Categor
       />
       <Section tone="cream" className="pt-12 sm:pt-16 lg:pt-20">
         <div className="container-site">
+          <h2 className="mb-8 font-heading text-2xl font-medium text-navy-900 sm:text-3xl">
+            {messages.catalog.modelsTitle}
+          </h2>
           <ProductGrid products={cards} types={types} labels={gridLabels(messages)} />
           <p className="mt-12 text-sm text-ink-600">{messages.catalog.noPrice}</p>
         </div>
