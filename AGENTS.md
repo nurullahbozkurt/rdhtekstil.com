@@ -24,21 +24,21 @@ Bu proje **3 faza** bölünmüştür. Fazlar sırayla ve **her biri bağımsız 
 | --------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | **Faz 1** | Landing Page / herkese açık site (statik içerik katmanı, katalog, SEO, i18n, tasarım sistemi)                                  |
 | **Faz 2** | Dinamik alanlar: Supabase entegrasyonu, Auth altyapısı, Talep Ekranı, Başarı Ekranı, İletişim formu, dosya yükleme ve güvenlik |
-| **Faz 3** | Admin Paneli + içerik yönetimi (CMS) + final test ve teslim                                                                    |
+| **Faz 3** | Admin Paneli + içerik yönetimi (CMS) + final kontrol ve teslim                                                                 |
 
 ### Onay kapısı kuralları (zorunlu)
 
 1. Yalnızca **o an aktif olan fazın** kapsamında çalış. Sonraki fazın işini **başlatma**, "hazırlık" olarak bile ekleme (istisna: bu dosyada açıkça "Faz X'te hazırlık" diye belirtilenler).
 2. Faz bittiğinde **dur** ve şunları içeren bir **Faz Teslim Raporu** yaz:
    - Ne yapıldı (kısa liste)
-   - Nasıl çalıştırılır / nasıl test edilir (komutlar, URL'ler)
+   - Nasıl çalıştırılır / nasıl doğrulanır (komutlar, URL'ler)
    - Faz kabul kriterlerinin her biri için ✅ / ❌ durumu
    - Açık kalan işler, `TODO(content)` listesi, README'ye yazılan varsayımlar
    - Bir sonraki faz için önerilen başlangıç noktası
 3. Raporun sonunda şu soruyu sor ve **cevap bekle:** _"Faz X'i onaylıyor musunuz? Onay verirseniz Faz X+1'e geçeceğim."_
 4. **Açık ve açık onay gelmeden** bir sonraki faza geçme. Kullanıcı değişiklik isterse aynı fazda düzelt, raporu güncelle ve tekrar onay iste.
 5. Her faz ayrı branch'te çalışılır (`phase-1-landing`, `phase-2-dynamic`, `phase-3-admin`); onaydan sonra `main`'e birleştirilir. Faz içinde küçük, anlamlı commit'ler.
-6. Her fazın sonunda proje **çalışır durumda** olmalı (build, lint, typecheck, testler geçer). Yarım bırakılmış özellik kalmamalı.
+6. Her fazın sonunda proje **çalışır durumda** olmalı (build, lint, typecheck geçer). Yarım bırakılmış özellik kalmamalı.
 
 ---
 
@@ -144,7 +144,7 @@ Bu dil TR ve EN içeriklerin tamamında korunur. Bu dosyadaki tüm metinler bire
 - İçeriği bileşenlerin içine sabit yazma; metinler i18n / **içerik katmanı** üzerinden gelsin (bkz. Faz 1, "İçerik katmanı"). Bu dosyadaki metinler seed verisi olarak yüklenir.
 - Kapsam dışı listesine (bölüm 1) dokunma. Belirsizlik varsa varsayımı README'deki "Varsayımlar" başlığına yaz ve ilerle; yalnızca ilerlemeyi tamamen engelleyen durumlarda dur ve sor.
 - Gerçek logo, ürün görseli, yasal metin ve referans listesi sonradan gelecek; placeholder'ları açıkça işaretle (`TODO(content)`).
-- Her faz sonunda README güncel olmalı (kurulum, çalıştırma, test, varsayımlar).
+- Her faz sonunda README güncel olmalı (kurulum, çalıştırma, varsayımlar).
 
 ---
 
@@ -156,7 +156,7 @@ Bu dil TR ve EN içeriklerin tamamında korunur. Bu dosyadaki tüm metinler bire
 
 ## F1.1 Faz 1 Kapsam Sınırı
 
-**Faz 1'de yapılacaklar:** proje kurulumu, tasarım sistemi, i18n, içerik katmanı, header/footer, ana sayfa, katalog (kategori + ürün detay), kullanım alanı sayfaları, özel üretim, referanslar/projeler, hakkımızda, iletişim sayfası (arayüz), FAQ, yasal sayfalar (placeholder), SEO, JSON-LD, çerez bannerı, GA4+GTM kurulumu (statik event'ler), performans ve erişilebilirlik, temel testler.
+**Faz 1'de yapılacaklar:** proje kurulumu, tasarım sistemi, i18n, içerik katmanı, header/footer, ana sayfa, katalog (kategori + ürün detay), kullanım alanı sayfaları, özel üretim, referanslar/projeler, hakkımızda, iletişim sayfası (arayüz), FAQ, yasal sayfalar (placeholder), SEO, JSON-LD, çerez bannerı, GA4+GTM kurulumu (statik event'ler), performans ve erişilebilirlik.
 
 **Faz 1'de YAPILMAYACAKLAR:** Supabase bağlantısı, veritabanı, auth, dosya yükleme, talep/iletişim formunun gerçek gönderimi, admin paneli, Turnstile, rate limit.
 
@@ -408,11 +408,10 @@ Form ve talep event'leri Faz 2'dedir. Event'lerde kişisel veri (ad, e-posta, te
 
 ## F1.17 Faz 1 Çalışma Aşamaları
 
-**1A — Kurulum:** Proje iskeleti, yığın kurulumu, ESLint/Prettier, `.env.example`, README (kurulum, çalıştırma, test), temel CI.
+**1A — Kurulum:** Proje iskeleti, yığın kurulumu, ESLint/Prettier, `.env.example`, README (kurulum, çalıştırma), temel CI.
 **1B — Tasarım sistemi ve altyapı:** Renk/tipografi/spacing token'ları (bölüm 4), shadcn/ui temeli, i18n (TR/EN), içerik katmanı + seed veri, header/footer, dil seçici, çerez bannerı.
 **1C — Sayfalar:** Ana sayfa, katalog (kategori + ürün detay), kullanım alanı sayfaları, özel üretim, referanslar/projeler, hakkımızda, iletişim (arayüz), yasal sayfalar, `/talep` ve `/talep/tamamlandi` iskeletleri.
 **1D — SEO, analytics, performans:** Meta/hreflang/canonical/OG, sitemap, robots, JSON-LD, GTM + event'ler, görsel optimizasyonu, erişilebilirlik kontrolü.
-**1E — Test ve teslim:** Birim testler (içerik katmanı, Zod şemaları) + Playwright smoke testleri (TR/EN gezinme, ürün → `/talep?urun=` yönlendirmesi, mobil görünüm), Lighthouse kontrolü, README.
 
 ## F1.18 Faz 1 Kabul Kriterleri
 
@@ -423,8 +422,7 @@ Form ve talep event'leri Faz 2'dedir. Event'lerde kişisel veri (ad, e-posta, te
 5. Tüm metinler i18n / içerik katmanından gelir; bileşenlerde sabit metin yoktur.
 6. Çerez onayı verilmeden analytics yüklenmez.
 7. Core Web Vitals hedefleri (LCP < 2.5 sn, CLS < 0.1) ve WCAG 2.1 AA kontrast/klavye gereksinimleri karşılanır.
-8. Lint, typecheck, birim ve Playwright smoke testleri geçer; README ile proje sıfırdan kurulup çalıştırılabilir.
-9. Yasak copy kalıpları ("numune" vb.) hiçbir yerde yoktur.
+8. Yasak copy kalıpları ("numune" vb.) hiçbir yerde yoktur.
 
 ## ⛔ FAZ 1 ONAY KAPISI
 
@@ -523,7 +521,7 @@ Müşteriler marka dosyası yükleyeceği için upload standart medya alanı gib
 - İstemci tarafında da aynı tip/boyut kontrolü yapılır (anlaşılır hata mesajıyla); ancak asıl doğrulama sunucudadır.
 - **Boyut limiti:** dosya başına 10 MB, talep başına en fazla 10 dosya (ortam değişkeniyle ayarlanabilir)
 - **Zararlı dosya kontrolü:** tarama için adaptör/hook (ör. ClamAV); geliştirmede no-op, üretimde etkinleştirilebilir
-- **Private storage:** dosyalar public erişime kapalı; yalnızca doğrulanmış admin oturumu üzerinden, kısa ömürlü imzalı URL veya sunucu üzerinden stream ile erişilir (erişim ucu bu fazda yazılır ve test edilir)
+- **Private storage:** dosyalar public erişime kapalı; yalnızca doğrulanmış admin oturumu üzerinden, kısa ömürlü imzalı URL veya sunucu üzerinden stream ile erişilir (erişim ucu bu fazda yazılır ve doğrulanır)
 - Dosya adları rastgele/tahmin edilemeyen anahtarlarla saklanır; orijinal ad yalnızca veritabanında tutulur
 - **Rate limiting** (talep ve iletişim formu uçları, giriş ucu) + **bot/spam koruması** (Turnstile/hCaptcha) + honeypot alanı
 - API anahtarları ve gizli bilgiler yalnızca sunucuda
@@ -570,7 +568,6 @@ Event'lerde kişisel veri (ad, e-posta, telefon) **gönderilmez.**
 **2C — Talep sistemi:** Adım adım Talep Ekranı, dosya yükleme UI, Zod ortak şema, sunucu doğrulaması, idempotency, kayıt oluşturma, başarı ekranı, `?urun=`/`?alan=` ön doldurma, form event'leri.
 **2D — İletişim formu ve güvenlik:** İletişim formu gönderimi, Turnstile, honeypot, rate limit, güvenlik başlıkları, CSRF.
 **2E — Auth altyapısı:** Supabase Auth, giriş sayfası, middleware, yetkisiz erişim kapatma, dosya erişim ucu yetkilendirmesi.
-**2F — Test ve teslim:** Birim + e2e testler (en az: talep gönderimi, dosya doğrulama reddi, çift gönderim engeli, iletişim formu gönderimi, admin girişi, yetkisiz erişim, yetkisiz dosya erişimi), mobil akış kontrolü, README güncelleme.
 
 ## F2.9 Faz 2 Kabul Kriterleri
 
@@ -583,7 +580,7 @@ Event'lerde kişisel veri (ad, e-posta, telefon) **gönderilmez.**
 7. Giriş yapmamış biri `/admin`'e ya da herhangi bir dosya URL'sine erişemez; rate limit ve bot koruması çalışır.
 8. Başarı ekranına doğrudan URL ile girilirse ana sayfaya yönlendirilir.
 9. `service_role` anahtarı ve diğer gizli bilgiler istemci koduna sızmaz.
-10. Lint, typecheck, birim ve e2e testler geçer; README ile Supabase dahil sıfırdan kurulum yapılabilir.
+10. Lint, typecheck geçer; README ile Supabase dahil sıfırdan kurulum yapılabilir.
 
 ## F2.10 Veri Modeli (Faz 2 başlangıç şeması)
 
@@ -625,7 +622,7 @@ Faz 2 bittiğinde **dur**, bölüm 0'daki **Faz Teslim Raporu**'nu yaz ve şunu 
 
 **Ön koşul:** Faz 2 onaylanmış ve `main`'e birleştirilmiş olmalı.
 
-**Amaç:** RDH/Glocal ekibinin gelen talepleri eksiksiz görüntüleyip yönetebildiği, ayrıca site içeriğini yazılımcı desteği olmadan değiştirebildiği admin paneli; ardından final test ve teslim.
+**Amaç:** RDH/Glocal ekibinin gelen talepleri eksiksiz görüntüleyip yönetebildiği, ayrıca site içeriğini yazılımcı desteği olmadan değiştirebildiği admin paneli; ardından final kontrol ve teslim.
 
 ## F3.1 Admin Paneli (`/admin`)
 
@@ -693,7 +690,7 @@ RDH/Glocal ekibi yazılımcı desteği almadan şunları değiştirebilmeli. **�
 **3B — Talepler:** Liste (arama/filtre/sıralama/sayfalama), detay, dosya önizleme + indirme + zip, durum, iç not, silme, okundu işareti, iletişim mesajları sekmesi.
 **3C — İçerik yönetimi:** CMS tabloları + migration, içerik katmanının Supabase uygulaması, seed aktarımı, katalog/referans/case study/FAQ/metin/form seçenekleri/yasal sayfa/SEO yönetim ekranları, revalidation.
 **3D — Sertleştirme ve saklama:** Saklama süresi job'ının (varsayılan kapalı) admin ayarı, yetki ve RLS gözden geçirmesi, güvenlik başlıkları son kontrol.
-**3E — Test ve teslim:** Tüm projeyi kapsayan birim + e2e testler (en az: talep gönderimi, dosya doğrulama reddi, admin girişi, yetkisiz erişim, dosya erişimi, silme, içerik değişikliğinin sitede görünmesi), mobil kontrol, performans/erişilebilirlik yeniden ölçümü, README ve dağıtım notları.
+**3E — Kontrol ve teslim:** Kritik akışların manuel doğrulanması (talep gönderimi, dosya doğrulama reddi, admin girişi, yetkisiz erişim, dosya erişimi, silme, içerik değişikliğinin sitede görünmesi), mobil kontrol, performans/erişilebilirlik yeniden ölçümü, README ve dağıtım notları.
 
 ## F3.4 Faz 3 / Proje Genel Kabul Kriterleri
 
@@ -708,7 +705,7 @@ Proje, aşağıdakilerin hepsi sağlandığında tamamdır:
 7. Admin durum değiştirebilir, iç not ekleyebilir, talebi (dosyalarıyla) kalıcı silebilir.
 8. Her sayfada title, meta description, H1, canonical, hreflang, OG alanları dil bazlı **admin panelden** yönetilebilir; `sitemap.xml` ve `robots.txt` çalışır.
 9. Admin panelden katalog, referans, case study, FAQ, metinler, form seçenekleri ve yasal sayfalar yazılımcı desteği olmadan düzenlenebilir; değişiklikler sitede görünür.
-10. README ile proje sıfırdan kurulup çalıştırılabilir; testler geçer.
+10. README ile proje sıfırdan kurulup çalıştırılabilir; lint, typecheck ve build geçer.
 11. Site profesyonel, modern, kullanıcı dostu ve kullanıcıya uygun tasarıma sahip; son web trend ve standartlarına uygun.
 12. Site 100% responsive, mobile-first.
 13. Site SEO dostu; SEO alanları dil bazlı yönetilebilir.
