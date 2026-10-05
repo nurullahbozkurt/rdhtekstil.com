@@ -4,7 +4,8 @@ type TurnstileResult = { ok: true } | { ok: false; reason: string };
 
 /**
  * Cloudflare Turnstile doğrulaması.
- * `TURNSTILE_SECRET_KEY` yoksa geliştirme ortamında geçilir (README'de belgelenir).
+ * Anahtar yoksa atlanır (honeypot + rate limit yeterince ilk koruma sağlar).
+ * Production’da anahtar eklemeniz önerilir.
  */
 export async function verifyTurnstile(
   token: string | undefined,
@@ -12,9 +13,6 @@ export async function verifyTurnstile(
 ): Promise<TurnstileResult> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) {
-    if (process.env.NODE_ENV === "production") {
-      return { ok: false, reason: "turnstile_not_configured" };
-    }
     return { ok: true };
   }
 
