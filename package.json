@@ -15,6 +15,7 @@
     "supabase:stop": "npx supabase stop",
     "supabase:reset": "npx supabase db reset",
     "seed:admin": "node --env-file=.env.local scripts/seed-admin.mjs",
+    "seed:cms": "npx tsx --env-file=.env.local scripts/seed-cms.mts",
     "link:admin": "node --env-file=.env.local scripts/link-admin.mjs"
   },
   "engines": {

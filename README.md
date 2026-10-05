@@ -67,6 +67,7 @@ npm run dev
 | `npm run build` / `start` | Üretim |
 | `npm run lint` / `typecheck` / `check` | Kalite |
 | `npm run seed:admin` / `link:admin` | Admin |
+| `npm run seed:cms` | Yerel içeriği Supabase CMS’e aktar |
 | `node --env-file=.env.local scripts/retention-cleanup.mjs` | Saklama süresi temizliği (varsayılan kapalı) |
 
 ## Fazlar
