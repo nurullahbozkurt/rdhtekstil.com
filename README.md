@@ -93,7 +93,7 @@ npm run dev
 - Turnstile boşken atlanır; honeypot + rate limit aktif
 - Rate limit bellek içi (tek instance)
 - Admin rotası locale dışında: `/admin`
-- Katalog ürün alanlarının tam form editörü sonraki iterasyonda genişletilebilir; seed + özet + metin alanları paneldan yönetilir
+- Katalog (ad/özet) ve SEO (slug/title/description/H1) paneldan düzenlenir; görsel yükleme content-media bucket’ına sonraki iterasyonda eklenebilir
 - GTM şimdilik boş
 
 ## TODO(content)

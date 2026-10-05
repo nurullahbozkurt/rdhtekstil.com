@@ -11,7 +11,8 @@ const sections = [
   { href: "/admin/content/form-options", label: "Form seçenekleri", text: "Adet aralıkları ve ülkeler" },
   { href: "/admin/content/references", label: "Referanslar", text: "Marka logoları ve izin durumu" },
   { href: "/admin/content/case-studies", label: "Projeler", text: "Case study başlık ve özetleri" },
-  { href: "/admin/content/catalog", label: "Katalog özeti", text: "Ürün / kategori / kullanım alanı (seed üzerinden)" },
+  { href: "/admin/content/catalog", label: "Katalog", text: "Ürün / kategori / kullanım alanı metinleri" },
+  { href: "/admin/content/seo", label: "SEO", text: "Slug, title, description, H1 (TR/EN)" },
 ] as const;
 
 export default async function AdminContentPage() {

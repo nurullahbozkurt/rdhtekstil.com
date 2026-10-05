@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/auth/admin";
 import { patchCmsStore } from "@/lib/content/cms-store";
 import { clearContentCache } from "@/lib/content/source";
+import type { SeoFields } from "@/lib/content/schema";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { assertSameOrigin } from "@/lib/security/origin";
 
@@ -70,6 +71,67 @@ const caseStudyPatch = z.object({
   summaryTr: z.string().min(1),
   summaryEn: z.string().min(1),
 });
+
+const productPatch = z.object({
+  type: z.literal("product"),
+  id: z.string().min(1),
+  nameTr: z.string().min(1),
+  nameEn: z.string().min(1),
+  summaryTr: z.string().min(1),
+  summaryEn: z.string().min(1),
+});
+
+const categoryPatch = z.object({
+  type: z.literal("category"),
+  id: z.string().min(1),
+  nameTr: z.string().min(1),
+  nameEn: z.string().min(1),
+});
+
+const industryPatch = z.object({
+  type: z.literal("industry"),
+  id: z.string().min(1),
+  nameTr: z.string().min(1),
+  nameEn: z.string().min(1),
+  ctaTr: z.string().min(1),
+  ctaEn: z.string().min(1),
+});
+
+const seoPatch = z.object({
+  type: z.literal("seo"),
+  kind: z.enum(["page", "category", "product", "industry"]),
+  key: z.string().min(1),
+  slugTr: z.string(),
+  slugEn: z.string(),
+  titleTr: z.string().min(10).max(70),
+  titleEn: z.string().min(10).max(70),
+  descriptionTr: z.string().min(50).max(170),
+  descriptionEn: z.string().min(50).max(170),
+  h1Tr: z.string().min(1),
+  h1En: z.string().min(1),
+});
+
+function applySeo(
+  existing: { tr: SeoFields; en: SeoFields },
+  parsed: z.infer<typeof seoPatch>,
+): { tr: SeoFields; en: SeoFields } {
+  return {
+    tr: {
+      ...existing.tr,
+      slug: parsed.slugTr,
+      title: parsed.titleTr,
+      description: parsed.descriptionTr,
+      h1: parsed.h1Tr,
+    },
+    en: {
+      ...existing.en,
+      slug: parsed.slugEn,
+      title: parsed.titleEn,
+      description: parsed.descriptionEn,
+      h1: parsed.h1En,
+    },
+  };
+}
 
 export async function PATCH(request: Request) {
   if (!assertSameOrigin(request)) {
@@ -209,6 +271,85 @@ export async function PATCH(request: Request) {
             : cs,
         ),
       }), session.user.id);
+    } else if (json?.type === "product") {
+      const parsed = productPatch.parse(json);
+      await patchCmsStore((store) => ({
+        ...store,
+        products: store.products.map((p) =>
+          p.id === parsed.id
+            ? {
+                ...p,
+                name: { tr: parsed.nameTr, en: parsed.nameEn },
+                summary: { tr: parsed.summaryTr, en: parsed.summaryEn },
+              }
+            : p,
+        ),
+      }), session.user.id);
+    } else if (json?.type === "category") {
+      const parsed = categoryPatch.parse(json);
+      await patchCmsStore((store) => ({
+        ...store,
+        categories: store.categories.map((c) =>
+          c.id === parsed.id
+            ? { ...c, name: { tr: parsed.nameTr, en: parsed.nameEn } }
+            : c,
+        ),
+      }), session.user.id);
+    } else if (json?.type === "industry") {
+      const parsed = industryPatch.parse(json);
+      await patchCmsStore((store) => ({
+        ...store,
+        industries: store.industries.map((i) =>
+          i.id === parsed.id
+            ? {
+                ...i,
+                name: { tr: parsed.nameTr, en: parsed.nameEn },
+                cta: { tr: parsed.ctaTr, en: parsed.ctaEn },
+              }
+            : i,
+        ),
+      }), session.user.id);
+    } else if (json?.type === "seo") {
+      const parsed = seoPatch.parse(json);
+      await patchCmsStore((store) => {
+        if (parsed.kind === "page") {
+          const pageKey = parsed.key as keyof typeof store.pages;
+          const page = store.pages[pageKey];
+          if (!page) throw new Error("unknown_page");
+          return {
+            ...store,
+            pages: {
+              ...store.pages,
+              [pageKey]: {
+                ...page,
+                seo: applySeo(page.seo, parsed),
+              },
+            },
+          };
+        }
+        if (parsed.kind === "category") {
+          return {
+            ...store,
+            categories: store.categories.map((c) =>
+              c.id === parsed.key ? { ...c, seo: applySeo(c.seo, parsed) } : c,
+            ),
+          };
+        }
+        if (parsed.kind === "product") {
+          return {
+            ...store,
+            products: store.products.map((p) =>
+              p.id === parsed.key ? { ...p, seo: applySeo(p.seo, parsed) } : p,
+            ),
+          };
+        }
+        return {
+          ...store,
+          industries: store.industries.map((i) =>
+            i.id === parsed.key ? { ...i, seo: applySeo(i.seo, parsed) } : i,
+          ),
+        };
+      }, session.user.id);
     } else {
       return NextResponse.json({ error: "unknown_type" }, { status: 400 });
     }
