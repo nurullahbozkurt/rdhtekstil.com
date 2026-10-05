@@ -3,10 +3,13 @@ import { HtmlLang } from "@/components/site/html-lang";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
-  title: "Admin | RDH Tekstil",
+  title: {
+    default: "Admin | RDH Tekstil",
+    template: "%s | RDH Admin",
+  },
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <HtmlLang lang="tr" />

@@ -1,6 +1,6 @@
-# RDH Tekstil — Kurumsal Web Sitesi
+# RDH Tekstil — Kurumsal Web Sitesi + Talep Sistemi + Admin
 
-Özel tasarım bere ve atkı üreticisi RDH Tekstil için TR + EN kurumsal site + talep sistemi (Faz 2).
+Özel tasarım bere ve atkı üreticisi RDH Tekstil için TR + EN kurumsal site, talep sistemi ve admin paneli.
 
 ## Gereksinimler
 
@@ -21,8 +21,12 @@ npm install
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable key)
 - `SUPABASE_SERVICE_ROLE_KEY` (secret key — yalnızca sunucu)
 
-Şema: SQL Editor’da `supabase/migrations/20261005142724_phase2_schema.sql` çalıştırın  
-veya `npx supabase link --project-ref <ref> && npx supabase db push`.
+### Şema (SQL Editor)
+
+Sırayla çalıştırın:
+
+1. `supabase/migrations/20261005142724_phase2_schema.sql`
+2. `supabase/FAZ3_SQL.sql` (veya iki Faz 3 migration dosyası)
 
 Admin:
 
@@ -39,6 +43,8 @@ npm run dev
 
 - Site: http://localhost:3000  
 - Admin: http://localhost:3000/admin/login  
+
+İlk girişten sonra **İçerik → Yerel içeriği Supabase’e aktar** ile CMS seed’ini çalıştırın.
 
 ## Ortam değişkenleri
 
@@ -61,17 +67,25 @@ npm run dev
 | `npm run build` / `start` | Üretim |
 | `npm run lint` / `typecheck` / `check` | Kalite |
 | `npm run seed:admin` / `link:admin` | Admin |
+| `node --env-file=.env.local scripts/retention-cleanup.mjs` | Saklama süresi temizliği (varsayılan kapalı) |
 
-## Faz 2 kapsamı
+## Fazlar
 
-- Supabase şema + RLS + private `request-files` bucket
-- Adım adım talep formu + dosya yükleme (tip/boyut/magic bytes/SVG sanitize)
-- İletişim formu gerçek gönderim
-- Honeypot + rate limit (+ opsiyonel Turnstile)
-- Admin giriş + placeholder (`/admin`); panel UI Faz 3
-- Dosya erişimi: `/api/admin/files/[id]` (imzalı URL)
+| Faz | Durum |
+| --- | --- |
+| 1 Landing | Tamam |
+| 2 Dinamik alanlar | Tamam |
+| 3 Admin + CMS | Bu branch |
 
-Katalog hâlâ yerel içerik katmanından gelir.
+### Admin paneli
+
+- Talepler: arama, filtre, detay, durum, iç not, dosya önizleme/indirme/zip, silme
+- İletişim mesajları
+- Kullanıcı yönetimi (ekle / sil / parola; son admin silinemez)
+- CMS: FAQ, yasal, CTA/başarı metni, form seçenekleri, referanslar, case study, katalog özeti + seed
+- Ayarlar: saklama süresi (job varsayılan kapalı)
+
+İçerik katmanı arayüzü (`getProducts` vb.) korunur; CMS kaydı varsa Supabase’ten, yoksa yerel seed’den okunur.
 
 ## Varsayımlar
 
@@ -79,6 +93,7 @@ Katalog hâlâ yerel içerik katmanından gelir.
 - Turnstile boşken atlanır; honeypot + rate limit aktif
 - Rate limit bellek içi (tek instance)
 - Admin rotası locale dışında: `/admin`
+- Katalog ürün alanlarının tam form editörü sonraki iterasyonda genişletilebilir; seed + özet + metin alanları paneldan yönetilir
 - GTM şimdilik boş
 
 ## TODO(content)
@@ -88,7 +103,8 @@ Katalog hâlâ yerel içerik katmanından gelir.
 
 ## Dağıtım
 
-1. Migration’ı uzak Supabase’e uygulayın
+1. Faz 2 + Faz 3 migration’larını uzak Supabase’e uygulayın
 2. Env’leri hosting’e ekleyin (`SERVICE_ROLE` yalnızca sunucu)
 3. `npm run seed:admin` (bir kez)
-4. `npm run build && npm run start`
+4. Admin → İçerik seed
+5. `npm run build && npm run start`
