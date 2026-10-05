@@ -1,0 +1,167 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * RDH Tekstil tasarım token'ları
+ * Lacivert (ana) · krem / kırık beyaz (zemin) · altın (vurgu)
+ * Kontrast: navy-900 / cream-100 ≈ 14:1, ink-600 / cream-100 ≈ 6.9:1,
+ * gold-700 / cream-100 ≈ 4.8:1 (metin), gold-400 / navy-800 ≈ 7.2:1.
+ */
+@theme {
+  --color-navy-950: #0b1428;
+  --color-navy-900: #111d36;
+  --color-navy-800: #17264a;
+  --color-navy-700: #22345e;
+  --color-navy-600: #33477a;
+  --color-navy-500: #4f6396;
+
+  --color-cream-50: #fcfaf5;
+  --color-cream-100: #f7f2e8;
+  --color-cream-200: #efe7d6;
+  --color-cream-300: #e3d7bf;
+  --color-cream-400: #cfbf9f;
+
+  --color-gold-200: #efdcb3;
+  --color-gold-300: #e2c68e;
+  --color-gold-400: #d4ae6a;
+  --color-gold-500: #b8893b;
+  --color-gold-700: #8a6424;
+
+  --color-ink-600: #4a5570;
+  --color-ink-500: #5d6884;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --text-display: clamp(2.5rem, 1.6rem + 3.6vw, 4.75rem);
+  --text-display--line-height: 1.02;
+  --text-h2: clamp(1.9rem, 1.4rem + 2vw, 3.1rem);
+  --text-h2--line-height: 1.08;
+
+  --animate-marquee: marquee 48s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: var(--color-cream-100);
+  --foreground: var(--color-navy-900);
+  --card: var(--color-cream-50);
+  --card-foreground: var(--color-navy-900);
+  --popover: var(--color-cream-50);
+  --popover-foreground: var(--color-navy-900);
+  --primary: var(--color-navy-800);
+  --primary-foreground: var(--color-cream-50);
+  --secondary: var(--color-cream-200);
+  --secondary-foreground: var(--color-navy-900);
+  --muted: var(--color-cream-200);
+  --muted-foreground: var(--color-ink-600);
+  --accent: var(--color-gold-400);
+  --accent-foreground: var(--color-navy-900);
+  --destructive: #b42318;
+  --border: var(--color-cream-300);
+  /* Form alanı kenarlıkları zemine karşı ≥ 3:1 (WCAG 1.4.11) */
+  --input: #8f8269;
+  --ring: var(--color-navy-700);
+  --radius: 0.75rem;
+
+  --weave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23b8893b' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M5 9h18M5 19h18M37 5v18M47 5v18M9 33v18M19 33v18M33 37h18M33 47h18'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply scroll-pt-24 font-sans;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading text-balance;
+    font-optical-sizing: auto;
+  }
+  p {
+    @apply text-pretty;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-navy-700;
+  }
+  ::selection {
+    @apply bg-gold-300 text-navy-950;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.18em] text-gold-700 uppercase;
+  }
+  .on-dark .eyebrow {
+    @apply text-gold-400;
+  }
+  .bg-weave {
+    background-image: var(--weave);
+    background-size: 56px 56px;
+  }
+  .prose-legal p {
+    @apply mb-4 leading-relaxed text-ink-600;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
