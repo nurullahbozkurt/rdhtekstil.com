@@ -3,8 +3,8 @@
 import { useSearchParams } from "next/navigation";
 
 /**
- * TODO(phase-2): Adım adım talep formu bu bileşenin yerini alacak.
- * Faz 1'de `?urun=` ve `?alan=` parametrelerinin doğru taşındığını gösterir.
+ * Talep ekranında `?urun=` / `?alan=` ön seçimini görsel olarak gösterir.
+ * Asıl form `RequestForm` içinde aynı parametrelerle draft’ı doldurur.
  */
 export function RequestPrefill({
   products,
