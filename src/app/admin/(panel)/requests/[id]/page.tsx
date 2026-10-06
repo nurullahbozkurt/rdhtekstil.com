@@ -64,9 +64,7 @@ export default async function AdminRequestDetailPage({
     listRequestsByEmail(request.email, request.id),
     getCategories(locale),
     getIndustries(locale),
-    request.product_slug
-      ? getProduct(request.product_slug, locale)
-      : Promise.resolve(undefined),
+    request.product_slug ? getProduct(request.product_slug, locale) : Promise.resolve(undefined),
   ]);
 
   const styleLabel =
@@ -82,8 +80,7 @@ export default async function AdminRequestDetailPage({
     ? (industries.find((item) => item.id === request.industry)?.name ?? request.industry)
     : null;
 
-  const modelLabel =
-    product?.name ?? request.model_slug ?? request.product_slug ?? null;
+  const modelLabel = product?.name ?? request.model_slug ?? request.product_slug ?? null;
 
   const summaryChips = [
     { label: "Ürün", value: REQUEST_PRODUCT_LABEL[request.product_type] },
@@ -175,9 +172,7 @@ export default async function AdminRequestDetailPage({
       <section className="rounded-2xl border border-cream-300 bg-white p-4 sm:p-5">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="font-heading text-lg font-medium text-navy-900">Yüklenen dosyalar</h2>
-          {!request.files.length ? (
-            <span className="text-xs text-ink-500">Dosya yok</span>
-          ) : null}
+          {!request.files.length ? <span className="text-xs text-ink-500">Dosya yok</span> : null}
         </div>
         {request.files.length ? (
           <FilePreviewList requestId={request.id} files={request.files} />
@@ -228,12 +223,8 @@ export default async function AdminRequestDetailPage({
               <dt className="text-xs text-ink-500">Renkler</dt>
               <dd className="mt-1.5 grid gap-2 sm:grid-cols-3">
                 <ColorSwatch label="Ana renk" value={request.color1} />
-                {request.color2 ? (
-                  <ColorSwatch label="İkinci renk" value={request.color2} />
-                ) : null}
-                {request.color3 ? (
-                  <ColorSwatch label="Üçüncü renk" value={request.color3} />
-                ) : null}
+                {request.color2 ? <ColorSwatch label="İkinci renk" value={request.color2} /> : null}
+                {request.color3 ? <ColorSwatch label="Üçüncü renk" value={request.color3} /> : null}
               </dd>
             </div>
             {request.slogan ? (

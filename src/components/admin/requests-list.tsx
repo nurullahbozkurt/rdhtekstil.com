@@ -33,7 +33,7 @@ function PreviewThumb({
         // eslint-disable-next-line @next/next/no-img-element
         <img src={url} alt={alt} className="size-full object-cover" />
       ) : (
-        <div className="flex size-full flex-col items-center justify-center gap-1 text-ink-400">
+        <div className="text-ink-400 flex size-full flex-col items-center justify-center gap-1">
           <ImageIcon className="size-5" aria-hidden />
           <span className="sr-only">Örnek görsel yok</span>
         </div>
@@ -168,7 +168,7 @@ export function RequestsList({ items }: { items: RequestListItem[] }) {
                   }
                 }}
                 className={cn(
-                  "cursor-pointer border-b border-cream-200 transition-colors last:border-0 hover:bg-cream-50 focus-visible:bg-cream-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-navy-800/30",
+                  "cursor-pointer border-b border-cream-200 transition-colors last:border-0 hover:bg-cream-50 focus-visible:bg-cream-50 focus-visible:ring-2 focus-visible:ring-navy-800/30 focus-visible:outline-none focus-visible:ring-inset",
                   !item.read_at && "bg-gold-200/15",
                 )}
               >

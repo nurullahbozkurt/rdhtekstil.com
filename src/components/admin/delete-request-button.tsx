@@ -87,7 +87,9 @@ export function DeleteRequestButton({
                   ilişkili tüm dosyalar kalıcı olarak silinecek. Bu işlem geri alınamaz.
                 </>
               ) : (
-                <>Bu talep ve ilişkili tüm dosyalar kalıcı olarak silinecek. Bu işlem geri alınamaz.</>
+                <>
+                  Bu talep ve ilişkili tüm dosyalar kalıcı olarak silinecek. Bu işlem geri alınamaz.
+                </>
               )}
             </DialogDescription>
           </DialogHeader>

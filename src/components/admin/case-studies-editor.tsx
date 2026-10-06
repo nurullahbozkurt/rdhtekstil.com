@@ -79,7 +79,10 @@ export function CaseStudiesEditor({ items }: { items: CaseRow[] }) {
               }}
             />
           </div>
-          <button type="submit" className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50">
+          <button
+            type="submit"
+            className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50"
+          >
             Kaydet
           </button>
         </form>

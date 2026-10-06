@@ -63,7 +63,7 @@ export function CatalogEditor({
               void save({ type: "product", ...row });
             }}
           >
-            <p className="text-xs font-semibold uppercase text-ink-500">{row.id}</p>
+            <p className="text-xs font-semibold text-ink-500 uppercase">{row.id}</p>
             <div className="grid gap-3 md:grid-cols-2">
               <input
                 className="h-11 rounded-xl border border-cream-300 px-3 text-sm"
@@ -106,7 +106,10 @@ export function CatalogEditor({
                 }}
               />
             </div>
-            <button type="submit" className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50">
+            <button
+              type="submit"
+              className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50"
+            >
               Kaydet
             </button>
           </form>
@@ -124,7 +127,7 @@ export function CatalogEditor({
               void save({ type: "category", ...row });
             }}
           >
-            <p className="text-xs font-semibold uppercase text-ink-500 md:col-span-3">{row.id}</p>
+            <p className="text-xs font-semibold text-ink-500 uppercase md:col-span-3">{row.id}</p>
             <input
               className="h-10 rounded-xl border border-cream-300 px-3 text-sm"
               value={row.nameTr}
@@ -143,7 +146,10 @@ export function CatalogEditor({
                 setCategoryRows(next);
               }}
             />
-            <button type="submit" className="h-10 rounded-xl bg-navy-800 text-sm font-semibold text-cream-50">
+            <button
+              type="submit"
+              className="h-10 rounded-xl bg-navy-800 text-sm font-semibold text-cream-50"
+            >
               Kaydet
             </button>
           </form>
@@ -161,7 +167,7 @@ export function CatalogEditor({
               void save({ type: "industry", ...row });
             }}
           >
-            <p className="text-xs font-semibold uppercase text-ink-500">{row.id}</p>
+            <p className="text-xs font-semibold text-ink-500 uppercase">{row.id}</p>
             <div className="grid gap-3 md:grid-cols-2">
               <input
                 className="h-11 rounded-xl border border-cream-300 px-3 text-sm"
@@ -202,7 +208,10 @@ export function CatalogEditor({
                 }}
               />
             </div>
-            <button type="submit" className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50">
+            <button
+              type="submit"
+              className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50"
+            >
               Kaydet
             </button>
           </form>

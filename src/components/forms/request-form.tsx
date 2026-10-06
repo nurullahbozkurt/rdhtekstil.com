@@ -190,9 +190,7 @@ export function RequestForm({
     if (product) {
       const inferredStyle = product.typeIds[0];
       const pastDate =
-        stored.desiredDate && stored.desiredDate < localTodayISO()
-          ? undefined
-          : stored.desiredDate;
+        stored.desiredDate && stored.desiredDate < localTodayISO() ? undefined : stored.desiredDate;
       setDraft({
         ...stored,
         productSlug: product.id,
@@ -210,9 +208,7 @@ export function RequestForm({
       });
     } else {
       const pastDate =
-        stored.desiredDate && stored.desiredDate < localTodayISO()
-          ? undefined
-          : stored.desiredDate;
+        stored.desiredDate && stored.desiredDate < localTodayISO() ? undefined : stored.desiredDate;
       setDraft({
         ...stored,
         productSlug: urun ?? stored.productSlug,
@@ -425,7 +421,9 @@ export function RequestForm({
       </ol>
 
       <div className="space-y-6 rounded-[1.75rem] border border-cream-300 bg-cream-50 p-6 sm:p-8">
-        <h2 className="font-heading text-xl font-medium text-navy-900">{messages.steps[stepKey]}</h2>
+        <h2 className="font-heading text-xl font-medium text-navy-900">
+          {messages.steps[stepKey]}
+        </h2>
 
         {stepKey === "product" ? (
           <div className="space-y-8">
@@ -726,7 +724,8 @@ export function RequestForm({
               <label
                 className={cn(
                   "flex gap-3 rounded-xl text-sm leading-relaxed text-navy-900",
-                  fieldErrors.privacyConsent && "rounded-xl border border-destructive/30 bg-destructive/5 p-3",
+                  fieldErrors.privacyConsent &&
+                    "rounded-xl border border-destructive/30 bg-destructive/5 p-3",
                 )}
               >
                 <input
@@ -835,7 +834,10 @@ export function RequestForm({
             </Link>
             <DialogClose
               render={
-                <button type="button" className={cn(ctaVariants({ variant: "primary", size: "md" }))} />
+                <button
+                  type="button"
+                  className={cn(ctaVariants({ variant: "primary", size: "md" }))}
+                />
               }
             >
               {messages.disclosureClose}

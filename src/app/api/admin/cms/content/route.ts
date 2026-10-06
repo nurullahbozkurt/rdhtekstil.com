@@ -204,7 +204,8 @@ export async function PATCH(request: Request) {
             showOnHome:
               item.showOnHome ??
               existing?.showOnHome ??
-              (existing?.topics.includes("general") ?? false),
+              existing?.topics.includes("general") ??
+              false,
           };
         });
         return { ...store, faqs };
@@ -267,100 +268,119 @@ export async function PATCH(request: Request) {
       }, session.user.id);
     } else if (json?.type === "cta") {
       const parsed = ctaPatch.parse(json);
-      await patchCmsStore((store) => ({
-        ...store,
-        siteSettings: {
-          ...store.siteSettings,
-          ctas: {
-            ...store.siteSettings.ctas,
-            designRequest: { tr: parsed.designRequestTr, en: parsed.designRequestEn },
-            browseProducts: { tr: parsed.browseProductsTr, en: parsed.browseProductsEn },
-            otherProducts: { tr: parsed.otherProductsTr, en: parsed.otherProductsEn },
-          },
-        },
-      }), session.user.id);
-    } else if (json?.type === "successText") {
-      const parsed = successPatch.parse(json);
-      await patchCmsStore((store) => ({
-        ...store,
-        pages: {
-          ...store.pages,
-          requestComplete: {
-            ...store.pages.requestComplete,
-            content: {
-              tr: { ...store.pages.requestComplete.content.tr, text: parsed.textTr },
-              en: { ...store.pages.requestComplete.content.en, text: parsed.textEn },
+      await patchCmsStore(
+        (store) => ({
+          ...store,
+          siteSettings: {
+            ...store.siteSettings,
+            ctas: {
+              ...store.siteSettings.ctas,
+              designRequest: { tr: parsed.designRequestTr, en: parsed.designRequestEn },
+              browseProducts: { tr: parsed.browseProductsTr, en: parsed.browseProductsEn },
+              otherProducts: { tr: parsed.otherProductsTr, en: parsed.otherProductsEn },
             },
           },
-        },
-      }), session.user.id);
+        }),
+        session.user.id,
+      );
+    } else if (json?.type === "successText") {
+      const parsed = successPatch.parse(json);
+      await patchCmsStore(
+        (store) => ({
+          ...store,
+          pages: {
+            ...store.pages,
+            requestComplete: {
+              ...store.pages.requestComplete,
+              content: {
+                tr: { ...store.pages.requestComplete.content.tr, text: parsed.textTr },
+                en: { ...store.pages.requestComplete.content.en, text: parsed.textEn },
+              },
+            },
+          },
+        }),
+        session.user.id,
+      );
     } else if (json?.type === "reference") {
       const parsed = referencePatch.parse(json);
-      await patchCmsStore((store) => ({
-        ...store,
-        references: store.references.map((ref) =>
-          ref.id === parsed.id
-            ? {
-                ...ref,
-                name: parsed.name,
-                permissionConfirmed: parsed.permissionConfirmed,
-                sortOrder: parsed.sortOrder,
-              }
-            : ref,
-        ),
-      }), session.user.id);
+      await patchCmsStore(
+        (store) => ({
+          ...store,
+          references: store.references.map((ref) =>
+            ref.id === parsed.id
+              ? {
+                  ...ref,
+                  name: parsed.name,
+                  permissionConfirmed: parsed.permissionConfirmed,
+                  sortOrder: parsed.sortOrder,
+                }
+              : ref,
+          ),
+        }),
+        session.user.id,
+      );
     } else if (json?.type === "caseStudy") {
       const parsed = caseStudyPatch.parse(json);
-      await patchCmsStore((store) => ({
-        ...store,
-        caseStudies: store.caseStudies.map((cs) =>
-          cs.id === parsed.id
-            ? {
-                ...cs,
-                title: { tr: parsed.titleTr, en: parsed.titleEn },
-                summary: { tr: parsed.summaryTr, en: parsed.summaryEn },
-              }
-            : cs,
-        ),
-      }), session.user.id);
+      await patchCmsStore(
+        (store) => ({
+          ...store,
+          caseStudies: store.caseStudies.map((cs) =>
+            cs.id === parsed.id
+              ? {
+                  ...cs,
+                  title: { tr: parsed.titleTr, en: parsed.titleEn },
+                  summary: { tr: parsed.summaryTr, en: parsed.summaryEn },
+                }
+              : cs,
+          ),
+        }),
+        session.user.id,
+      );
     } else if (json?.type === "product") {
       const parsed = productPatch.parse(json);
-      await patchCmsStore((store) => ({
-        ...store,
-        products: store.products.map((p) =>
-          p.id === parsed.id
-            ? {
-                ...p,
-                name: { tr: parsed.nameTr, en: parsed.nameEn },
-                summary: { tr: parsed.summaryTr, en: parsed.summaryEn },
-              }
-            : p,
-        ),
-      }), session.user.id);
+      await patchCmsStore(
+        (store) => ({
+          ...store,
+          products: store.products.map((p) =>
+            p.id === parsed.id
+              ? {
+                  ...p,
+                  name: { tr: parsed.nameTr, en: parsed.nameEn },
+                  summary: { tr: parsed.summaryTr, en: parsed.summaryEn },
+                }
+              : p,
+          ),
+        }),
+        session.user.id,
+      );
     } else if (json?.type === "category") {
       const parsed = categoryPatch.parse(json);
-      await patchCmsStore((store) => ({
-        ...store,
-        categories: store.categories.map((c) =>
-          c.id === parsed.id
-            ? { ...c, name: { tr: parsed.nameTr, en: parsed.nameEn } }
-            : c,
-        ),
-      }), session.user.id);
+      await patchCmsStore(
+        (store) => ({
+          ...store,
+          categories: store.categories.map((c) =>
+            c.id === parsed.id ? { ...c, name: { tr: parsed.nameTr, en: parsed.nameEn } } : c,
+          ),
+        }),
+        session.user.id,
+      );
     } else if (json?.type === "industry") {
       const parsed = industryPatch.parse(json);
-      await patchCmsStore((store) => ({
-        ...store,
-        industries: store.industries.map((i) =>
-          i.id === parsed.id
-            ? {
-                ...i,
-                name: { tr: parsed.nameTr, en: parsed.nameEn },
-                cta: { tr: parsed.ctaTr, en: parsed.ctaEn },
-              }
-            : i,
-        ),
-      }), session.user.id);
+      await patchCmsStore(
+        (store) => ({
+          ...store,
+          industries: store.industries.map((i) =>
+            i.id === parsed.id
+              ? {
+                  ...i,
+                  name: { tr: parsed.nameTr, en: parsed.nameEn },
+                  cta: { tr: parsed.ctaTr, en: parsed.ctaEn },
+                }
+              : i,
+          ),
+        }),
+        session.user.id,
+      );
     } else if (json?.type === "seo") {
       const parsed = seoPatch.parse(json);
       await patchCmsStore((store) => {

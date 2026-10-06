@@ -13,8 +13,7 @@ export default async function AdminRequestsPage({
   const q = typeof sp.q === "string" ? sp.q : "";
   const status = (typeof sp.status === "string" ? sp.status : "") as RequestStatus | "";
   const productType = (typeof sp.productType === "string" ? sp.productType : "") as
-    | ProductType
-    | "";
+    ProductType | "";
   const locale = typeof sp.locale === "string" ? sp.locale : "";
   const page = Number(typeof sp.page === "string" ? sp.page : "1") || 1;
 

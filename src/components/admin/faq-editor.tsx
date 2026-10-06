@@ -2,7 +2,7 @@
 
 import { ChevronDown, Home, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 import {
   Dialog,
   DialogBody,
@@ -50,6 +50,7 @@ export function FaqEditor({ items }: { items: FaqEditorItem[] }) {
   const baseId = useId();
   const [rows, setRows] = useState(items);
   const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
+  const [prevItems, setPrevItems] = useState(items);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -57,13 +58,15 @@ export function FaqEditor({ items }: { items: FaqEditorItem[] }) {
   const [draft, setDraft] = useState<DraftFaq>(emptyDraft);
   const [draftError, setDraftError] = useState<string | null>(null);
 
-  useEffect(() => {
+  // Server refresh sonrası prop değişince lokal taslağı senkronize et (effect yerine render sırasında).
+  if (items !== prevItems) {
+    setPrevItems(items);
     setRows(items);
     setOpenId((current) => {
       if (current && items.some((item) => item.id === current)) return current;
       return items[0]?.id ?? null;
     });
-  }, [items]);
+  }
 
   const updateRow = (id: string, patch: Partial<FaqEditorItem>) => {
     setRows((prev) => prev.map((row) => (row.id === id ? { ...row, ...patch } : row)));
@@ -359,8 +362,8 @@ export function FaqEditor({ items }: { items: FaqEditorItem[] }) {
           <DialogHeader>
             <DialogTitle>Yeni soru ekle</DialogTitle>
             <DialogDescription>
-              Soru ve cevapları TR / EN olarak doldurun. Listeye eklendikten sonra Kaydet ile
-              kalıcı yapın.
+              Soru ve cevapları TR / EN olarak doldurun. Listeye eklendikten sonra Kaydet ile kalıcı
+              yapın.
             </DialogDescription>
           </DialogHeader>
           <DialogBody className="space-y-3">

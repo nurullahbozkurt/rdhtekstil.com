@@ -30,11 +30,7 @@ export async function listAdminUsers(): Promise<AdminUser[]> {
   return users;
 }
 
-export async function createAdminUser(input: {
-  email: string;
-  password: string;
-  name: string;
-}) {
+export async function createAdminUser(input: { email: string; password: string; name: string }) {
   const admin = createAdminClient();
   const { data, error } = await admin.auth.admin.createUser({
     email: input.email,

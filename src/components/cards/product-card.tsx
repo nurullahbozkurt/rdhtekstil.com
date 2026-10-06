@@ -30,7 +30,7 @@ export function ProductCard({
           placeholderLabel={placeholderLabel}
           className={
             product.hoverImage
-              ? "transition-opacity duration-500 ease-out group-hover:opacity-0 group-focus-within:opacity-0 motion-reduce:transition-none"
+              ? "transition-opacity duration-500 ease-out group-focus-within:opacity-0 group-hover:opacity-0 motion-reduce:transition-none"
               : "transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:transition-none"
           }
         />
@@ -40,7 +40,7 @@ export function ProductCard({
               image={{ src: product.hoverImage.src, alt: "" }}
               sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
               placeholderLabel={placeholderLabel}
-              className="opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none"
+              className="opacity-0 transition-opacity duration-500 ease-out group-focus-within:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
             />
           </div>
         ) : null}

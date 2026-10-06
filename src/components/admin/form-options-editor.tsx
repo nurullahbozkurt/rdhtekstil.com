@@ -45,7 +45,7 @@ export function FormOptionsEditor({ options }: { options: FormOptionRow[] }) {
             });
           }}
         >
-          <div className="text-xs font-semibold uppercase text-ink-500 md:col-span-6">
+          <div className="text-xs font-semibold text-ink-500 uppercase md:col-span-6">
             {row.type} · {row.value}
           </div>
           <input
@@ -78,7 +78,10 @@ export function FormOptionsEditor({ options }: { options: FormOptionRow[] }) {
             />
             Aktif
           </label>
-          <button type="submit" className="h-10 rounded-xl bg-navy-800 text-sm font-semibold text-cream-50">
+          <button
+            type="submit"
+            className="h-10 rounded-xl bg-navy-800 text-sm font-semibold text-cream-50"
+          >
             Kaydet
           </button>
         </form>

@@ -148,7 +148,8 @@ const en: Messages = {
     undecidedModel: "I haven't decided yet",
     shapeHelp: "Your choice is added to the request.",
     onRequest: "Upon your request",
-    onRequestDescription: "The model, size and details are finalised together, based on your request.",
+    onRequestDescription:
+      "The model, size and details are finalised together, based on your request.",
     styleNoteHelp: "Describe the shape, size or model details you need.",
     styleNotePlaceholder: "e.g. high crown, custom size, earflaps…",
     disclosureClose: "Close",

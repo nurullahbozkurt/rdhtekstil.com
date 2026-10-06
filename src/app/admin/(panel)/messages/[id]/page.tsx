@@ -126,7 +126,7 @@ export default async function AdminMessageDetailPage({
 
       <section className="rounded-2xl border border-cream-300 bg-white p-4 sm:p-5">
         <h2 className="font-heading text-lg font-medium text-navy-900">Mesaj</h2>
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-navy-900">
+        <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-navy-900">
           {message.message}
         </p>
       </section>

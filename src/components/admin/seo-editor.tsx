@@ -42,7 +42,7 @@ export function SeoEditor({ items }: { items: SeoRow[] }) {
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="font-heading text-lg font-medium text-navy-900">{row.label}</p>
-            <span className="text-xs font-semibold uppercase text-ink-500">
+            <span className="text-xs font-semibold text-ink-500 uppercase">
               {row.kind} · {row.key}
             </span>
           </div>
@@ -97,7 +97,10 @@ export function SeoEditor({ items }: { items: SeoRow[] }) {
               />
             </label>
           </div>
-          <button type="submit" className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50">
+          <button
+            type="submit"
+            className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50"
+          >
             Kaydet
           </button>
         </form>

@@ -41,40 +41,40 @@ npm run link:admin -- <user-uuid> "RDH Admin"
 npm run dev
 ```
 
-- Site: http://localhost:3000  
-- Admin: http://localhost:3000/admin/login  
+- Site: http://localhost:3000
+- Admin: http://localhost:3000/admin/login
 
 İçerik, Supabase yapılandırıldığında otomatik olarak veritabanında tutulur; paneldan yapılan değişiklikler doğrudan CMS kaydına yazılır.
 
 ## Ortam değişkenleri
 
-| Değişken | Açıklama |
-| --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Kanonik site adresi |
-| `NEXT_PUBLIC_GTM_ID` | Boş bırakılabilir |
-| `NEXT_PUBLIC_ALLOW_INDEXING` | Staging için `false` |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase API URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Publishable / anon key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Secret key (istemciye gitmez) |
-| `ADMIN_*` | Seed script |
-| `NEXT_PUBLIC_TURNSTILE_*` / `TURNSTILE_*` | Opsiyonel bot koruması |
+| Değişken                                  | Açıklama                      |
+| ----------------------------------------- | ----------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                    | Kanonik site adresi           |
+| `NEXT_PUBLIC_GTM_ID`                      | Boş bırakılabilir             |
+| `NEXT_PUBLIC_ALLOW_INDEXING`              | Staging için `false`          |
+| `NEXT_PUBLIC_SUPABASE_URL`                | Supabase API URL              |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`           | Publishable / anon key        |
+| `SUPABASE_SERVICE_ROLE_KEY`               | Secret key (istemciye gitmez) |
+| `ADMIN_*`                                 | Seed script                   |
+| `NEXT_PUBLIC_TURNSTILE_*` / `TURNSTILE_*` | Opsiyonel bot koruması        |
 
 ## Komutlar
 
-| Komut | Açıklama |
-| --- | --- |
-| `npm run dev` | Geliştirme |
-| `npm run build` / `start` | Üretim |
-| `npm run lint` / `typecheck` / `check` | Kalite |
-| `npm run seed:admin` / `link:admin` | Admin |
+| Komut                                  | Açıklama   |
+| -------------------------------------- | ---------- |
+| `npm run dev`                          | Geliştirme |
+| `npm run build` / `start`              | Üretim     |
+| `npm run lint` / `typecheck` / `check` | Kalite     |
+| `npm run seed:admin` / `link:admin`    | Admin      |
 
 ## Fazlar
 
-| Faz | Durum |
-| --- | --- |
-| 1 Landing | Tamam |
-| 2 Dinamik alanlar | Tamam |
-| 3 Admin + CMS | Bu branch |
+| Faz               | Durum     |
+| ----------------- | --------- |
+| 1 Landing         | Tamam     |
+| 2 Dinamik alanlar | Tamam     |
+| 3 Admin + CMS     | Bu branch |
 
 ### Admin paneli
 

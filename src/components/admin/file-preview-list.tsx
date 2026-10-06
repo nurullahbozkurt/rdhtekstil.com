@@ -32,24 +32,24 @@ function surfaceClass(surface: LightboxSurface) {
   return "bg-checkered";
 }
 
-export function FilePreviewList({
-  files,
-  requestId,
-}: {
-  requestId: string;
-  files: FileItem[];
-}) {
-  const [loaded, setLoaded] = useState<LoadedFile[]>([]);
+export function FilePreviewList({ files, requestId }: { requestId: string; files: FileItem[] }) {
+  const fileKey = files.map((file) => file.id).join(",");
+  const [loadedKey, setLoadedKey] = useState(fileKey);
+  const [loaded, setLoaded] = useState<LoadedFile[]>(() =>
+    files.map((file) => ({ ...file, url: null })),
+  );
   const [lightbox, setLightbox] = useState<{ url: string; name: string } | null>(null);
   const [surface, setSurface] = useState<LightboxSurface>("light");
   const [error, setError] = useState<string | null>(null);
 
-  const fileKey = files.map((file) => file.id).join(",");
+  if (fileKey !== loadedKey) {
+    setLoadedKey(fileKey);
+    setLoaded(files.map((file) => ({ ...file, url: null })));
+    setLightbox(null);
+  }
 
   useEffect(() => {
     let cancelled = false;
-    setLoaded(files.map((file) => ({ ...file, url: null })));
-    setLightbox(null);
 
     async function loadUrls() {
       const next = await Promise.all(
@@ -158,7 +158,7 @@ export function FilePreviewList({
                     className="size-full object-contain p-2 transition duration-200 group-hover:scale-[1.02]"
                   />
                 ) : (
-                  <div className="flex size-full flex-col items-center justify-center gap-2 text-ink-400">
+                  <div className="text-ink-400 flex size-full flex-col items-center justify-center gap-2">
                     <ImageIcon className="size-6" aria-hidden />
                     <span className="text-xs">
                       {file.loadError ? "Yüklenemedi" : "Yükleniyor…"}
@@ -173,7 +173,9 @@ export function FilePreviewList({
                 </div>
               </button>
               <div className="mt-1.5 flex items-center justify-between gap-2 px-0.5">
-                <span className="truncate text-[11px] text-ink-500">{formatSize(file.size_bytes)}</span>
+                <span className="truncate text-[11px] text-ink-500">
+                  {formatSize(file.size_bytes)}
+                </span>
                 <button
                   type="button"
                   onClick={() => void downloadFile(file.id)}
@@ -301,9 +303,7 @@ export function FilePreviewList({
                 onClick={() => setSurface(value)}
                 className={cn(
                   "rounded-full px-3 py-1.5 text-xs font-semibold transition",
-                  surface === value
-                    ? "bg-cream-50 text-navy-900"
-                    : "bg-cream-50/10 text-cream-50",
+                  surface === value ? "bg-cream-50 text-navy-900" : "bg-cream-50/10 text-cream-50",
                 )}
               >
                 {label}

@@ -38,8 +38,7 @@ export function AdminNav({
       }
     >
       {links.map((link) => {
-        const active =
-          pathname === link.href || pathname.startsWith(`${link.href}/`);
+        const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
         const badge =
           link.href === "/admin/requests"
             ? unreadRequests

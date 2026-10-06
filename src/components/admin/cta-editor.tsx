@@ -67,7 +67,10 @@ export function CtaEditor({
             </label>
           ))}
         </div>
-        <button type="submit" className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50">
+        <button
+          type="submit"
+          className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50"
+        >
           CTA kaydet
         </button>
       </form>
@@ -109,7 +112,10 @@ export function CtaEditor({
             onChange={(e) => setValues({ ...values, textEn: e.target.value })}
           />
         </label>
-        <button type="submit" className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50">
+        <button
+          type="submit"
+          className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50"
+        >
           Başarı metnini kaydet
         </button>
       </form>

@@ -26,12 +26,14 @@ export type ContactDetail = ContactListItem & {
   privacy_consent_version: string;
 };
 
-export async function listContactMessages(filters: {
-  q?: string;
-  status?: ContactStatus | "";
-  page?: number;
-  pageSize?: number;
-} = {}) {
+export async function listContactMessages(
+  filters: {
+    q?: string;
+    status?: ContactStatus | "";
+    page?: number;
+    pageSize?: number;
+  } = {},
+) {
   const admin = createAdminClient();
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(50, Math.max(5, filters.pageSize ?? 20));
@@ -60,18 +62,29 @@ export async function listContactMessages(filters: {
 
 export async function getContactMessage(id: string): Promise<ContactDetail | null> {
   const admin = createAdminClient();
-  const { data, error } = await admin.from("contact_messages").select("*").eq("id", id).maybeSingle();
+  const { data, error } = await admin
+    .from("contact_messages")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
   if (error) throw new Error(error.message);
   return (data as ContactDetail) ?? null;
 }
 
 export async function markContactRead(id: string) {
   const admin = createAdminClient();
-  const { data } = await admin.from("contact_messages").select("read_at, status").eq("id", id).maybeSingle();
+  const { data } = await admin
+    .from("contact_messages")
+    .select("read_at, status")
+    .eq("id", id)
+    .maybeSingle();
   if (data && !data.read_at) {
     await admin
       .from("contact_messages")
-      .update({ read_at: new Date().toISOString(), status: data.status === "NEW" ? "READ" : data.status })
+      .update({
+        read_at: new Date().toISOString(),
+        status: data.status === "NEW" ? "READ" : data.status,
+      })
       .eq("id", id);
   }
 }

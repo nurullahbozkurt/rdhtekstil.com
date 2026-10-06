@@ -23,8 +23,7 @@ export default function AdminContentPage() {
           İçerik yönetimi
         </h1>
         <p className="mt-1 text-sm text-ink-600">
-          SSS ve yasal metinleri paneldan düzenleyin. Diğer site içerikleri kod üzerinden
-          yönetilir.
+          SSS ve yasal metinleri paneldan düzenleyin. Diğer site içerikleri kod üzerinden yönetilir.
         </p>
       </div>
 
@@ -33,7 +32,7 @@ export default function AdminContentPage() {
           <Link
             key={section.href}
             href={section.href}
-            className="rounded-2xl border border-cream-300 bg-white p-4 transition-colors active:bg-cream-50 sm:p-5 hover:border-navy-700/30"
+            className="rounded-2xl border border-cream-300 bg-white p-4 transition-colors hover:border-navy-700/30 active:bg-cream-50 sm:p-5"
           >
             <h2 className="font-heading text-xl font-medium text-navy-900">{section.label}</h2>
             <p className="mt-2 text-sm text-ink-600">{section.text}</p>

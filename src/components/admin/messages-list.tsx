@@ -29,7 +29,7 @@ function StatusBadge({ status }: { status: ContactListItem["status"] }) {
 
 function Avatar() {
   return (
-    <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-cream-100 text-ink-400 ring-1 ring-cream-300">
+    <div className="text-ink-400 flex size-12 shrink-0 items-center justify-center rounded-xl bg-cream-100 ring-1 ring-cream-300">
       <Mail className="size-5" aria-hidden />
     </div>
   );
@@ -142,7 +142,7 @@ export function MessagesList({ items }: { items: ContactListItem[] }) {
                   }
                 }}
                 className={cn(
-                  "cursor-pointer border-b border-cream-200 transition-colors last:border-0 hover:bg-cream-50 focus-visible:bg-cream-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-navy-800/30",
+                  "cursor-pointer border-b border-cream-200 transition-colors last:border-0 hover:bg-cream-50 focus-visible:bg-cream-50 focus-visible:ring-2 focus-visible:ring-navy-800/30 focus-visible:outline-none focus-visible:ring-inset",
                   item.status === "NEW" && "bg-gold-200/15",
                 )}
               >
@@ -168,9 +168,7 @@ export function MessagesList({ items }: { items: ContactListItem[] }) {
                   <p className="line-clamp-2">{truncateMessage(item.message, 120)}</p>
                 </td>
                 <td className="px-4 py-3">{formatProductInterest(item.product_interest)}</td>
-                <td className="px-4 py-3 whitespace-nowrap">
-                  {formatCountryLabel(item.country)}
-                </td>
+                <td className="px-4 py-3 whitespace-nowrap">{formatCountryLabel(item.country)}</td>
                 <td className="px-4 py-3">
                   <div className="flex flex-col items-start gap-1">
                     <StatusBadge status={item.status} />

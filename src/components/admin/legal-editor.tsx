@@ -36,7 +36,7 @@ export function LegalEditor({ items }: { items: LegalItem[] }) {
             });
           }}
         >
-          <p className="font-semibold uppercase tracking-wide text-ink-600">{row.id}</p>
+          <p className="font-semibold tracking-wide text-ink-600 uppercase">{row.id}</p>
           <div className="grid gap-3 md:grid-cols-2">
             {(
               [
@@ -86,7 +86,10 @@ export function LegalEditor({ items }: { items: LegalItem[] }) {
               />
             </label>
           </div>
-          <button type="submit" className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50">
+          <button
+            type="submit"
+            className="h-10 rounded-xl bg-navy-800 px-4 text-sm font-semibold text-cream-50"
+          >
             Kaydet
           </button>
         </form>

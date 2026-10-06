@@ -39,7 +39,7 @@ export function ReferencesEditor({ items }: { items: RefRow[] }) {
             });
           }}
         >
-          <div className="md:col-span-4 text-xs font-semibold uppercase text-ink-500">{row.id}</div>
+          <div className="text-xs font-semibold text-ink-500 uppercase md:col-span-4">{row.id}</div>
           <input
             className="h-10 rounded-xl border border-cream-300 px-3 text-sm md:col-span-2"
             value={row.name}
@@ -61,7 +61,10 @@ export function ReferencesEditor({ items }: { items: RefRow[] }) {
             />
             İzin onaylı
           </label>
-          <button type="submit" className="h-10 rounded-xl bg-navy-800 text-sm font-semibold text-cream-50">
+          <button
+            type="submit"
+            className="h-10 rounded-xl bg-navy-800 text-sm font-semibold text-cream-50"
+          >
             Kaydet
           </button>
         </form>
