@@ -4,6 +4,7 @@ import { clientIp, rateLimit } from "@/lib/security/rate-limit";
 import { verifyTurnstile } from "@/lib/security/turnstile";
 import { hasSupabaseConfig } from "@/lib/supabase/env";
 import { MAX_FILE_BYTES } from "@/lib/uploads/config";
+import { optimizeValidatedUpload } from "@/lib/uploads/optimize";
 import { storeValidatedUpload } from "@/lib/uploads/storage";
 import { validateUpload } from "@/lib/uploads/validate";
 
@@ -57,15 +58,16 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { storageKey } = await storeValidatedUpload(validated.data, kind);
+    const optimized = await optimizeValidatedUpload(validated.data, kind);
+    const { storageKey } = await storeValidatedUpload(optimized, kind);
     return NextResponse.json({
       ok: true,
       file: {
         kind: kindRaw === "LOGO" || kindRaw === "REFERENCE" ? kindRaw : "OTHER",
-        originalName: validated.data.originalName,
+        originalName: optimized.originalName,
         storageKey,
-        mimeType: validated.data.mime,
-        sizeBytes: validated.data.sizeBytes,
+        mimeType: optimized.mime,
+        sizeBytes: optimized.sizeBytes,
       },
     });
   } catch {
