@@ -4,11 +4,24 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useId, useMemo, useState, useSyncExternalStore } from "react";
+import { CircleAlert } from "lucide-react";
 import type { Messages } from "@/i18n/messages";
 import { track } from "@/lib/analytics/events";
+import { ON_REQUEST_STYLE } from "@/lib/catalog/styles";
 import { cn } from "@/lib/utils";
-import { requestFormSchema, type RequestFormData } from "@/lib/validation/request";
+import { parseErrorCode } from "@/lib/validation/contact";
+import { requestFormSchema, localTodayISO, type RequestFormData } from "@/lib/validation/request";
+import { ShapeOptions, type ShapeOption } from "../catalog/shape-options";
 import { ctaVariants } from "../site/button-link";
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import type { UploadedFileMeta } from "./request-file-upload";
 
 const RequestFileUpload = dynamic(
@@ -17,12 +30,18 @@ const RequestFileUpload = dynamic(
 );
 
 type Option = { value: string; label: string };
-type ProductOption = { id: string; name: string; categoryId: string };
+type ProductOption = {
+  id: string;
+  name: string;
+  categoryId: string;
+  typeIds: string[];
+};
 
 type Draft = {
   productType?: "BEANIE" | "SCARF" | "SET";
   productSlug?: string;
-  modelSlug?: string;
+  styleSlug?: string;
+  styleNote?: string;
   industry?: string;
   color1?: string;
   color2?: string;
@@ -40,20 +59,29 @@ type Draft = {
   marketingConsent?: boolean;
 };
 
-const STORAGE_KEY = "rdh-request-draft";
+type FieldName =
+  | "productType"
+  | "styleSlug"
+  | "styleNote"
+  | "color1"
+  | "quantityRange"
+  | "desiredDate"
+  | "fullName"
+  | "company"
+  | "email"
+  | "phone"
+  | "country"
+  | "privacyConsent";
 
-const STEPS = [
-  "productType",
-  "model",
-  "colors",
-  "logo",
-  "slogan",
-  "references",
-  "quantity",
-  "date",
-  "note",
-  "contact",
-] as const;
+type FieldErrors = Partial<Record<FieldName, string>>;
+type DisclosureSection = { heading: string; paragraphs: string[] };
+
+const STORAGE_KEY = "rdh-request-draft";
+const ALL_STEPS = ["product", "brand", "project", "contact"] as const;
+type StepKey = (typeof ALL_STEPS)[number];
+
+const inputClass =
+  "h-12 w-full rounded-xl border border-cream-300 bg-cream-100 px-4 transition-colors focus-visible:border-navy-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-navy-700 aria-invalid:border-destructive aria-invalid:bg-destructive/5";
 
 function categoryToType(categoryId: string): Draft["productType"] {
   if (categoryId === "scarves") return "SCARF";
@@ -78,13 +106,33 @@ function subscribe() {
   return () => undefined;
 }
 
+function interpolate(template: string, values: Record<string, string>) {
+  return template.replace(/\{(\w+)\}/g, (m, key: string) => values[key] ?? m);
+}
+
+function FieldError({ id, message }: { id?: string; message?: string }) {
+  if (!message) return null;
+  return (
+    <p
+      id={id}
+      role="alert"
+      className="mt-2 flex items-start gap-1.5 text-sm font-medium text-destructive"
+    >
+      <CircleAlert aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+      <span>{message}</span>
+    </p>
+  );
+}
+
 export function RequestForm({
   locale,
   messages,
   formMessages,
   privacyHref,
+  disclosure,
   completeHref,
   products,
+  shapes,
   quantities,
   countries,
   submitLabel,
@@ -93,8 +141,10 @@ export function RequestForm({
   messages: Messages["request"];
   formMessages: Messages["form"];
   privacyHref: string;
+  disclosure: { title: string; sections: DisclosureSection[] };
   completeHref: string;
   products: ProductOption[];
+  shapes: Record<"beanies" | "scarves" | "sets", ShapeOption[]>;
   quantities: Option[];
   countries: Option[];
   submitLabel: string;
@@ -104,6 +154,7 @@ export function RequestForm({
   const search = useSearchParams();
   const urun = search.get("urun") ?? undefined;
   const alan = search.get("alan") ?? undefined;
+  const kalip = search.get("kalip") ?? undefined;
   const hydrated = useSyncExternalStore(
     subscribe,
     () => true,
@@ -114,23 +165,65 @@ export function RequestForm({
   const [logoFiles, setLogoFiles] = useState<UploadedFileMeta[]>([]);
   const [refFiles, setRefFiles] = useState<UploadedFileMeta[]>([]);
   const [idempotencyKey] = useState(() => crypto.randomUUID());
-  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [formError, setFormError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [filesWarned, setFilesWarned] = useState(false);
   const [initKey, setInitKey] = useState("");
+  const [disclosureOpen, setDisclosureOpen] = useState(false);
 
-  const nextInitKey = hydrated ? `${urun ?? ""}:${alan ?? ""}` : "";
+  const prefilledProduct = urun ? products.find((p) => p.id === urun) : undefined;
+  const skipProductStep = Boolean(prefilledProduct);
+
+  const steps = useMemo<StepKey[]>(
+    () => (skipProductStep ? ALL_STEPS.filter((s) => s !== "product") : [...ALL_STEPS]),
+    [skipProductStep],
+  );
+
+  const nextInitKey = hydrated ? `${urun ?? ""}:${alan ?? ""}:${kalip ?? ""}` : "";
   if (hydrated && initKey !== nextInitKey) {
     const stored = loadDraft();
     const product = urun ? products.find((p) => p.id === urun) : undefined;
     setInitKey(nextInitKey);
-    setDraft({
-      ...stored,
-      productSlug: urun ?? stored.productSlug,
-      industry: alan ?? stored.industry,
-      productType: product ? categoryToType(product.categoryId) : stored.productType,
-      modelSlug: product ? product.id : stored.modelSlug,
-    });
+    setStep(0);
+
+    if (product) {
+      const inferredStyle = product.typeIds[0];
+      const pastDate =
+        stored.desiredDate && stored.desiredDate < localTodayISO()
+          ? undefined
+          : stored.desiredDate;
+      setDraft({
+        ...stored,
+        productSlug: product.id,
+        industry: alan ?? stored.industry,
+        productType: categoryToType(product.categoryId),
+        styleSlug: kalip ?? inferredStyle ?? stored.styleSlug,
+        styleNote:
+          kalip === ON_REQUEST_STYLE || inferredStyle === ON_REQUEST_STYLE
+            ? stored.styleNote
+            : undefined,
+        color1: undefined,
+        color2: undefined,
+        color3: undefined,
+        desiredDate: pastDate,
+      });
+    } else {
+      const pastDate =
+        stored.desiredDate && stored.desiredDate < localTodayISO()
+          ? undefined
+          : stored.desiredDate;
+      setDraft({
+        ...stored,
+        productSlug: urun ?? stored.productSlug,
+        industry: alan ?? stored.industry,
+        styleSlug: kalip ?? stored.styleSlug,
+        color1: undefined,
+        color2: undefined,
+        color3: undefined,
+        desiredDate: pastDate,
+      });
+    }
     setFilesWarned(Boolean(Object.keys(stored).length));
   }
 
@@ -139,52 +232,32 @@ export function RequestForm({
     saveDraft(draft);
   }, [draft, hydrated, initKey]);
 
-  const models = useMemo(() => {
-    if (!draft.productType) return products;
-    const cat =
-      draft.productType === "SCARF" ? "scarves" : draft.productType === "SET" ? "sets" : "beanies";
-    return products.filter((p) => p.categoryId === cat);
-  }, [draft.productType, products]);
+  const shapeKey =
+    draft.productType === "SCARF" ? "scarves" : draft.productType === "SET" ? "sets" : "beanies";
+  const shapeOptions = shapes[shapeKey];
+  const showStyleNote = draft.styleSlug === ON_REQUEST_STYLE;
 
-  const patch = (partial: Draft) => setDraft((d) => ({ ...d, ...partial }));
-
-  const validateStep = (): boolean => {
-    setError(null);
-    switch (STEPS[step]) {
-      case "productType":
-        if (!draft.productType) {
-          setError(formMessages.errors.required);
-          return false;
-        }
-        return true;
-      case "colors":
-        if (!draft.color1?.trim()) {
-          setError(formMessages.errors.required);
-          return false;
-        }
-        return true;
-      case "quantity":
-        if (!draft.quantityRange) {
-          setError(formMessages.errors.selectOption);
-          return false;
-        }
-        return true;
-      case "contact": {
-        const result = requestFormSchema.safeParse(buildPayload());
-        if (!result.success) {
-          setError(
-            formMessages.errors.summary.replace("{count}", String(result.error.issues.length)),
-          );
-          return false;
-        }
-        return true;
+  const patch = (partial: Draft) => {
+    setDraft((d) => ({ ...d, ...partial }));
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      for (const key of Object.keys(partial) as (keyof Draft)[]) {
+        if (key in next) delete next[key as FieldName];
       }
-      default:
-        return true;
-    }
+      return next;
+    });
+    setFormError(null);
   };
 
-  const buildPayload = (): RequestFormData => {
+  const errorText = (code: string) => {
+    const parsed = parseErrorCode(code);
+    const template =
+      formMessages.errors[parsed.code as keyof Messages["form"]["errors"]] ??
+      formMessages.errors.required;
+    return interpolate(template, parsed.params);
+  };
+
+  const buildPayloadInput = () => {
     const files = [
       ...logoFiles.map((f) => ({ ...f, kind: "LOGO" as const })),
       ...refFiles.map((f) => ({ ...f, kind: "REFERENCE" as const })),
@@ -196,11 +269,12 @@ export function RequestForm({
       sizeBytes,
     }));
 
-    return requestFormSchema.parse({
+    return {
       locale,
       productType: draft.productType,
       productSlug: draft.productSlug,
-      modelSlug: draft.modelSlug === "__none__" ? undefined : draft.modelSlug,
+      styleSlug: draft.styleSlug ?? "",
+      styleNote: draft.styleNote,
       industry: draft.industry,
       color1: draft.color1 ?? "",
       color2: draft.color2,
@@ -210,7 +284,7 @@ export function RequestForm({
       desiredDate: draft.desiredDate,
       note: draft.note,
       fullName: draft.fullName ?? "",
-      company: draft.company ?? "",
+      company: draft.company,
       email: draft.email ?? "",
       phone: draft.phone ?? "",
       country: draft.country ?? "",
@@ -220,12 +294,72 @@ export function RequestForm({
       idempotencyKey,
       website: "",
       turnstileToken: "",
-    });
+    };
+  };
+
+  const validateStep = (): boolean => {
+    setFormError(null);
+    const stepKey = steps[step];
+    const next: FieldErrors = {};
+
+    switch (stepKey) {
+      case "product": {
+        if (!draft.productType) {
+          next.productType = formMessages.errors.required;
+          break;
+        }
+        if (!draft.styleSlug || !shapeOptions.some((option) => option.id === draft.styleSlug)) {
+          next.styleSlug = formMessages.errors.selectOption;
+        }
+        if (draft.styleSlug === ON_REQUEST_STYLE) {
+          const note = draft.styleNote?.trim() ?? "";
+          if (note.length < 10) {
+            next.styleNote = note
+              ? formMessages.errors.tooShort.replace("{min}", "10")
+              : formMessages.errors.required;
+          }
+        }
+        break;
+      }
+      case "brand":
+        if (!draft.color1?.trim()) next.color1 = formMessages.errors.required;
+        break;
+      case "project":
+        if (!draft.quantityRange) next.quantityRange = formMessages.errors.selectOption;
+        if (draft.desiredDate && draft.desiredDate < localTodayISO()) {
+          next.desiredDate = formMessages.errors.pastDate;
+        }
+        break;
+      case "contact": {
+        const result = requestFormSchema.safeParse(buildPayloadInput());
+        if (!result.success) {
+          for (const issue of result.error.issues) {
+            const field = issue.path[0];
+            if (typeof field === "string" && !(field in next)) {
+              next[field as FieldName] = errorText(issue.message);
+            }
+          }
+        }
+        break;
+      }
+      default:
+        break;
+    }
+
+    setFieldErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
+  const goBack = () => {
+    setFieldErrors({});
+    setFormError(null);
+    setStep((s) => s - 1);
   };
 
   const onNext = () => {
     if (!validateStep()) return;
-    if (step < STEPS.length - 1) {
+    setFieldErrors({});
+    if (step < steps.length - 1) {
       setStep((s) => s + 1);
       return;
     }
@@ -234,30 +368,41 @@ export function RequestForm({
 
   const onSubmit = async () => {
     setPending(true);
-    setError(null);
+    setFormError(null);
     try {
-      const payload = buildPayload();
+      const parsed = requestFormSchema.safeParse(buildPayloadInput());
+      if (!parsed.success) {
+        const next: FieldErrors = {};
+        for (const issue of parsed.error.issues) {
+          const field = issue.path[0];
+          if (typeof field === "string" && !(field in next)) {
+            next[field as FieldName] = errorText(issue.message);
+          }
+        }
+        setFieldErrors(next);
+        return;
+      }
+      const payload: RequestFormData = parsed.data;
       const res = await fetch("/api/requests", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
-        setError(messages.submitFailed);
+        setFormError(messages.submitFailed);
         return;
       }
       localStorage.removeItem(STORAGE_KEY);
       track("submit_request");
       router.push(completeHref);
     } catch {
-      setError(messages.submitFailed);
-      // Başarısız denemede aynı idempotency key korunur.
+      setFormError(messages.submitFailed);
     } finally {
       setPending(false);
     }
   };
 
-  const stepKey = STEPS[step]!;
+  const stepKey = steps[step]!;
   const [consentBefore, consentAfter] = formMessages.fields.privacyConsent.split("{link}");
 
   return (
@@ -269,265 +414,302 @@ export function RequestForm({
       ) : null}
 
       <ol className="mb-8 flex gap-1 overflow-x-auto" aria-label={messages.stepsLabel}>
-        {STEPS.map((key, index) => (
+        {steps.map((key, index) => (
           <li key={key} className="min-w-8 flex-1">
             <div
               className={cn("h-1.5 rounded-full", index <= step ? "bg-navy-800" : "bg-cream-300")}
+              title={messages.steps[key]}
             />
           </li>
         ))}
       </ol>
 
       <div className="space-y-6 rounded-[1.75rem] border border-cream-300 bg-cream-50 p-6 sm:p-8">
-        {stepKey === "productType" ? (
-          <fieldset>
-            <legend className="mb-4 font-heading text-xl font-medium text-navy-900">
-              {messages.fields.productType}
-            </legend>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {(["BEANIE", "SCARF", "SET"] as const).map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  aria-pressed={draft.productType === type}
-                  className={cn(
-                    "min-h-14 rounded-2xl border px-4 py-3 text-left font-semibold transition-colors",
-                    draft.productType === type
-                      ? "border-navy-800 bg-navy-800 text-cream-50"
-                      : "border-cream-300 bg-cream-100 text-navy-900 hover:border-navy-700/40",
-                  )}
-                  onClick={() => {
-                    patch({ productType: type });
-                    track("select_product", { product_type: type });
-                  }}
-                >
-                  {messages.productTypes[type]}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-        ) : null}
+        <h2 className="font-heading text-xl font-medium text-navy-900">{messages.steps[stepKey]}</h2>
 
-        {stepKey === "model" ? (
-          <fieldset>
-            <legend className="mb-4 font-heading text-xl font-medium text-navy-900">
-              {messages.fields.model}
-            </legend>
-            <div className="grid gap-2">
-              <label className="flex min-h-12 items-center gap-3 rounded-xl border border-cream-300 bg-cream-100 px-4">
-                <input
-                  type="radio"
-                  name="model"
-                  checked={!draft.modelSlug || draft.modelSlug === "__none__"}
-                  onChange={() => patch({ modelSlug: "__none__" })}
+        {stepKey === "product" ? (
+          <div className="space-y-8">
+            <fieldset>
+              <legend className="mb-4 text-sm font-semibold text-navy-900">
+                {messages.fields.productType} *
+              </legend>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {(["BEANIE", "SCARF", "SET"] as const).map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    aria-pressed={draft.productType === type}
+                    aria-invalid={fieldErrors.productType ? true : undefined}
+                    className={cn(
+                      "min-h-14 rounded-2xl border px-4 py-3 text-left font-semibold transition-colors",
+                      draft.productType === type
+                        ? "border-navy-800 bg-navy-800 text-cream-50"
+                        : fieldErrors.productType
+                          ? "border-destructive bg-destructive/5 text-navy-900"
+                          : "border-cream-300 bg-cream-100 text-navy-900 hover:border-navy-700/40",
+                    )}
+                    onClick={() => {
+                      const nextKey =
+                        type === "SCARF" ? "scarves" : type === "SET" ? "sets" : "beanies";
+                      const allowed = new Set(shapes[nextKey].map((option) => option.id));
+                      patch({
+                        productType: type,
+                        styleSlug:
+                          draft.styleSlug && allowed.has(draft.styleSlug)
+                            ? draft.styleSlug
+                            : undefined,
+                        styleNote:
+                          draft.styleSlug && allowed.has(draft.styleSlug)
+                            ? draft.styleNote
+                            : undefined,
+                      });
+                      track("select_product", { product_type: type });
+                    }}
+                  >
+                    {messages.productTypes[type]}
+                  </button>
+                ))}
+              </div>
+              <FieldError message={fieldErrors.productType} />
+            </fieldset>
+
+            {draft.productType ? (
+              <fieldset>
+                <legend className="mb-2 text-sm font-semibold text-navy-900">
+                  {messages.fields.shape} *
+                </legend>
+                <p className="mb-4 text-sm text-ink-600">{messages.shapeHelp}</p>
+                <ShapeOptions
+                  name="shape"
+                  options={shapeOptions}
+                  value={draft.styleSlug}
+                  invalid={Boolean(fieldErrors.styleSlug)}
+                  onChange={(styleSlug) =>
+                    patch({
+                      styleSlug,
+                      styleNote: styleSlug === ON_REQUEST_STYLE ? draft.styleNote : undefined,
+                    })
+                  }
                 />
-                <span>{messages.undecidedModel}</span>
-              </label>
-              {models.map((product) => (
-                <label
-                  key={product.id}
-                  className="flex min-h-12 items-center gap-3 rounded-xl border border-cream-300 bg-cream-100 px-4"
-                >
-                  <input
-                    type="radio"
-                    name="model"
-                    checked={draft.modelSlug === product.id}
-                    onChange={() => {
-                      patch({ modelSlug: product.id, productSlug: product.id });
-                      track("select_model", { model: product.id });
-                    }}
-                  />
-                  <span>{product.name}</span>
-                </label>
-              ))}
+                <FieldError message={fieldErrors.styleSlug} />
+                {showStyleNote ? (
+                  <label className="mt-4 block space-y-2">
+                    <span className="text-sm font-semibold text-navy-900">
+                      {messages.fields.styleNote} *
+                    </span>
+                    <p className="text-sm text-ink-600">{messages.styleNoteHelp}</p>
+                    <textarea
+                      rows={3}
+                      maxLength={1000}
+                      aria-invalid={fieldErrors.styleNote ? true : undefined}
+                      className={cn(
+                        "w-full rounded-xl border border-cream-300 bg-cream-100 px-4 py-3 transition-colors aria-invalid:border-destructive aria-invalid:bg-destructive/5",
+                      )}
+                      placeholder={messages.styleNotePlaceholder}
+                      value={draft.styleNote ?? ""}
+                      onChange={(e) => patch({ styleNote: e.target.value })}
+                    />
+                    <FieldError message={fieldErrors.styleNote} />
+                  </label>
+                ) : null}
+              </fieldset>
+            ) : null}
+          </div>
+        ) : null}
+
+        {stepKey === "brand" ? (
+          <div className="space-y-8">
+            <fieldset className="space-y-4">
+              <legend className="mb-2 text-sm font-semibold text-navy-900">
+                {messages.fields.colors} *
+              </legend>
+              {(
+                [
+                  ["color1", messages.fields.color1, true],
+                  ["color2", messages.fields.color2, false],
+                  ["color3", messages.fields.color3, false],
+                ] as const
+              ).map(([key, label, required]) => {
+                const hasColor = Boolean(draft[key]?.trim());
+                const pickerValue =
+                  draft[key]?.startsWith("#") && draft[key]!.length >= 4
+                    ? draft[key]!.slice(0, 7)
+                    : "#ffffff";
+                const showError = key === "color1" ? fieldErrors.color1 : undefined;
+                return (
+                  <div key={key} className="block space-y-2">
+                    <span className="text-sm font-semibold text-navy-900">
+                      {label}
+                      {required ? " *" : ""}
+                    </span>
+                    <div className="flex gap-3">
+                      <input
+                        type="color"
+                        aria-label={label}
+                        className={cn(
+                          "h-12 w-14 cursor-pointer rounded-xl border border-cream-300 bg-cream-100",
+                          !hasColor && "opacity-60",
+                          showError && "border-destructive",
+                        )}
+                        value={pickerValue}
+                        onChange={(e) => {
+                          patch({ [key]: e.target.value });
+                          track("select_color");
+                        }}
+                      />
+                      <input
+                        type="text"
+                        aria-invalid={showError ? true : undefined}
+                        className={cn(inputClass, "flex-1")}
+                        placeholder="#1A2744 / Pantone"
+                        value={draft[key] ?? ""}
+                        onChange={(e) => patch({ [key]: e.target.value })}
+                      />
+                    </div>
+                    <FieldError message={showError} />
+                  </div>
+                );
+              })}
+            </fieldset>
+
+            <div>
+              <h3 className="mb-4 text-sm font-semibold text-navy-900">{messages.fields.logo}</h3>
+              <RequestFileUpload
+                kind="LOGO"
+                files={logoFiles}
+                onChange={(files) => {
+                  setLogoFiles(files);
+                  if (files.length) track("upload_logo");
+                }}
+                labels={{
+                  drop: messages.fileDrop,
+                  uploading: messages.fileUploading,
+                  remove: messages.fileRemove,
+                  retry: messages.fileRetry,
+                  help: messages.fileHelp,
+                  privacy: messages.filePrivacy,
+                }}
+              />
             </div>
-          </fieldset>
-        ) : null}
 
-        {stepKey === "colors" ? (
-          <fieldset className="space-y-4">
-            <legend className="mb-2 font-heading text-xl font-medium text-navy-900">
-              {messages.fields.colors}
-            </legend>
-            {(
-              [
-                ["color1", messages.fields.color1, true],
-                ["color2", messages.fields.color2, false],
-                ["color3", messages.fields.color3, false],
-              ] as const
-            ).map(([key, label, required]) => (
-              <label key={key} className="block space-y-2">
-                <span className="text-sm font-semibold text-navy-900">
-                  {label}
-                  {required ? " *" : ""}
-                </span>
-                <div className="flex gap-3">
-                  <input
-                    type="color"
-                    aria-label={label}
-                    className="h-12 w-14 cursor-pointer rounded-xl border border-cream-300 bg-cream-100"
-                    value={
-                      draft[key]?.startsWith("#") && draft[key]!.length >= 4
-                        ? draft[key]!.slice(0, 7)
-                        : "#1a2744"
-                    }
-                    onChange={(e) => {
-                      patch({ [key]: e.target.value });
-                      track("select_color");
-                    }}
-                  />
-                  <input
-                    type="text"
-                    className="h-12 flex-1 rounded-xl border border-cream-300 bg-cream-100 px-4"
-                    placeholder="#1A2744 / Pantone"
-                    value={draft[key] ?? ""}
-                    onChange={(e) => patch({ [key]: e.target.value })}
-                  />
-                </div>
-              </label>
-            ))}
-          </fieldset>
-        ) : null}
-
-        {stepKey === "logo" ? (
-          <div>
-            <h2 className="mb-4 font-heading text-xl font-medium text-navy-900">
-              {messages.fields.logo}
-            </h2>
-            <RequestFileUpload
-              kind="LOGO"
-              files={logoFiles}
-              onChange={(files) => {
-                setLogoFiles(files);
-                if (files.length) track("upload_logo");
-              }}
-              labels={{
-                drop: messages.fileDrop,
-                uploading: messages.fileUploading,
-                remove: messages.fileRemove,
-                retry: messages.fileRetry,
-                help: messages.fileHelp,
-                privacy: messages.filePrivacy,
-              }}
-            />
+            <label className="block space-y-2">
+              <span className="text-sm font-semibold text-navy-900">{messages.fields.slogan}</span>
+              <input
+                type="text"
+                maxLength={200}
+                className={inputClass}
+                value={draft.slogan ?? ""}
+                onChange={(e) => patch({ slogan: e.target.value })}
+              />
+            </label>
           </div>
         ) : null}
 
-        {stepKey === "slogan" ? (
-          <label className="block space-y-2">
-            <span className="font-heading text-xl font-medium text-navy-900">
-              {messages.fields.slogan}
-            </span>
-            <input
-              type="text"
-              maxLength={200}
-              className="h-12 w-full rounded-xl border border-cream-300 bg-cream-100 px-4"
-              value={draft.slogan ?? ""}
-              onChange={(e) => patch({ slogan: e.target.value })}
-            />
-          </label>
-        ) : null}
+        {stepKey === "project" ? (
+          <div className="space-y-8">
+            <div>
+              <h3 className="mb-4 text-sm font-semibold text-navy-900">
+                {messages.fields.references}
+              </h3>
+              <RequestFileUpload
+                kind="REFERENCE"
+                multiple
+                files={refFiles}
+                onChange={(files) => {
+                  setRefFiles(files);
+                  if (files.length) track("upload_reference");
+                }}
+                labels={{
+                  drop: messages.fileDrop,
+                  uploading: messages.fileUploading,
+                  remove: messages.fileRemove,
+                  retry: messages.fileRetry,
+                  privacy: messages.filePrivacy,
+                }}
+              />
+            </div>
 
-        {stepKey === "references" ? (
-          <div>
-            <h2 className="mb-4 font-heading text-xl font-medium text-navy-900">
-              {messages.fields.references}
-            </h2>
-            <RequestFileUpload
-              kind="REFERENCE"
-              multiple
-              files={refFiles}
-              onChange={(files) => {
-                setRefFiles(files);
-                if (files.length) track("upload_reference");
-              }}
-              labels={{
-                drop: messages.fileDrop,
-                uploading: messages.fileUploading,
-                remove: messages.fileRemove,
-                retry: messages.fileRetry,
-                privacy: messages.filePrivacy,
-              }}
-            />
+            <div className="space-y-2">
+              <span className="text-sm font-semibold text-navy-900">
+                {messages.fields.quantityRange} *
+              </span>
+              <select
+                aria-invalid={fieldErrors.quantityRange ? true : undefined}
+                className={inputClass}
+                value={draft.quantityRange ?? ""}
+                onChange={(e) => patch({ quantityRange: e.target.value })}
+              >
+                <option value="">{formMessages.selectPlaceholder}</option>
+                {quantities.map((q) => (
+                  <option key={q.value} value={q.value}>
+                    {q.label}
+                  </option>
+                ))}
+              </select>
+              <FieldError message={fieldErrors.quantityRange} />
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-sm font-semibold text-navy-900">
+                {messages.fields.desiredDate}
+              </span>
+              <input
+                type="date"
+                min={localTodayISO()}
+                aria-invalid={fieldErrors.desiredDate ? true : undefined}
+                className={inputClass}
+                value={draft.desiredDate ?? ""}
+                onChange={(e) => patch({ desiredDate: e.target.value })}
+              />
+              <FieldError message={fieldErrors.desiredDate} />
+            </div>
+
+            <label className="block space-y-2">
+              <span className="text-sm font-semibold text-navy-900">{messages.fields.note}</span>
+              <textarea
+                rows={4}
+                maxLength={3000}
+                className="w-full rounded-xl border border-cream-300 bg-cream-100 px-4 py-3"
+                value={draft.note ?? ""}
+                onChange={(e) => patch({ note: e.target.value })}
+              />
+            </label>
           </div>
-        ) : null}
-
-        {stepKey === "quantity" ? (
-          <label className="block space-y-2">
-            <span className="font-heading text-xl font-medium text-navy-900">
-              {messages.fields.quantityRange} *
-            </span>
-            <select
-              className="h-12 w-full rounded-xl border border-cream-300 bg-cream-100 px-4"
-              value={draft.quantityRange ?? ""}
-              onChange={(e) => patch({ quantityRange: e.target.value })}
-            >
-              <option value="">{formMessages.selectPlaceholder}</option>
-              {quantities.map((q) => (
-                <option key={q.value} value={q.value}>
-                  {q.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
-
-        {stepKey === "date" ? (
-          <label className="block space-y-2">
-            <span className="font-heading text-xl font-medium text-navy-900">
-              {messages.fields.desiredDate}
-            </span>
-            <input
-              type="date"
-              className="h-12 w-full rounded-xl border border-cream-300 bg-cream-100 px-4"
-              value={draft.desiredDate ?? ""}
-              onChange={(e) => patch({ desiredDate: e.target.value })}
-            />
-          </label>
-        ) : null}
-
-        {stepKey === "note" ? (
-          <label className="block space-y-2">
-            <span className="font-heading text-xl font-medium text-navy-900">
-              {messages.fields.note}
-            </span>
-            <textarea
-              rows={5}
-              maxLength={3000}
-              className="w-full rounded-xl border border-cream-300 bg-cream-100 px-4 py-3"
-              value={draft.note ?? ""}
-              onChange={(e) => patch({ note: e.target.value })}
-            />
-          </label>
         ) : null}
 
         {stepKey === "contact" ? (
           <div className="space-y-4">
             {(
               [
-                ["fullName", messages.fields.fullName, "text"],
-                ["company", messages.fields.company, "text"],
-                ["email", messages.fields.email, "email"],
-                ["phone", messages.fields.phone, "tel"],
+                ["fullName", messages.fields.fullName, "text", true],
+                ["company", messages.fields.company, "text", false],
+                ["email", messages.fields.email, "email", true],
+                ["phone", messages.fields.phone, "tel", true],
               ] as const
-            ).map(([key, label, type]) => (
-              <label key={key} className="block space-y-2">
-                <span className="text-sm font-semibold text-navy-900">{label} *</span>
+            ).map(([key, label, type, required]) => (
+              <div key={key} className="space-y-2">
+                <span className="text-sm font-semibold text-navy-900">
+                  {label}
+                  {required ? " *" : ""}
+                </span>
                 <input
                   type={type}
-                  required
-                  className="h-12 w-full rounded-xl border border-cream-300 bg-cream-100 px-4"
+                  required={required}
+                  aria-invalid={fieldErrors[key] ? true : undefined}
+                  className={inputClass}
                   value={draft[key] ?? ""}
                   onChange={(e) => patch({ [key]: e.target.value })}
                 />
-              </label>
+                <FieldError message={fieldErrors[key]} />
+              </div>
             ))}
-            <label className="block space-y-2">
+            <div className="space-y-2">
               <span className="text-sm font-semibold text-navy-900">
                 {messages.fields.country} *
               </span>
               <select
-                className="h-12 w-full rounded-xl border border-cream-300 bg-cream-100 px-4"
+                aria-invalid={fieldErrors.country ? true : undefined}
+                className={inputClass}
                 value={draft.country ?? ""}
                 onChange={(e) => patch({ country: e.target.value })}
               >
@@ -538,22 +720,40 @@ export function RequestForm({
                   </option>
                 ))}
               </select>
-            </label>
-            <label className="flex gap-3 text-sm leading-relaxed text-navy-900">
-              <input
-                type="checkbox"
-                className="mt-1 size-4"
-                checked={draft.privacyConsent === true}
-                onChange={(e) => patch({ privacyConsent: e.target.checked })}
-              />
-              <span>
-                {consentBefore}
-                <Link href={privacyHref} className="font-semibold underline underline-offset-2">
-                  {formMessages.fields.privacyConsentLink}
-                </Link>
-                {consentAfter}
-              </span>
-            </label>
+              <FieldError message={fieldErrors.country} />
+            </div>
+            <div className="space-y-2">
+              <label
+                className={cn(
+                  "flex gap-3 rounded-xl text-sm leading-relaxed text-navy-900",
+                  fieldErrors.privacyConsent && "rounded-xl border border-destructive/30 bg-destructive/5 p-3",
+                )}
+              >
+                <input
+                  type="checkbox"
+                  className="mt-1 size-4"
+                  aria-invalid={fieldErrors.privacyConsent ? true : undefined}
+                  checked={draft.privacyConsent === true}
+                  onChange={(e) => patch({ privacyConsent: e.target.checked })}
+                />
+                <span>
+                  {consentBefore}
+                  <button
+                    type="button"
+                    className="font-semibold underline underline-offset-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setDisclosureOpen(true);
+                    }}
+                  >
+                    {formMessages.fields.privacyConsentLink}
+                  </button>
+                  {consentAfter}
+                </span>
+              </label>
+              <FieldError message={fieldErrors.privacyConsent} />
+            </div>
             <label className="flex gap-3 text-sm leading-relaxed text-ink-600">
               <input
                 type="checkbox"
@@ -569,10 +769,14 @@ export function RequestForm({
           </div>
         ) : null}
 
-        {error ? (
-          <p role="alert" className="text-sm text-destructive">
-            {error}
-          </p>
+        {formError ? (
+          <div
+            role="alert"
+            className="flex gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+          >
+            <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
+            <p>{formError}</p>
+          </div>
         ) : null}
 
         <div className="flex flex-wrap gap-3 pt-2">
@@ -580,7 +784,7 @@ export function RequestForm({
             <button
               type="button"
               className={cn(ctaVariants({ variant: "outline", size: "md" }))}
-              onClick={() => setStep((s) => s - 1)}
+              onClick={goBack}
               disabled={pending}
             >
               {messages.back}
@@ -594,12 +798,51 @@ export function RequestForm({
           >
             {pending
               ? messages.submitting
-              : step === STEPS.length - 1
+              : step === steps.length - 1
                 ? submitLabel
                 : messages.next}
           </button>
         </div>
       </div>
+
+      <Dialog open={disclosureOpen} onOpenChange={setDisclosureOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{disclosure.title}</DialogTitle>
+          </DialogHeader>
+          <DialogBody className="space-y-6 text-sm leading-relaxed text-ink-600">
+            {disclosure.sections.map((section) => (
+              <section key={section.heading}>
+                <h3 className="font-heading text-base font-medium text-navy-900">
+                  {section.heading}
+                </h3>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className="mt-2">
+                    {paragraph}
+                  </p>
+                ))}
+              </section>
+            ))}
+          </DialogBody>
+          <DialogFooter className="flex flex-wrap items-center justify-between gap-3">
+            <Link
+              href={privacyHref}
+              className="text-sm font-semibold text-navy-800 underline underline-offset-2"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {messages.disclosureOpenFull}
+            </Link>
+            <DialogClose
+              render={
+                <button type="button" className={cn(ctaVariants({ variant: "primary", size: "md" }))} />
+              }
+            >
+              {messages.disclosureClose}
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

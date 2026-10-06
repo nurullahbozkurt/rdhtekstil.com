@@ -42,7 +42,7 @@ export async function getSeo(key: RouteKey, locale: Locale): Promise<SeoFields> 
   return localize(entry.seo, locale);
 }
 
-export type RequestQuery = { urun?: string; alan?: string };
+export type RequestQuery = { urun?: string; alan?: string; kalip?: string };
 
 /** Bir dil için bağlantı üreticisi. */
 export async function getLinks(locale: Locale) {

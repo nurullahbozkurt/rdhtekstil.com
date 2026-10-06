@@ -131,12 +131,22 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-navy-700;
   }
+  button:not(:disabled),
+  input:where([type="button"], [type="reset"], [type="submit"]):not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
   ::selection {
     @apply bg-gold-300 text-navy-950;
   }
 }
 
 @layer components {
+  .admin-app input:not([type="checkbox"]):not([type="radio"]),
+  .admin-app select,
+  .admin-app textarea {
+    font-size: 1rem;
+  }
   .container-site {
     @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
   }
@@ -149,6 +159,35 @@
   .bg-weave {
     background-image: var(--weave);
     background-size: 56px 56px;
+  }
+  /* Şeffaf ürün görselleri için dama tahtası zemin */
+  .bg-checkered {
+    background-color: #f7f2e8;
+    background-image:
+      linear-gradient(45deg, #e3d7bf 25%, transparent 25%),
+      linear-gradient(-45deg, #e3d7bf 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e3d7bf 75%),
+      linear-gradient(-45deg, transparent 75%, #e3d7bf 75%);
+    background-size: 16px 16px;
+    background-position:
+      0 0,
+      0 8px,
+      8px -8px,
+      -8px 0;
+  }
+  .bg-checkered-dark {
+    background-color: #17264a;
+    background-image:
+      linear-gradient(45deg, #22345e 25%, transparent 25%),
+      linear-gradient(-45deg, #22345e 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #22345e 75%),
+      linear-gradient(-45deg, transparent 75%, #22345e 75%);
+    background-size: 16px 16px;
+    background-position:
+      0 0,
+      0 8px,
+      8px -8px,
+      -8px 0;
   }
   .prose-legal p {
     @apply mb-4 leading-relaxed text-ink-600;

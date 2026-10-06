@@ -11,9 +11,11 @@ export default async function AdminUsersPage() {
   const users = await listAdminUsers();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <h1 className="font-heading text-3xl font-medium tracking-tight">Kullanıcılar</h1>
+        <h1 className="font-heading text-2xl font-medium tracking-tight text-navy-900 sm:text-3xl">
+          Kullanıcılar
+        </h1>
         <p className="mt-1 text-sm text-ink-600">Admin ekleme, silme ve parola değiştirme</p>
       </div>
       <UsersManager users={users} currentUserId={session.user.id} />

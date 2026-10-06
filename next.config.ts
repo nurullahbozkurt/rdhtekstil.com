@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV !== "production";
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
@@ -8,6 +10,16 @@ const nextConfig: NextConfig = {
     qualities: [70, 75, 85],
   },
   async headers() {
+    const scriptSrc = [
+      "'self'",
+      "'unsafe-inline'",
+      // React/Next dev tooling needs eval; never enable in production.
+      ...(isDev ? ["'unsafe-eval'"] : []),
+      "https://www.googletagmanager.com",
+      "https://www.google-analytics.com",
+      "https://challenges.cloudflare.com",
+    ].join(" ");
+
     return [
       {
         source: "/product-images/:path*",
@@ -27,7 +39,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://challenges.cloudflare.com",
+              `script-src ${scriptSrc}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",

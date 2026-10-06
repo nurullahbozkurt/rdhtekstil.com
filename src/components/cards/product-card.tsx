@@ -8,8 +8,7 @@ export type ProductCardData = {
   summary: string;
   href: string;
   image: { src: string | null; alt: string };
-  typeIds: string[];
-  typeLabels: string[];
+  hoverImage?: { src: string; alt: string };
   isPlaceholder: boolean;
 };
 
@@ -29,8 +28,22 @@ export function ProductCard({
           image={product.image}
           sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
           placeholderLabel={placeholderLabel}
-          className="transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className={
+            product.hoverImage
+              ? "transition-opacity duration-500 ease-out group-hover:opacity-0 group-focus-within:opacity-0 motion-reduce:transition-none"
+              : "transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:transition-none"
+          }
         />
+        {product.hoverImage ? (
+          <div aria-hidden className="absolute inset-0">
+            <ContentImage
+              image={{ src: product.hoverImage.src, alt: "" }}
+              sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
+              placeholderLabel={placeholderLabel}
+              className="opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none"
+            />
+          </div>
+        ) : null}
         {product.isPlaceholder ? (
           <span className="absolute top-3 left-3 rounded-full bg-cream-50/95 px-2.5 py-1 text-[0.7rem] font-semibold text-ink-600">
             {placeholderBadge}
@@ -44,12 +57,7 @@ export function ProductCard({
         </span>
       </div>
       <div className="flex flex-1 flex-col pt-4">
-        {product.typeLabels.length ? (
-          <p className="text-[0.8rem] font-semibold tracking-wide text-gold-700">
-            {product.typeLabels.join(" · ")}
-          </p>
-        ) : null}
-        <h3 className="mt-1.5 font-sans text-base font-bold text-navy-900 sm:text-lg">
+        <h3 className="font-sans text-base font-bold text-navy-900 sm:text-lg">
           <Link
             href={product.href}
             className="after:absolute after:inset-0 focus-visible:outline-none"

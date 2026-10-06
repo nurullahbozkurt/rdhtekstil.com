@@ -91,7 +91,7 @@ export async function ProductsIndexView({ locale }: { locale: Locale }) {
                   {items.map((product) => (
                     <li key={product.id}>
                       <ProductCard
-                        product={toProductCard(product, categories, links)}
+                        product={toProductCard(product, links)}
                         placeholderLabel={messages.common.placeholderImage}
                         placeholderBadge={messages.common.placeholderBadge}
                       />
@@ -120,19 +120,17 @@ export async function ProductsIndexView({ locale }: { locale: Locale }) {
 
 export async function CategoryView({ locale, id }: { locale: Locale; id: CategoryId }) {
   const messages = getMessages(locale);
-  const [category, seo, settings, categories, products, faqs, links] = await Promise.all([
+  const [category, seo, settings, products, faqs, links] = await Promise.all([
     getCategory(id, locale),
     getSeo({ type: "category", id }, locale),
     getSiteSettings(locale),
-    getCategories(locale),
     getProducts(locale, { categoryId: id }),
     getFaqs(locale, { topic: id }),
     getLinks(locale),
   ]);
   if (!category) return null;
 
-  const cards = products.map((p) => toProductCard(p, categories, links));
-  const types = category.types.filter((t) => products.some((p) => p.typeIds.includes(t.id)));
+  const cards = products.map((p) => toProductCard(p, links));
   const breadcrumbs = [
     { name: messages.nav.home, href: links.home() },
     { name: settings.navigation.products, href: links.page("products") },
@@ -160,7 +158,7 @@ export async function CategoryView({ locale, id }: { locale: Locale; id: Categor
           <h2 className="mb-8 font-heading text-2xl font-medium text-navy-900 sm:text-3xl">
             {messages.catalog.modelsTitle}
           </h2>
-          <ProductGrid products={cards} types={types} labels={gridLabels(messages)} />
+          <ProductGrid products={cards} labels={gridLabels(messages)} />
           <p className="mt-12 text-sm text-ink-600">{messages.catalog.noPrice}</p>
         </div>
       </Section>
@@ -186,9 +184,8 @@ export async function ProductView({ locale, id }: { locale: Locale; id: string }
   const product = await getProduct(id, locale);
   if (!product) return null;
 
-  const [settings, categories, category, links, references, related] = await Promise.all([
+  const [settings, category, links, references, related] = await Promise.all([
     getSiteSettings(locale),
-    getCategories(locale),
     getCategory(product.categoryId, locale),
     getLinks(locale),
     getReferences(locale),
@@ -201,9 +198,6 @@ export async function ProductView({ locale, id }: { locale: Locale; id: string }
   const faqs = ownFaqs.length ? ownFaqs : await getFaqs(locale, { ids: category?.faqIds ?? [] });
 
   const href = links.product(product.id);
-  const typeLabels = product.typeIds.flatMap(
-    (tid) => category?.types.find((t) => t.id === tid)?.label ?? [],
-  );
   const breadcrumbs = [
     { name: messages.nav.home, href: links.home() },
     { name: settings.navigation.products, href: links.page("products") },
@@ -249,7 +243,7 @@ export async function ProductView({ locale, id }: { locale: Locale; id: string }
                 href={links.request({ urun: product.id })}
                 variant="primary"
                 size="lg"
-                className="mt-8 w-full sm:w-auto"
+                className="mt-8"
                 data-testid="product-request-cta"
               >
                 {settings.ctas.productRequest}
@@ -258,12 +252,6 @@ export async function ProductView({ locale, id }: { locale: Locale; id: string }
               <p className="mt-3 text-sm text-ink-600">{messages.catalog.noPrice}</p>
 
               <dl className="mt-10 grid gap-6 border-t border-cream-300 pt-8 sm:grid-cols-2">
-                {typeLabels.length ? (
-                  <div>
-                    <dt className="eyebrow">{messages.catalog.types}</dt>
-                    <dd className="mt-2 font-semibold text-navy-900">{typeLabels.join(", ")}</dd>
-                  </div>
-                ) : null}
                 <div>
                   <dt className="eyebrow">{messages.catalog.customizations}</dt>
                   <dd className="mt-2 flex flex-wrap gap-2">
@@ -325,7 +313,7 @@ export async function ProductView({ locale, id }: { locale: Locale; id: string }
               {related.map((p) => (
                 <li key={p.id}>
                   <ProductCard
-                    product={toProductCard(p, categories, links)}
+                    product={toProductCard(p, links)}
                     placeholderLabel={messages.common.placeholderImage}
                     placeholderBadge={messages.common.placeholderBadge}
                   />

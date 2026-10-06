@@ -153,9 +153,13 @@ export async function getCaseStudy(id: string, locale: Locale): Promise<CaseStud
   return (await getCaseStudies(locale)).find((c) => c.id === id);
 }
 
+function faqShowsOnHome(faq: Faq): boolean {
+  return faq.showOnHome ?? faq.topics.includes("general");
+}
+
 export async function getFaqs(
   locale: Locale,
-  filters: { topic?: FaqTopic; ids?: readonly string[] } = {},
+  filters: { topic?: FaqTopic; ids?: readonly string[]; showOnHome?: boolean } = {},
 ): Promise<FaqView[]> {
   const { faqs } = await getContentStore();
   const list = [...faqs].sort(bySort);
@@ -168,6 +172,7 @@ export async function getFaqs(
   }
   return list
     .filter((f) => !filters.topic || f.topics.includes(filters.topic))
+    .filter((f) => filters.showOnHome === undefined || faqShowsOnHome(f) === filters.showOnHome)
     .map((f) => localize(f, locale));
 }
 

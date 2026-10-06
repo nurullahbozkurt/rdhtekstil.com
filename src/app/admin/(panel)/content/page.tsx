@@ -1,40 +1,39 @@
 import Link from "next/link";
-import { CmsSeedButton } from "@/components/admin/cms-seed-button";
-import { readCmsStore } from "@/lib/content/cms-store";
 
 export const metadata = { title: "İçerik" };
 
 const sections = [
-  { href: "/admin/content/faqs", label: "SSS (FAQ)", text: "Sıkça sorulan sorular" },
-  { href: "/admin/content/legal", label: "Yasal sayfalar", text: "KVKK, gizlilik, çerez, aydınlatma" },
-  { href: "/admin/content/ctas", label: "CTA & başarı metni", text: "Buton metinleri ve talep başarı metni" },
-  { href: "/admin/content/form-options", label: "Form seçenekleri", text: "Adet aralıkları ve ülkeler" },
-  { href: "/admin/content/references", label: "Referanslar", text: "Marka logoları ve izin durumu" },
-  { href: "/admin/content/case-studies", label: "Projeler", text: "Case study başlık ve özetleri" },
-  { href: "/admin/content/catalog", label: "Katalog", text: "Ürün / kategori / kullanım alanı metinleri" },
-  { href: "/admin/content/seo", label: "SEO", text: "Slug, title, description, H1 (TR/EN)" },
+  {
+    href: "/admin/content/faqs",
+    label: "SSS",
+    text: "Sıkça sorulan sorular ve anasayfa görünürlüğü",
+  },
+  {
+    href: "/admin/content/legal",
+    label: "Yasal sayfalar",
+    text: "KVKK, gizlilik, çerez ve aydınlatma metinleri",
+  },
 ] as const;
 
-export default async function AdminContentPage() {
-  const store = await readCmsStore();
-
+export default function AdminContentPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="font-heading text-3xl font-medium tracking-tight">İçerik yönetimi</h1>
+        <h1 className="font-heading text-2xl font-medium tracking-tight text-navy-900 sm:text-3xl">
+          İçerik yönetimi
+        </h1>
         <p className="mt-1 text-sm text-ink-600">
-          Site içeriğini paneldan düzenleyin. Değişiklikler anında yeniden doğrulanır.
+          SSS ve yasal metinleri paneldan düzenleyin. Diğer site içerikleri kod üzerinden
+          yönetilir.
         </p>
       </div>
 
-      <CmsSeedButton seeded={Boolean(store)} />
-
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
         {sections.map((section) => (
           <Link
             key={section.href}
             href={section.href}
-            className="rounded-2xl border border-cream-300 bg-white p-5 transition-colors hover:border-navy-700/30"
+            className="rounded-2xl border border-cream-300 bg-white p-4 transition-colors active:bg-cream-50 sm:p-5 hover:border-navy-700/30"
           >
             <h2 className="font-heading text-xl font-medium text-navy-900">{section.label}</h2>
             <p className="mt-2 text-sm text-ink-600">{section.text}</p>

@@ -13,8 +13,8 @@ export const categories: ContentStoreInput["categories"] = [
     },
     cardCta: { tr: "Bereleri İncele", en: "Browse Beanies" },
     intro: {
-      tr: "Klasik, katlamalı, ponponlu ve jakarlı modellerden çocuk berelerine kadar; renk, desen, logo ve etiket detaylarıyla markanıza özel bere üretiyoruz.",
-      en: "From classic, cuffed, pompom and jacquard models to kids' beanies, we produce beanies made for your brand with custom colours, patterns, logos and labels.",
+      tr: "Klasik katlamalı, ponponlu, katlamasız uzun, yüksek tepeli ve kulaklıklı bereler üretiyoruz. Renk, desen, logo ve etiket detaylarını markanıza göre belirliyoruz.",
+      en: "We produce classic cuffed, pom-pom, uncuffed, high-top and earflap beanies, with colours, patterns, logos and labels shaped around your brand.",
     },
     image: img(
       `${P}/bereler/jets/1.jpg`,
@@ -22,12 +22,37 @@ export const categories: ContentStoreInput["categories"] = [
       "Burgundy and gold pompom jacquard Troisdorf Jets beanie",
     ),
     types: [
-      { id: "classic", label: { tr: "Klasik", en: "Classic" } },
-      { id: "cuffed", label: { tr: "Katlamalı", en: "Cuffed" } },
-      { id: "pompom", label: { tr: "Ponponlu", en: "Pompom" } },
-      { id: "jacquard", label: { tr: "Jakarlı", en: "Jacquard" } },
-      { id: "kids", label: { tr: "Çocuk", en: "Kids" } },
-      { id: "custom", label: { tr: "Özel Üretim", en: "Custom Made" } },
+      {
+        id: "classic-cuffed",
+        label: { tr: "Klasik katlamalı bere", en: "Classic Cuffed Beanie" },
+        description: {
+          tr: "Altta geniş katlı manşet bulunur.",
+          en: "A wide folded cuff sits at the hem.",
+        },
+      },
+      {
+        id: "pom-pom",
+        label: { tr: "Ponponlu bere", en: "Pom-Pom Beanie" },
+        description: { tr: "Tepesinde ponpon bulunur.", en: "A pom-pom sits on the crown." },
+      },
+      {
+        id: "uncuffed",
+        label: { tr: "Katlamasız uzun bere", en: "Uncuffed Beanie" },
+        description: { tr: "Düz, katlanmayan uzun gövde.", en: "A long body with no folded cuff." },
+      },
+      {
+        id: "high-top",
+        label: { tr: "Yüksek tepeli bere", en: "High-Top Beanie" },
+        description: { tr: "Tepesi dik ve uzun durur.", en: "The crown stands tall." },
+      },
+      {
+        id: "earflap",
+        label: { tr: "Kulaklıklı bere", en: "Earflap Beanie" },
+        description: {
+          tr: "Yanlarda kulakları kapatan parçalar bulunur.",
+          en: "Side pieces cover the ears.",
+        },
+      },
     ],
     faqIds: ["beanie-models", "beanie-logo", "min-order", "own-logo"],
     seo: {
@@ -35,14 +60,14 @@ export const categories: ContentStoreInput["categories"] = [
         slug: "bere-uretimi",
         title: "Özel Tasarım Bere Üretimi | RDH Tekstil",
         description:
-          "Logolu, jakarlı, ponponlu ve katlamalı bere üretimi. Kulüpler, markalar ve kurumlar için düşük minimum adetle özel tasarım bereler.",
+          "Klasik katlamalı, ponponlu, katlamasız, yüksek tepeli ve kulaklıklı bere üretimi. Kulüpler, markalar ve kurumlar için düşük minimum adetle özel tasarım bereler.",
         h1: "Markanıza Özel Bere Üretimi",
       },
       en: {
         slug: "beanie-manufacturing",
         title: "Custom Beanie Manufacturing | RDH Tekstil",
         description:
-          "Custom logo, jacquard, pompom and cuffed beanie manufacturing for clubs, brands and organisations, with low minimum order quantities.",
+          "Classic cuffed, pom-pom, uncuffed, high-top and earflap beanie manufacturing for clubs, brands and organisations, with low minimum order quantities.",
         h1: "Custom Beanie Manufacturing for Your Brand",
       },
     },
@@ -58,8 +83,8 @@ export const categories: ContentStoreInput["categories"] = [
     },
     cardCta: { tr: "Atkıları İncele", en: "Browse Scarves" },
     intro: {
-      tr: "Örgü ve jakarlı atkılardan taraftar ve kurumsal koleksiyonlara kadar; renk, yazı, arma ve etiket detaylarını projenize göre şekillendiriyoruz.",
-      en: "From knitted and jacquard scarves to fan and corporate collections, we shape colours, lettering, crests and labels around your project.",
+      tr: "Klasik örgü, saçaklı, düz uçlu, ribana ve polar atkılar üretiyoruz. Renk, yazı, arma ve etiket detaylarını projenize göre şekillendiriyoruz.",
+      en: "We produce classic knit, fringed, straight-end, ribbed and fleece scarves, and shape colours, lettering, crests and labels around your project.",
     },
     image: img(
       `${P}/atkilar/warriors/1.jpg`,
@@ -67,27 +92,52 @@ export const categories: ContentStoreInput["categories"] = [
       "Green and gold jacquard Warriors Football scarf",
     ),
     types: [
-      { id: "knit", label: { tr: "Örgü", en: "Knitted" } },
-      { id: "jacquard", label: { tr: "Jakarlı", en: "Jacquard" } },
-      { id: "fan", label: { tr: "Taraftar / Futbol", en: "Fan / Football" } },
-      { id: "corporate", label: { tr: "Kurumsal", en: "Corporate" } },
-      { id: "kids", label: { tr: "Çocuk", en: "Kids" } },
-      { id: "custom", label: { tr: "Özel Üretim", en: "Custom Made" } },
+      {
+        id: "classic-knit",
+        label: { tr: "Klasik örgü atkı", en: "Classic Knit Scarf" },
+        description: {
+          tr: "Düz örgü gövdeli klasik atkı kalıbı.",
+          en: "A classic scarf with a plain knit body.",
+        },
+      },
+      {
+        id: "fringed",
+        label: { tr: "Saçaklı atkı", en: "Fringed Scarf" },
+        description: { tr: "Uçlarda saçak bulunur.", en: "The ends finish with fringe." },
+      },
+      {
+        id: "straight-end",
+        label: { tr: "Düz uçlu atkı", en: "Straight-End Scarf" },
+        description: {
+          tr: "Uçlar saçaksız, düz kesimle biter.",
+          en: "The ends are cut straight, without fringe.",
+        },
+      },
+      {
+        id: "ribbed",
+        label: { tr: "Ribana atkı", en: "Ribbed Knit Scarf" },
+        description: { tr: "Fitilli, esneyen ribana örgü.", en: "A stretch rib knit." },
+      },
+      {
+        id: "fleece",
+        label: { tr: "Polar atkı", en: "Fleece Scarf" },
+        description: { tr: "Yumuşak polar doku.", en: "A soft fleece fabric." },
+      },
     ],
-    faqIds: ["scarf-size", "scarf-text", "min-order", "own-logo"],
+    faqIds: ["scarf-models", "scarf-size", "scarf-text", "min-order", "own-logo"],
     seo: {
       tr: {
         slug: "atki-uretimi",
         title: "Özel Tasarım Atkı Üretimi | RDH Tekstil",
         description:
-          "Jakarlı, örgü, taraftar ve kurumsal atkı üretimi. Kulüp renkleri, arma, yazı ve etiketle markanıza özel atkılar, düşük minimum adet.",
+          "Klasik örgü, saçaklı, düz uçlu, ribana ve polar atkı üretimi. Kulüp renkleri, arma ve yazıyla markanıza özel atkılar.",
         h1: "Markanıza Özel Atkı Üretimi",
       },
       en: {
         slug: "scarf-manufacturing",
         title: "Custom Scarf Manufacturing | RDH Tekstil",
         description:
-          "Jacquard, knitted, fan and corporate scarf manufacturing with your club colours, crest, lettering and labels, at low minimum quantities.",
+          "Classic knit, fringed, straight-end, ribbed and fleece scarves, made with your colours, crest and lettering.",
         h1: "Custom Scarf Manufacturing for Your Brand",
       },
     },
@@ -112,10 +162,38 @@ export const categories: ContentStoreInput["categories"] = [
       "Troisdorf Jets beanie and scarf set",
     ),
     types: [
-      { id: "beanie-scarf", label: { tr: "Bere + Atkı", en: "Beanie + Scarf" } },
-      { id: "corporate", label: { tr: "Kurumsal", en: "Corporate" } },
-      { id: "fan", label: { tr: "Taraftar", en: "Fan" } },
-      { id: "kids", label: { tr: "Çocuk", en: "Kids" } },
+      {
+        id: "beanie-scarf",
+        label: { tr: "Bere + Atkı", en: "Beanie + Scarf" },
+        description: {
+          tr: "Bere ve atkı aynı renk ve tasarım diliyle birlikte üretilir.",
+          en: "The beanie and scarf are produced together in one colour and design language.",
+        },
+      },
+      {
+        id: "corporate",
+        label: { tr: "Kurumsal", en: "Corporate" },
+        description: {
+          tr: "Kurumsal renk, logo ve etiketle hazırlanan set.",
+          en: "A set prepared with corporate colours, a logo and a label.",
+        },
+      },
+      {
+        id: "fan",
+        label: { tr: "Taraftar", en: "Fan" },
+        description: {
+          tr: "Kulüp renkleri ve arma ile hazırlanan taraftar seti.",
+          en: "A fan set prepared with club colours and a crest.",
+        },
+      },
+      {
+        id: "kids",
+        label: { tr: "Çocuk", en: "Kids" },
+        description: {
+          tr: "Çocuk ölçüsünde, okul veya kulüp renkleriyle hazırlanan set.",
+          en: "A kids' size set in school or club colours.",
+        },
+      },
     ],
     faqIds: ["set-separate", "min-order", "private-label"],
     seo: {

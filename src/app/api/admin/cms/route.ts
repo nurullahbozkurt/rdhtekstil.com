@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth/admin";
-import { seedCmsFromLocal, writeCmsStore, readCmsStore } from "@/lib/content/cms-store";
+import { writeCmsStore, ensureCmsStore } from "@/lib/content/cms-store";
 import { clearContentCache } from "@/lib/content/source";
 import { contentStoreSchema } from "@/lib/content/schema";
 import { assertSameOrigin } from "@/lib/security/origin";
@@ -12,8 +12,8 @@ export async function GET() {
   } catch {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const store = await readCmsStore();
-  return NextResponse.json({ ok: true, seeded: Boolean(store) });
+  const store = await ensureCmsStore();
+  return NextResponse.json({ ok: true, ready: Boolean(store) });
 }
 
 export async function POST(request: Request) {
@@ -29,13 +29,10 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => ({}));
   try {
-    if (body?.action === "seed") {
-      await seedCmsFromLocal(session.user.id);
-    } else if (body?.store) {
-      await writeCmsStore(contentStoreSchema.parse(body.store), session.user.id);
-    } else {
+    if (!body?.store) {
       return NextResponse.json({ error: "invalid_action" }, { status: 400 });
     }
+    await writeCmsStore(contentStoreSchema.parse(body.store), session.user.id);
     clearContentCache();
     revalidatePath("/", "layout");
     return NextResponse.json({ ok: true });

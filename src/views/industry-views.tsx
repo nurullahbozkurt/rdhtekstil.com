@@ -14,7 +14,6 @@ import type { Locale } from "@/i18n/config";
 import { getMessages } from "@/i18n/messages";
 import {
   getCaseStudies,
-  getCategories,
   getFaqs,
   getIndustries,
   getIndustry,
@@ -85,11 +84,10 @@ export async function IndustriesIndexView({ locale }: { locale: Locale }) {
 
 export async function IndustryView({ locale, id }: { locale: Locale; id: IndustryId }) {
   const messages = getMessages(locale);
-  const [industry, seo, settings, categories, links] = await Promise.all([
+  const [industry, seo, settings, links] = await Promise.all([
     getIndustry(id, locale),
     getSeo({ type: "industry", id }, locale),
     getSiteSettings(locale),
-    getCategories(locale),
     getLinks(locale),
   ]);
   if (!industry) return null;
@@ -168,7 +166,7 @@ export async function IndustryView({ locale, id }: { locale: Locale; id: Industr
               {products.map((p) => (
                 <li key={p.id}>
                   <ProductCard
-                    product={toProductCard(p, categories, links)}
+                    product={toProductCard(p, links)}
                     placeholderLabel={messages.common.placeholderImage}
                     placeholderBadge={messages.common.placeholderBadge}
                   />

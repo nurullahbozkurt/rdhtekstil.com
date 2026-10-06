@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createSignedDownloadUrl } from "@/lib/uploads/storage";
 
 export type RequestStatus = "NEW" | "IN_REVIEW" | "REPLIED";
 export type ProductType = "BEANIE" | "SCARF" | "SET";
@@ -19,6 +20,8 @@ export type RequestListItem = {
   country: string;
   status: RequestStatus;
   read_at: string | null;
+  previewUrl: string | null;
+  hasFiles: boolean;
 };
 
 export type RequestFile = {
@@ -33,6 +36,7 @@ export type RequestFile = {
 
 export type RequestDetail = RequestListItem & {
   model_slug: string | null;
+  style_slug: string | null;
   industry: string | null;
   color1: string;
   color2: string | null;
@@ -88,12 +92,74 @@ export async function listRequests(filters: RequestFilters = {}) {
   const { data, error, count } = await query;
   if (error) throw new Error(error.message);
 
+  const rows = (data ?? []) as Omit<RequestListItem, "previewUrl" | "hasFiles">[];
+  const items = await attachRequestPreviews(rows);
+
   return {
-    items: (data ?? []) as RequestListItem[],
+    items,
     total: count ?? 0,
     page,
     pageSize,
   };
+}
+
+type PreviewFileRow = {
+  id: string;
+  request_id: string;
+  kind: RequestFile["kind"];
+  mime_type: string;
+  storage_key: string;
+};
+
+function previewRank(kind: RequestFile["kind"]) {
+  if (kind === "REFERENCE") return 0;
+  if (kind === "LOGO") return 1;
+  return 2;
+}
+
+async function attachRequestPreviews(
+  rows: Omit<RequestListItem, "previewUrl" | "hasFiles">[],
+): Promise<RequestListItem[]> {
+  if (!rows.length) return [];
+
+  const admin = createAdminClient();
+  const ids = rows.map((row) => row.id);
+  const { data: files, error } = await admin
+    .from("request_files")
+    .select("id, request_id, kind, mime_type, storage_key")
+    .in("request_id", ids);
+  if (error) throw new Error(error.message);
+
+  const filesByRequest = new Map<string, PreviewFileRow[]>();
+  for (const file of (files ?? []) as PreviewFileRow[]) {
+    const list = filesByRequest.get(file.request_id) ?? [];
+    list.push(file);
+    filesByRequest.set(file.request_id, list);
+  }
+
+  return Promise.all(
+    rows.map(async (row) => {
+      const requestFiles = filesByRequest.get(row.id) ?? [];
+      const image = [...requestFiles]
+        .filter((file) => file.mime_type.startsWith("image/"))
+        .sort((a, b) => previewRank(a.kind) - previewRank(b.kind))[0];
+
+      let previewUrl: string | null = null;
+      if (image) {
+        try {
+          previewUrl = await createSignedDownloadUrl(image.storage_key, 60 * 60);
+        } catch {
+          previewUrl = null;
+        }
+      }
+
+      return {
+        ...row,
+        previewUrl,
+        hasFiles: requestFiles.length > 0,
+      };
+    }),
+  );
 }
 
 export async function getRequest(id: string): Promise<RequestDetail | null> {

@@ -40,3 +40,5 @@ values (
   array['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml', 'image/avif']
 )
 on conflict (id) do nothing;
+
+alter table public.requests add column if not exists style_slug text;

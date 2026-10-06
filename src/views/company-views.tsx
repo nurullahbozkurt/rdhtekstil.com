@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { TrackedLink } from "@/components/analytics/tracked-link";
 import { TrackEvent } from "@/components/analytics/track-event";
 import { ContactForm } from "@/components/forms/contact-form";
+import { ON_REQUEST_STYLE } from "@/lib/catalog/styles";
 import { RequestForm } from "@/components/forms/request-form";
 import { RequestPrefill } from "@/components/forms/request-prefill";
 import { CtaBand } from "@/components/sections/cta-band";
@@ -18,6 +19,7 @@ import type { Locale } from "@/i18n/config";
 import { redirect } from "next/navigation";
 import { format, getMessages } from "@/i18n/messages";
 import {
+  getCategories,
   getFaqs,
   getFormOptions,
   getIndustries,
@@ -28,7 +30,8 @@ import {
 } from "@/lib/content";
 import type { LegalPageId } from "@/lib/content/schema";
 import { getDbFormOptions } from "@/lib/form-options";
-import { consumeRequestSuccessEmail } from "@/lib/requests/success-cookie";
+import { ClearRequestSuccessCookie } from "@/components/forms/clear-request-success-cookie";
+import { getRequestSuccessEmail } from "@/lib/requests/success-cookie";
 import { getLinks, getSeo } from "@/lib/routing";
 import { faqJsonLd } from "@/lib/seo/jsonld";
 
@@ -416,15 +419,47 @@ export async function LegalView({ locale, id }: { locale: Locale; id: LegalPageI
 
 export async function RequestView({ locale }: { locale: Locale }) {
   const messages = getMessages(locale);
-  const [page, seo, products, industries, quantities, countries, links] = await Promise.all([
-    getPage("request", locale),
-    getSeo({ type: "page", id: "request" }, locale),
-    getProducts(locale),
-    getIndustries(locale),
-    getDbFormOptions("quantity", locale),
-    getDbFormOptions("country", locale),
-    getLinks(locale),
-  ]);
+  const [page, seo, products, industries, categories, quantities, countries, links, disclosure] =
+    await Promise.all([
+      getPage("request", locale),
+      getSeo({ type: "page", id: "request" }, locale),
+      getProducts(locale),
+      getIndustries(locale),
+      getCategories(locale),
+      getDbFormOptions("quantity", locale),
+      getDbFormOptions("country", locale),
+      getLinks(locale),
+      getLegalPage("disclosure", locale),
+    ]);
+  const onRequest = {
+    id: ON_REQUEST_STYLE,
+    label: messages.request.onRequest,
+    description: messages.request.onRequestDescription,
+  };
+  const shapes = {
+    beanies: [],
+    scarves: [],
+    sets: [],
+  } as Record<
+    "beanies" | "scarves" | "sets",
+    { id: string; label: string; description?: string }[]
+  >;
+  for (const category of categories) {
+    shapes[category.id] = [
+      ...category.types.map((type) => ({
+        id: type.id,
+        label: type.label,
+        description: type.description,
+      })),
+      onRequest,
+    ];
+  }
+
+  const shapeLabels = Object.fromEntries(
+    Object.values(shapes)
+      .flat()
+      .map((option) => [option.id, option.label]),
+  );
 
   return (
     <section className="relative overflow-hidden bg-cream-100 py-16 sm:py-24">
@@ -440,9 +475,14 @@ export async function RequestView({ locale }: { locale: Locale }) {
           <RequestPrefill
             products={Object.fromEntries(products.map((p) => [p.id, p.name]))}
             industries={Object.fromEntries(industries.map((i) => [i.id, i.name]))}
+            shapes={shapeLabels}
+            productShapes={Object.fromEntries(
+              products.map((p) => [p.id, p.typeIds[0] ? shapeLabels[p.typeIds[0]] : undefined]),
+            )}
             labels={{
               product: messages.request.prefilledProduct,
               industry: messages.request.prefilledIndustry,
+              shape: messages.request.prefilledShape,
             }}
           />
           <RequestForm
@@ -450,12 +490,18 @@ export async function RequestView({ locale }: { locale: Locale }) {
             messages={messages.request}
             formMessages={messages.form}
             privacyHref={links.legal("disclosure")}
+            disclosure={{
+              title: disclosure?.seo.h1 ?? messages.form.fields.privacyConsentLink,
+              sections: disclosure?.sections ?? [],
+            }}
             completeHref={links.page("requestComplete")}
             products={products.map((p) => ({
               id: p.id,
               name: p.name,
               categoryId: p.categoryId,
+              typeIds: p.typeIds,
             }))}
+            shapes={shapes}
             quantities={quantities}
             countries={countries}
             submitLabel={
@@ -477,12 +523,13 @@ export async function RequestCompleteView({ locale }: { locale: Locale }) {
     getSeo({ type: "page", id: "requestComplete" }, locale),
     getSiteSettings(locale),
     getLinks(locale),
-    consumeRequestSuccessEmail(),
+    getRequestSuccessEmail(),
   ]);
   if (!email) redirect(links.home());
 
   return (
     <section className="bg-cream-100 py-20 sm:py-28">
+      <ClearRequestSuccessCookie />
       <div className="container-site max-w-3xl text-center">
         <h1 className="text-display font-medium tracking-tight text-navy-900">{seo.h1}</h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-600">

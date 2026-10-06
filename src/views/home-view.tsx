@@ -33,7 +33,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
     getCategories(locale),
     getIndustries(locale),
     getReferences(locale),
-    getFaqs(locale, { topic: "general" }),
+    getFaqs(locale, { showOnHome: true }),
     getLinks(locale),
   ]);
   const { content } = page;

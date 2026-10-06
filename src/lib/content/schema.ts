@@ -66,6 +66,7 @@ export const customizationSchema = z.enum(["color", "pattern", "logo", "label"])
 export const productTypeSchema = z.object({
   id: z.string().regex(slugSegment),
   label: localized(text),
+  description: localized(text).optional(),
 });
 
 export const categorySchema = z.object({
@@ -164,6 +165,8 @@ export const faqSchema = z.object({
   answer: localized(text),
   topics: z.array(faqTopicSchema).min(1),
   sortOrder: z.number().int(),
+  /** Anasayfa SSS bölümünde göster. Yoksa `general` topic’ine göre varsayılır. */
+  showOnHome: z.boolean().optional(),
 });
 
 export const formOptionSchema = z.object({

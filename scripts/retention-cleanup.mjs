@@ -1,8 +1,9 @@
 /**
- * Saklama süresi dolmuş talepleri temizler.
- * Önce site_runtime_settings, yoksa RETENTION_* env.
+ * Geliştirici / ops aracı: saklama süresi dolmuş talepleri temizler.
+ * Admin panelde yönetilmez; varsayılan kapalıdır. Talepler normalde yalnızca
+ * panelden manuel silinir.
  *
- *   node --env-file=.env.local scripts/retention-cleanup.mjs
+ *   RETENTION_ENABLED=true RETENTION_DAYS=365 node --env-file=.env.local scripts/retention-cleanup.mjs
  */
 import { createClient } from "@supabase/supabase-js";
 
@@ -18,19 +19,11 @@ const admin = createClient(url, serviceKey, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-const { data: settings } = await admin
-  .from("site_runtime_settings")
-  .select("retention_enabled, retention_days")
-  .eq("id", "default")
-  .maybeSingle();
-
-const enabled =
-  settings?.retention_enabled === true || process.env.RETENTION_ENABLED === "true";
-const days =
-  Number(settings?.retention_days ?? 0) || Number(process.env.RETENTION_DAYS || 0);
+const enabled = process.env.RETENTION_ENABLED === "true";
+const days = Number(process.env.RETENTION_DAYS || 0);
 
 if (!enabled || days <= 0) {
-  console.log("Retention kapalı. Çıkılıyor.");
+  console.log("Retention kapalı (yalnızca RETENTION_ENABLED=true + RETENTION_DAYS ile açılır).");
   process.exit(0);
 }
 

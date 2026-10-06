@@ -1,8 +1,10 @@
 import "server-only";
 
+import { ON_REQUEST_STYLE } from "@/lib/catalog/styles";
+import { getContentStore } from "@/lib/content";
 import { PRIVACY_CONSENT_VERSION } from "@/lib/security/privacy";
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { RequestFormData } from "@/lib/validation/request";
+import { mergeStyleNoteIntoNote, type RequestFormData } from "@/lib/validation/request";
 
 export type CreateRequestResult =
   | { ok: true; requestId: string; number: string; email: string; created: boolean }
@@ -32,34 +34,48 @@ export async function createRequest(data: RequestFormData): Promise<CreateReques
     return { ok: false, error: "number_failed" };
   }
 
-  const { data: inserted, error } = await admin
+  const note = mergeStyleNoteIntoNote(data.locale, data.styleNote, data.note);
+
+  const row = {
+    number: numberRow as string,
+    locale: data.locale,
+    product_type: data.productType,
+    product_slug: data.productSlug ?? null,
+    model_slug: data.modelSlug ?? null,
+    industry: data.industry ?? null,
+    color1: data.color1,
+    color2: data.color2 ?? null,
+    color3: data.color3 ?? null,
+    slogan: data.slogan ?? null,
+    quantity_range: data.quantityRange,
+    desired_date: data.desiredDate ?? null,
+    note: note ?? null,
+    full_name: data.fullName,
+    company: data.company ?? "",
+    email: data.email,
+    phone: data.phone,
+    country: data.country,
+    privacy_consent_at: new Date().toISOString(),
+    privacy_consent_version: PRIVACY_CONSENT_VERSION,
+    marketing_consent: data.marketingConsent ?? false,
+    idempotency_key: data.idempotencyKey,
+  };
+
+  let { data: inserted, error } = await admin
     .from("requests")
-    .insert({
-      number: numberRow as string,
-      locale: data.locale,
-      product_type: data.productType,
-      product_slug: data.productSlug ?? null,
-      model_slug: data.modelSlug ?? null,
-      industry: data.industry ?? null,
-      color1: data.color1,
-      color2: data.color2 ?? null,
-      color3: data.color3 ?? null,
-      slogan: data.slogan ?? null,
-      quantity_range: data.quantityRange,
-      desired_date: data.desiredDate ?? null,
-      note: data.note ?? null,
-      full_name: data.fullName,
-      company: data.company,
-      email: data.email,
-      phone: data.phone,
-      country: data.country,
-      privacy_consent_at: new Date().toISOString(),
-      privacy_consent_version: PRIVACY_CONSENT_VERSION,
-      marketing_consent: data.marketingConsent ?? false,
-      idempotency_key: data.idempotencyKey,
-    })
+    .insert({ ...row, style_slug: data.styleSlug })
     .select("id, number, email")
     .single();
+
+  if (error && /style_slug/i.test(error.message)) {
+    const label = await styleLabel(data.styleSlug, data.locale);
+    const fallbackNote = [label, note].filter(Boolean).join("\n\n");
+    ({ data: inserted, error } = await admin
+      .from("requests")
+      .insert({ ...row, note: fallbackNote || null })
+      .select("id, number, email")
+      .single());
+  }
 
   if (error) {
     if (error.code === "23505") {
@@ -80,6 +96,8 @@ export async function createRequest(data: RequestFormData): Promise<CreateReques
     }
     return { ok: false, error: error.message };
   }
+
+  if (!inserted) return { ok: false, error: "insert_failed" };
 
   if (data.files.length) {
     const { error: filesError } = await admin.from("request_files").insert(
@@ -102,4 +120,16 @@ export async function createRequest(data: RequestFormData): Promise<CreateReques
     email: inserted.email as string,
     created: true,
   };
+}
+
+async function styleLabel(slug: string, locale: "tr" | "en") {
+  if (slug === ON_REQUEST_STYLE) {
+    return locale === "en" ? "Upon your request" : "Talebinize göre";
+  }
+  const { categories } = await getContentStore();
+  for (const category of categories) {
+    const type = category.types.find((item) => item.id === slug);
+    if (type) return type.label[locale];
+  }
+  return slug;
 }

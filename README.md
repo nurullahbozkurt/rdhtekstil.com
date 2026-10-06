@@ -44,7 +44,7 @@ npm run dev
 - Site: http://localhost:3000  
 - Admin: http://localhost:3000/admin/login  
 
-İlk girişten sonra **İçerik → Yerel içeriği Supabase’e aktar** ile CMS seed’ini çalıştırın.
+İçerik, Supabase yapılandırıldığında otomatik olarak veritabanında tutulur; paneldan yapılan değişiklikler doğrudan CMS kaydına yazılır.
 
 ## Ortam değişkenleri
 
@@ -67,8 +67,6 @@ npm run dev
 | `npm run build` / `start` | Üretim |
 | `npm run lint` / `typecheck` / `check` | Kalite |
 | `npm run seed:admin` / `link:admin` | Admin |
-| `npm run seed:cms` | Yerel içeriği Supabase CMS’e aktar |
-| `node --env-file=.env.local scripts/retention-cleanup.mjs` | Saklama süresi temizliği (varsayılan kapalı) |
 
 ## Fazlar
 
@@ -83,10 +81,10 @@ npm run dev
 - Talepler: arama, filtre, detay, durum, iç not, dosya önizleme/indirme/zip, silme
 - İletişim mesajları
 - Kullanıcı yönetimi (ekle / sil / parola; son admin silinemez)
-- CMS: FAQ, yasal, CTA/başarı metni, form seçenekleri, referanslar, case study, katalog özeti + seed
-- Ayarlar: saklama süresi (job varsayılan kapalı)
+- CMS (panel): SSS, yasal sayfalar — diğer içerikler kod üzerinden yönetilir
+- Talepler yalnızca admin panelden manuel silinir (otomatik saklama süresi kapalı)
 
-İçerik katmanı arayüzü (`getProducts` vb.) korunur; CMS kaydı varsa Supabase’ten, yoksa yerel seed’den okunur.
+İçerik katmanı arayüzü (`getProducts` vb.) korunur. Supabase bağlıysa içerik `cms_documents` üzerinden okunur/yazılır; boşsa uygulama bir kez başlangıç içeriğini kendisi oluşturur.
 
 ## Varsayımlar
 
@@ -107,5 +105,4 @@ npm run dev
 1. Faz 2 + Faz 3 migration’larını uzak Supabase’e uygulayın
 2. Env’leri hosting’e ekleyin (`SERVICE_ROLE` yalnızca sunucu)
 3. `npm run seed:admin` (bir kez)
-4. Admin → İçerik seed
-5. `npm run build && npm run start`
+4. `npm run build && npm run start` (CMS içeriği ilk istekte otomatik oluşur)

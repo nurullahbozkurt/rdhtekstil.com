@@ -8,4 +8,4 @@ Bu şunları oluşturur:
 - `cms_documents` (içerik katmanı JSON store)
 - `content-media` public storage bucket
 
-Ardından admin panelde **İçerik → Yerel içeriği Supabase’e aktar**.
+CMS içeriği, uygulama ilk kez içerik okuduğunda Supabase’de yoksa otomatik oluşturulur.

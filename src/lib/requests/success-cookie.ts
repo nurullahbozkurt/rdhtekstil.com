@@ -15,9 +15,14 @@ export async function setRequestSuccessCookie(email: string) {
   });
 }
 
-export async function consumeRequestSuccessEmail(): Promise<string | null> {
+/** Yalnızca okur — RSC içinde cookie silinemez. */
+export async function getRequestSuccessEmail(): Promise<string | null> {
   const jar = await cookies();
-  const email = jar.get(REQUEST_SUCCESS_COOKIE)?.value ?? null;
-  if (email) jar.delete(REQUEST_SUCCESS_COOKIE);
-  return email;
+  return jar.get(REQUEST_SUCCESS_COOKIE)?.value ?? null;
+}
+
+/** Route Handler veya Server Action içinden çağırın. */
+export async function clearRequestSuccessCookie() {
+  const jar = await cookies();
+  jar.delete(REQUEST_SUCCESS_COOKIE);
 }

@@ -360,7 +360,10 @@ export const caseStudies: ContentStoreInput["caseStudies"] = [
       en: "Private label beanies and scarves in understated grey tones, branded with leather patches.",
     },
     sector: { tr: "Moda / aksesuar markası", en: "Fashion / accessories brand" },
-    productLabel: { tr: "Katlamalı bere, örgü atkı, set", en: "Cuffed beanie, knitted scarf, set" },
+    productLabel: {
+      tr: "Klasik katlamalı bere, örgü atkı, set",
+      en: "Classic cuffed beanie, knitted scarf, set",
+    },
     productIds: ["es-deri-etiketli-bere", "es-deri-etiketli-atki", "es-set"],
     country: { tr: "Bilgi eklenecek", en: "To be confirmed" },
     need: {

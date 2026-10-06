@@ -8,7 +8,7 @@ export type ConsentState = ConsentChoices & {
 
 export const CONSENT_STORAGE_KEY = "rdh-consent";
 /** Onay metni/kategorileri değişirse artırın; kullanıcıdan yeniden onay istenir. */
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2;
 export const CONSENT_EVENT = "rdh:consent-change";
 
 export function readConsent(): ConsentState | null {
@@ -27,7 +27,8 @@ export function parseConsent(raw: string | null): ConsentState | null {
     if (parsed.version !== CONSENT_VERSION) return null;
     return {
       necessary: true,
-      analytics: parsed.analytics === true,
+      // Analitik ölçüm her tercih seçiminde açıktır; pazarlama opsiyoneldir.
+      analytics: true,
       marketing: parsed.marketing === true,
       version: CONSENT_VERSION,
       updatedAt: String(parsed.updatedAt ?? ""),
@@ -40,7 +41,7 @@ export function parseConsent(raw: string | null): ConsentState | null {
 export function writeConsent(choices: ConsentChoices): ConsentState {
   const state: ConsentState = {
     necessary: true,
-    analytics: choices.analytics,
+    analytics: true,
     marketing: choices.marketing,
     version: CONSENT_VERSION,
     updatedAt: new Date().toISOString(),
@@ -52,6 +53,19 @@ export function writeConsent(choices: ConsentChoices): ConsentState {
 
 export function hasAnalyticsConsent(): boolean {
   return readConsent()?.analytics === true;
+}
+
+/** Pazarlama onayı geri çekildiğinde reklam / remarketing çerezlerini temizler. */
+export function clearMarketingCookies(): void {
+  const host = window.location.hostname;
+  const domains = ["", host, `.${host}`, `.${host.split(".").slice(-2).join(".")}`];
+  for (const cookie of document.cookie.split(";")) {
+    const name = cookie.split("=")[0]?.trim();
+    if (!name || !/^(_gcl|_fbp|_fbc|fr)/.test(name)) continue;
+    for (const domain of domains) {
+      document.cookie = `${name}=; Max-Age=0; path=/${domain ? `; domain=${domain}` : ""}`;
+    }
+  }
 }
 
 /** Onay geri çekildiğinde Google Analytics çerezlerini temizler. */

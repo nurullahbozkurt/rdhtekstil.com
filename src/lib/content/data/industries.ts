@@ -74,14 +74,14 @@ export const industries: ContentStoreInput["industries"] = [
     highlights: {
       tr: [
         "Jakarlı taraftar atkıları",
-        "Ponponlu ve katlamalı bereler",
+        "Klasik katlamalı ve ponponlu bereler",
         "Maç günü bere + atkı setleri",
         "Arma ve yazı uygulamaları",
         "Özel koleksiyon ve sezon ürünleri",
       ],
       en: [
         "Jacquard fan scarves",
-        "Pompom and cuffed beanies",
+        "Classic cuffed and pom-pom beanies",
         "Match-day beanie + scarf sets",
         "Crest and lettering applications",
         "Special collections and seasonal products",

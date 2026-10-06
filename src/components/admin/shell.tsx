@@ -1,13 +1,5 @@
-import Link from "next/link";
 import { AdminLogoutButton } from "@/components/admin/logout-button";
-
-const links = [
-  { href: "/admin/requests", label: "Talepler" },
-  { href: "/admin/messages", label: "İletişim" },
-  { href: "/admin/users", label: "Kullanıcılar" },
-  { href: "/admin/content", label: "İçerik" },
-  { href: "/admin/settings", label: "Ayarlar" },
-] as const;
+import { AdminNav } from "@/components/admin/admin-nav";
 
 export function AdminShell({
   children,
@@ -21,45 +13,44 @@ export function AdminShell({
   unreadMessages: number;
 }) {
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[16rem_1fr]">
-      <aside className="border-b border-cream-300 bg-navy-900 text-cream-50 lg:min-h-dvh lg:border-r lg:border-b-0">
+    <div className="admin-app min-h-dvh bg-cream-100 lg:grid lg:grid-cols-[16rem_1fr]">
+      <aside className="hidden border-cream-300 bg-navy-900 text-cream-50 lg:flex lg:min-h-dvh lg:flex-col lg:border-r">
         <div className="px-5 py-6">
           <p className="font-heading text-xl font-medium tracking-tight">RDH Admin</p>
-          <p className="mt-1 text-sm text-cream-50/70">{name}</p>
+          <p className="mt-1 truncate text-sm text-cream-50/70">{name}</p>
         </div>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-4 lg:flex-col lg:overflow-visible">
-          {links.map((link) => {
-            const badge =
-              link.href === "/admin/requests"
-                ? unreadRequests
-                : link.href === "/admin/messages"
-                  ? unreadMessages
-                  : 0;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-cream-50/85 transition-colors hover:bg-cream-50/10 hover:text-cream-50"
-              >
-                <span>{link.label}</span>
-                {badge > 0 ? (
-                  <span className="rounded-full bg-gold-500 px-2 py-0.5 text-xs font-bold text-navy-900">
-                    {badge}
-                  </span>
-                ) : null}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="hidden px-5 pb-6 lg:block">
+        <div className="flex-1">
+          <AdminNav
+            unreadRequests={unreadRequests}
+            unreadMessages={unreadMessages}
+            variant="side"
+          />
+        </div>
+        <div className="px-5 pb-6">
           <AdminLogoutButton label="Çıkış" />
         </div>
       </aside>
-      <div className="min-w-0">
-        <div className="flex items-center justify-end border-b border-cream-300 px-4 py-3 lg:hidden">
-          <AdminLogoutButton label="Çıkış" />
+
+      <div className="flex min-h-dvh min-w-0 flex-col">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-cream-300 bg-navy-900 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 text-cream-50 lg:hidden">
+          <div className="min-w-0">
+            <p className="font-heading text-lg font-medium tracking-tight">RDH Admin</p>
+            <p className="truncate text-xs text-cream-50/70">{name}</p>
+          </div>
+          <AdminLogoutButton label="Çıkış" tone="light" />
+        </header>
+
+        <div className="min-w-0 flex-1 px-4 py-5 pb-[calc(5.25rem+env(safe-area-inset-bottom))] sm:px-6 sm:py-6 lg:px-8 lg:py-8 lg:pb-8">
+          {children}
         </div>
-        <div className="px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+
+        <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
+          <AdminNav
+            unreadRequests={unreadRequests}
+            unreadMessages={unreadMessages}
+            variant="bottom"
+          />
+        </div>
       </div>
     </div>
   );

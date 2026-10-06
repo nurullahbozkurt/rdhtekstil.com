@@ -13,6 +13,7 @@ export type ContactListItem = {
   email: string;
   country: string | null;
   product_interest: string | null;
+  message: string;
   status: ContactStatus;
   read_at: string | null;
 };
@@ -40,7 +41,7 @@ export async function listContactMessages(filters: {
   let query = admin
     .from("contact_messages")
     .select(
-      "id, created_at, locale, full_name, company, email, country, product_interest, status, read_at",
+      "id, created_at, locale, full_name, company, email, country, product_interest, message, status, read_at",
       { count: "exact" },
     )
     .order("created_at", { ascending: false })

@@ -17,12 +17,17 @@ export default async function AdminLegalPage() {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <Link href="/admin/content" className="text-sm font-semibold text-ink-600">
+        <Link
+          href="/admin/content"
+          className="inline-flex min-h-10 items-center text-sm font-semibold text-ink-600 hover:text-navy-900"
+        >
           ← İçerik
         </Link>
-        <h1 className="mt-2 font-heading text-3xl font-medium tracking-tight">Yasal sayfalar</h1>
+        <h1 className="mt-2 font-heading text-2xl font-medium tracking-tight text-navy-900 sm:text-3xl">
+          Yasal sayfalar
+        </h1>
       </div>
       <LegalEditor items={items} />
     </div>

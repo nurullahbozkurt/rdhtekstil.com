@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import {
-  clearAnalyticsCookies,
+  clearMarketingCookies,
   CONSENT_EVENT,
   CONSENT_STORAGE_KEY,
   parseConsent,
@@ -72,13 +72,12 @@ export function ConsentProvider({
 
   const save = useCallback(
     (choices: ConsentChoices) => {
-      const revoked =
-        (consent?.analytics && !choices.analytics) || (consent?.marketing && !choices.marketing);
-      writeConsent(choices);
+      const next = { analytics: true as const, marketing: choices.marketing };
+      const revoked = Boolean(consent?.marketing && !next.marketing);
+      writeConsent(next);
       setPanelOpen(false);
       if (revoked) {
-        // Yüklenmiş etiketleri bellekten kaldırmanın güvenilir yolu sayfayı yenilemektir.
-        clearAnalyticsCookies();
+        clearMarketingCookies();
         window.location.reload();
       }
     },
@@ -90,7 +89,8 @@ export function ConsentProvider({
     [consent, save],
   );
 
-  const loadTags = Boolean(gtmId && consent && (consent.analytics || consent.marketing));
+  // Analitik her tercih sonrası açıktır; GTM onay kaydı oluşunca yüklenir.
+  const loadTags = Boolean(gtmId && consent);
 
   return (
     <ConsentContext.Provider value={value}>
@@ -99,7 +99,7 @@ export function ConsentProvider({
         <CookieBanner
           text={text}
           policyHref={policyHref}
-          initial={consent ?? { analytics: false, marketing: false }}
+          initial={consent ?? { analytics: true, marketing: false }}
           onSave={save}
           dismissible={consent !== null}
           onClose={() => setPanelOpen(false)}

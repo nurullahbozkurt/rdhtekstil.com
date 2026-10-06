@@ -4,17 +4,29 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/auth/admin";
 import { patchCmsStore } from "@/lib/content/cms-store";
 import { clearContentCache } from "@/lib/content/source";
-import type { SeoFields } from "@/lib/content/schema";
+import { faqTopicSchema, type SeoFields } from "@/lib/content/schema";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { assertSameOrigin } from "@/lib/security/origin";
 
+const faqItemSchema = z.object({
+  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  questionTr: z.string().trim().min(1),
+  questionEn: z.string().trim().min(1),
+  answerTr: z.string().trim().min(1),
+  answerEn: z.string().trim().min(1),
+  topics: z.array(faqTopicSchema).min(1).optional(),
+  sortOrder: z.number().int().optional(),
+  showOnHome: z.boolean().optional(),
+});
+
 const faqPatch = z.object({
   type: z.literal("faq"),
-  id: z.string(),
-  questionTr: z.string().min(1),
-  questionEn: z.string().min(1),
-  answerTr: z.string().min(1),
-  answerEn: z.string().min(1),
+  ...faqItemSchema.shape,
+});
+
+const faqsReplace = z.object({
+  type: z.literal("faqs"),
+  items: z.array(faqItemSchema),
 });
 
 const legalPatch = z.object({
@@ -177,15 +189,55 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ ok: true });
     }
 
-    if (json?.type === "faq") {
+    if (json?.type === "faqs") {
+      const parsed = faqsReplace.parse(json);
+      await patchCmsStore((store) => {
+        const previous = new Map(store.faqs.map((faq) => [faq.id, faq]));
+        const faqs = parsed.items.map((item, index) => {
+          const existing = previous.get(item.id);
+          return {
+            id: item.id,
+            question: { tr: item.questionTr, en: item.questionEn },
+            answer: { tr: item.answerTr, en: item.answerEn },
+            topics: item.topics?.length ? item.topics : (existing?.topics ?? ["general"]),
+            sortOrder: item.sortOrder ?? existing?.sortOrder ?? index + 1,
+            showOnHome:
+              item.showOnHome ??
+              existing?.showOnHome ??
+              (existing?.topics.includes("general") ?? false),
+          };
+        });
+        return { ...store, faqs };
+      }, session.user.id);
+    } else if (json?.type === "faq") {
       const parsed = faqPatch.parse(json);
       await patchCmsStore((store) => {
+        const index = store.faqs.findIndex((faq) => faq.id === parsed.id);
+        if (index === -1) {
+          return {
+            ...store,
+            faqs: [
+              ...store.faqs,
+              {
+                id: parsed.id,
+                question: { tr: parsed.questionTr, en: parsed.questionEn },
+                answer: { tr: parsed.answerTr, en: parsed.answerEn },
+                topics: parsed.topics?.length ? parsed.topics : ["general"],
+                sortOrder: parsed.sortOrder ?? store.faqs.length + 1,
+                showOnHome: parsed.showOnHome ?? false,
+              },
+            ],
+          };
+        }
         const faqs = store.faqs.map((faq) =>
           faq.id === parsed.id
             ? {
                 ...faq,
                 question: { tr: parsed.questionTr, en: parsed.questionEn },
                 answer: { tr: parsed.answerTr, en: parsed.answerEn },
+                ...(parsed.topics?.length ? { topics: parsed.topics } : {}),
+                ...(parsed.sortOrder !== undefined ? { sortOrder: parsed.sortOrder } : {}),
+                ...(parsed.showOnHome !== undefined ? { showOnHome: parsed.showOnHome } : {}),
               }
             : faq,
         );

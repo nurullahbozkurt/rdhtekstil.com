@@ -84,8 +84,8 @@ export const faqs: ContentStoreInput["faqs"] = [
       en: "Which beanie models do you produce?",
     },
     answer: {
-      tr: "Klasik, katlamalı, ponponlu, jakarlı ve çocuk berelerinin yanı sıra projenize özel modeller üretiyoruz. Model seçimi kullanım alanına ve tasarıma göre birlikte netleştirilir.",
-      en: "We produce classic, cuffed, pompom, jacquard and kids' beanies, as well as models made for your project. The model is finalised together, based on use and design.",
+      tr: "Klasik katlamalı bere, ponponlu bere, katlamasız uzun bere, yüksek tepeli bere ve kulaklıklı bere üretiyoruz. Model seçimi kullanım alanına ve tasarıma göre birlikte netleştirilir.",
+      en: "We produce classic cuffed, pom-pom, uncuffed, high-top and earflap beanies. The model is finalised together, based on use and design.",
     },
   },
   {
@@ -99,6 +99,19 @@ export const faqs: ContentStoreInput["faqs"] = [
     answer: {
       tr: "Logo; jakarlı örgü, dokuma arma, nakış veya deri etiket gibi farklı yöntemlerle uygulanabilir. Uygun yöntem logonuzun detaylarına ve ürün modeline göre önerilir.",
       en: "Your logo can be applied through jacquard knitting, a woven badge, embroidery or a leather patch. We recommend the right method based on your logo's details and the product model.",
+    },
+  },
+  {
+    id: "scarf-models",
+    sortOrder: 11,
+    topics: ["scarves"],
+    question: {
+      tr: "Hangi atkı modellerini üretiyorsunuz?",
+      en: "Which scarf models do you produce?",
+    },
+    answer: {
+      tr: "Klasik örgü atkı, saçaklı atkı, düz uçlu atkı, ribana atkı ve polar atkı üretiyoruz. Model seçimi kullanım alanına ve tasarıma göre birlikte netleştirilir.",
+      en: "We produce classic knit, fringed, straight-end, ribbed and fleece scarves. The model is finalised together, based on use and design.",
     },
   },
   {

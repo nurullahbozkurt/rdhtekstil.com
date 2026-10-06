@@ -93,8 +93,9 @@ export function CookieBanner({
           <ConsentRow
             title={text.analytics}
             description={text.analyticsText}
-            checked={choices.analytics}
-            onChange={(analytics) => setChoices((c) => ({ ...c, analytics }))}
+            checked
+            disabled
+            badge={text.alwaysOn}
           />
           <ConsentRow
             title={text.marketing}
@@ -116,7 +117,7 @@ export function CookieBanner({
         <button
           type="button"
           className={cn(ctaVariants({ variant: "outline", size: "sm" }), "sm:flex-1")}
-          onClick={() => onSave({ analytics: false, marketing: false })}
+          onClick={() => onSave({ analytics: true, marketing: false })}
         >
           {text.rejectAll}
         </button>
@@ -124,7 +125,7 @@ export function CookieBanner({
           <button
             type="button"
             className={cn(ctaVariants({ variant: "outline", size: "sm" }), "sm:w-full")}
-            onClick={() => onSave(choices)}
+            onClick={() => onSave({ analytics: true, marketing: choices.marketing })}
           >
             {text.save}
           </button>

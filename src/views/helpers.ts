@@ -3,28 +3,23 @@ import "server-only";
 import type { CaseStudyCardData } from "@/components/cards/case-study-card";
 import type { ProductCardData } from "@/components/cards/product-card";
 import type { Messages } from "@/i18n/messages";
-import type { CaseStudyView, CategoryView, ProductView } from "@/lib/content";
+import type { CaseStudyView, ProductView } from "@/lib/content";
 import type { Links } from "@/lib/routing";
 
-export function toProductCard(
-  product: ProductView,
-  categories: CategoryView[],
-  links: Links,
-): ProductCardData {
-  const category = categories.find((c) => c.id === product.categoryId);
-  const typeLabels = product.typeIds
-    .filter((id) => id !== "custom")
-    .flatMap((id) => category?.types.find((t) => t.id === id)?.label ?? [])
-    .slice(0, 2);
+export function toProductCard(product: ProductView, links: Links): ProductCardData {
   const firstImage = product.images[0];
+  const secondImage = product.images[1];
+  const hoverImage =
+    secondImage?.src && secondImage.src !== firstImage?.src
+      ? { src: secondImage.src, alt: secondImage.alt }
+      : undefined;
   return {
     id: product.id,
     name: product.name,
     summary: product.summary,
     href: links.product(product.id),
     image: firstImage ?? { src: null, alt: product.name },
-    typeIds: product.typeIds,
-    typeLabels,
+    hoverImage,
     isPlaceholder: product.contentStatus === "placeholder",
   };
 }
