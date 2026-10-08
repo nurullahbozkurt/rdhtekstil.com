@@ -43,7 +43,8 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="w-full max-w-sm overflow-y-auto border-cream-300 bg-cream-50 p-0"
+        initialFocus={() => document.querySelector<HTMLElement>('[data-slot="sheet-content"]')}
+        className="w-full max-w-sm overflow-y-auto border-cream-300 bg-cream-50 p-0 focus-visible:outline-none"
       >
         <div className="flex items-center border-b border-cream-300 px-6 py-5">
           <SheetTitle className="font-sans text-sm font-bold tracking-[0.18em] text-ink-600 uppercase">
@@ -52,35 +53,47 @@ export function MobileNav({
         </div>
         <nav aria-label={labels.menu} className="flex-1 px-3 py-4">
           <ul className="space-y-1">
-            {items.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    "flex min-h-12 items-center rounded-xl px-3 font-heading text-xl text-navy-900 hover:bg-cream-200",
-                    pathname === item.href && "bg-cream-200",
-                  )}
-                >
-                  {item.label}
-                </Link>
-                {item.children?.length ? (
-                  <ul className="mb-2 ml-3 border-l border-cream-300 pl-3">
-                    {item.children.map((child) => (
-                      <li key={child.href}>
-                        <Link
-                          href={child.href}
-                          onClick={() => setOpen(false)}
-                          className="flex min-h-11 items-center rounded-lg px-3 text-[0.95rem] text-ink-600 hover:bg-cream-200 hover:text-navy-900"
-                        >
-                          {child.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            ))}
+            {items.map((item) => {
+              const current = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={current ? "page" : undefined}
+                    className={cn(
+                      "flex min-h-12 items-center rounded-xl px-3 font-heading text-xl text-navy-900 hover:bg-cream-200 focus-visible:bg-cream-200 focus-visible:outline-none",
+                      current && "bg-cream-200",
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                  {item.children?.length ? (
+                    <ul className="mt-1 mb-3 ml-3 space-y-0.5 border-l border-cream-300 pl-3">
+                      {item.children.map((child) => {
+                        const childCurrent =
+                          pathname === child.href || pathname.startsWith(`${child.href}/`);
+                        return (
+                          <li key={child.href}>
+                            <Link
+                              href={child.href}
+                              onClick={() => setOpen(false)}
+                              aria-current={childCurrent ? "page" : undefined}
+                              className={cn(
+                                "flex min-h-11 items-center rounded-lg px-3 text-[0.95rem] text-ink-600 hover:bg-cream-200 hover:text-navy-900 focus-visible:bg-cream-200 focus-visible:text-navy-900 focus-visible:outline-none",
+                                childCurrent && "bg-cream-200 text-navy-900",
+                              )}
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <div className="space-y-4 border-t border-cream-300 px-6 py-6">

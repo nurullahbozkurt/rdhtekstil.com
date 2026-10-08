@@ -58,7 +58,7 @@ export function DesktopNav({ items, label }: { items: NavItem[]; label: string }
             isActive(item.href) || Boolean(item.children?.some((child) => isActive(child.href)));
           const linkClass = cn(
             "inline-flex h-10 items-center gap-1 rounded-full px-3 text-[0.9rem] font-semibold whitespace-nowrap transition-colors hover:bg-navy-800/5",
-            active ? "text-navy-900" : "text-navy-900/80",
+            active ? "bg-navy-800/5 text-navy-900" : "text-navy-900/80",
           );
 
           if (!hasChildren) {
@@ -124,7 +124,11 @@ export function DesktopNav({ items, label }: { items: NavItem[]; label: string }
                       <li key={child.href}>
                         <Link
                           href={child.href}
-                          className="group flex h-full flex-col gap-1 rounded-xl p-3 transition-colors hover:bg-cream-200"
+                          aria-current={isActive(child.href) ? "page" : undefined}
+                          className={cn(
+                            "group flex h-full flex-col gap-1 rounded-xl p-3 transition-colors hover:bg-cream-200",
+                            isActive(child.href) && "bg-cream-200",
+                          )}
                         >
                           {child.image?.src ? (
                             <span className="relative mb-2 block aspect-[4/3] overflow-hidden rounded-lg bg-cream-200">
@@ -149,7 +153,11 @@ export function DesktopNav({ items, label }: { items: NavItem[]; label: string }
                   </ul>
                   <Link
                     href={item.href}
-                    className="mt-2 flex items-center justify-between rounded-xl bg-cream-200/70 px-4 py-3 text-sm font-semibold text-navy-900 hover:bg-cream-300/60"
+                    aria-current={pathname === item.href ? "page" : undefined}
+                    className={cn(
+                      "mt-2 flex items-center justify-between rounded-xl bg-cream-200/70 px-4 py-3 text-sm font-semibold text-navy-900 hover:bg-cream-300/60",
+                      pathname === item.href && "bg-cream-300/60",
+                    )}
                   >
                     {item.overviewLabel ?? item.label}
                     <ArrowRight aria-hidden className="size-4" />
