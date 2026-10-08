@@ -62,7 +62,7 @@ const tr = {
     projects: "Projeler",
     filterLabel: "Projeleri kategoriye göre filtrele",
     noProjects: "Bu kategoride henüz yayınlanmış proje yok.",
-    logoNotice: "Referans logoları, kullanım izinleri tamamlandıkça eklenecektir.",
+    logoNotice: "",
     otherCaseStudies: "Diğer projeler",
     fields: {
       client: "Müşteri / Marka",
