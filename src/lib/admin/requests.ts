@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createSignedDownloadUrl } from "@/lib/uploads/storage";
+import { createSignedDownloadUrls } from "@/lib/uploads/storage";
 
 export type RequestStatus = "NEW" | "IN_REVIEW" | "REPLIED";
 export type ProductType = "BEANIE" | "SCARF" | "SET";
@@ -137,29 +137,30 @@ async function attachRequestPreviews(
     filesByRequest.set(file.request_id, list);
   }
 
-  return Promise.all(
-    rows.map(async (row) => {
-      const requestFiles = filesByRequest.get(row.id) ?? [];
-      const image = [...requestFiles]
-        .filter((file) => file.mime_type.startsWith("image/"))
-        .sort((a, b) => previewRank(a.kind) - previewRank(b.kind))[0];
+  const previewKeys = rows.map((row) => {
+    const requestFiles = filesByRequest.get(row.id) ?? [];
+    const image = requestFiles
+      .filter((file) => file.mime_type.startsWith("image/"))
+      .sort((a, b) => previewRank(a.kind) - previewRank(b.kind))[0];
+    return image?.storage_key ?? null;
+  });
 
-      let previewUrl: string | null = null;
-      if (image) {
-        try {
-          previewUrl = await createSignedDownloadUrl(image.storage_key, 60 * 60);
-        } catch {
-          previewUrl = null;
-        }
-      }
+  const uniqueKeys = [...new Set(previewKeys.filter((key): key is string => Boolean(key)))];
+  const signed = await createSignedDownloadUrls(uniqueKeys, 60 * 60);
+  const signedByKey = new Map<string, string>();
+  uniqueKeys.forEach((key, index) => {
+    const url = signed[index];
+    if (url) signedByKey.set(key, url);
+  });
 
-      return {
-        ...row,
-        previewUrl,
-        hasFiles: requestFiles.length > 0,
-      };
-    }),
-  );
+  return rows.map((row, index) => {
+    const key = previewKeys[index];
+    return {
+      ...row,
+      previewUrl: key ? (signedByKey.get(key) ?? null) : null,
+      hasFiles: (filesByRequest.get(row.id) ?? []).length > 0,
+    };
+  });
 }
 
 export async function getRequest(id: string): Promise<RequestDetail | null> {

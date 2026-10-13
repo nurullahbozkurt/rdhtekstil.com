@@ -133,7 +133,7 @@ const tr = {
       invalidDate: "Geçerli bir tarih seçin.",
       pastDate: "Teslim tarihi bugünden önce olamaz.",
     },
-    submit: "Projemi Gönder",
+    submit: "İletişime Geç",
     successTitle: "Mesajınızı aldık.",
     successText: "Ekibimiz mesajınızı inceleyerek sizinle iletişime geçecek.",
   },

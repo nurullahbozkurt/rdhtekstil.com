@@ -57,10 +57,10 @@ export default async function AdminRequestDetailPage({
   const { id } = await params;
   const request = await getRequest(id);
   if (!request) notFound();
-  await markRequestRead(id);
 
   const locale = request.locale === "en" ? "en" : "tr";
-  const [previous, categories, industries, product] = await Promise.all([
+  const [, previous, categories, industries, product] = await Promise.all([
+    markRequestRead(id),
     listRequestsByEmail(request.email, request.id),
     getCategories(locale),
     getIndustries(locale),

@@ -17,17 +17,20 @@ export async function listAdminUsers(): Promise<AdminUser[]> {
     .order("created_at", { ascending: true });
   if (error) throw new Error(error.message);
 
-  const users: AdminUser[] = [];
-  for (const profile of profiles ?? []) {
-    const { data } = await admin.auth.admin.getUserById(profile.id as string);
-    users.push({
-      id: profile.id as string,
-      name: profile.name as string,
-      email: data.user?.email ?? "",
-      created_at: profile.created_at as string,
-    });
+  const emails = new Map<string, string>();
+  for (let page = 1; page <= 10; page += 1) {
+    const { data, error: usersError } = await admin.auth.admin.listUsers({ page, perPage: 200 });
+    if (usersError) throw new Error(usersError.message);
+    for (const user of data.users) emails.set(user.id, user.email ?? "");
+    if (data.users.length < 200) break;
   }
-  return users;
+
+  return (profiles ?? []).map((profile) => ({
+    id: profile.id as string,
+    name: profile.name as string,
+    email: emails.get(profile.id as string) ?? "",
+    created_at: profile.created_at as string,
+  }));
 }
 
 export async function createAdminUser(input: { email: string; password: string; name: string }) {

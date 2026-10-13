@@ -38,7 +38,7 @@ export const legalPages: ContentStoreInput["legalPages"] = [
           heading: "1. Veri sorumlusu",
           paragraphs: [
             "KVKK kapsamında veri sorumlusu: RDH Tekstil.",
-            "İletişim: info@rdhtekstil.com · +90 (212) 000 00 00 · Türkiye.",
+            "İletişim: info@rdhtekstil.com · +90 541 464 10 09 · Türkiye.",
             "Güncel adres ve ticari unvan bilgileri İletişim sayfasında ve bu metnin güncellenmiş sürümlerinde yayımlanır.",
           ],
         },
@@ -121,7 +121,7 @@ export const legalPages: ContentStoreInput["legalPages"] = [
           heading: "1. Data controller",
           paragraphs: [
             "Data controller under the KVKK: RDH Tekstil.",
-            "Contact: info@rdhtekstil.com · +90 (212) 000 00 00 · Türkiye.",
+            "Contact: info@rdhtekstil.com · +90 541 464 10 09 · Türkiye.",
             "Up-to-date address and legal entity details are published on the Contact page and in updated versions of this notice.",
           ],
         },
@@ -233,7 +233,7 @@ export const legalPages: ContentStoreInput["legalPages"] = [
           heading: "1. Veri sorumlusu",
           paragraphs: [
             "Veri sorumlusu: RDH Tekstil.",
-            "İletişim: info@rdhtekstil.com · +90 (212) 000 00 00.",
+            "İletişim: info@rdhtekstil.com · +90 541 464 10 09.",
           ],
         },
         {
@@ -288,7 +288,7 @@ export const legalPages: ContentStoreInput["legalPages"] = [
           heading: "1. Data controller",
           paragraphs: [
             "Data controller: RDH Tekstil.",
-            "Contact: info@rdhtekstil.com · +90 (212) 000 00 00.",
+            "Contact: info@rdhtekstil.com · +90 541 464 10 09.",
           ],
         },
         {

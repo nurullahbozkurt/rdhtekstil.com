@@ -13,6 +13,15 @@ import {
   type ContactFormInput,
 } from "@/lib/validation/contact";
 import { ctaVariants } from "../site/button-link";
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 
 type Option = { value: string; label: string };
 type Errors = Partial<Record<ContactField, string>>;
@@ -42,12 +51,22 @@ export function ContactForm({
   options,
   privacyHref,
   submitLabel,
+  disclosure,
+  disclosureClose,
+  disclosureOpenFull,
 }: {
   locale: "tr" | "en";
   messages: Messages["form"];
   options: { countries: Option[]; products: Option[]; quantities: Option[] };
   privacyHref: string;
   submitLabel: string;
+  disclosure: {
+    title: string;
+    intro?: string;
+    sections: { heading: string; paragraphs: string[] }[];
+  };
+  disclosureClose: string;
+  disclosureOpenFull: string;
 }) {
   const formId = useId();
   const summaryRef = useRef<HTMLDivElement>(null);
@@ -56,6 +75,8 @@ export function ContactForm({
   const [submitted, setSubmitted] = useState(false);
   const [pending, setPending] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [consent, setConsent] = useState(false);
+  const [disclosureOpen, setDisclosureOpen] = useState(false);
 
   const errorText = (code: string) => {
     const parsed = parseErrorCode(code);
@@ -76,7 +97,7 @@ export function ContactForm({
       productInterest: value("productInterest"),
       quantityRange: value("quantityRange"),
       message: value("message"),
-      privacyConsent: (data.get("privacyConsent") === "on") as true,
+      privacyConsent: (consent || data.get("privacyConsent") === "on") as true,
     };
   };
 
@@ -124,6 +145,7 @@ export function ContactForm({
         return;
       }
       setSubmitted(true);
+      setConsent(false);
       form.reset();
       track("contact_submit");
       requestAnimationFrame(() => noticeRef.current?.focus());
@@ -344,6 +366,8 @@ export function ContactForm({
             {...fieldProps("privacyConsent")}
             type="checkbox"
             required
+            checked={consent}
+            onChange={(event) => setConsent(event.target.checked)}
             className="mt-1 size-5 shrink-0 rounded accent-navy-800"
           />
           <label
@@ -351,12 +375,17 @@ export function ContactForm({
             className="text-sm leading-relaxed text-ink-600"
           >
             {consentBefore}
-            <Link
-              href={privacyHref}
+            <button
+              type="button"
               className="font-semibold text-navy-800 underline underline-offset-4"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setDisclosureOpen(true);
+              }}
             >
               {messages.fields.privacyConsentLink}
-            </Link>
+            </button>
             {consentAfter}{" "}
             <span aria-hidden className="text-destructive">
               *
@@ -375,11 +404,54 @@ export function ContactForm({
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || !consent}
         className={cn(ctaVariants({ variant: "primary", size: "lg" }), "w-full sm:w-auto")}
       >
         {pending ? "…" : submitLabel}
       </button>
+
+      <Dialog open={disclosureOpen} onOpenChange={setDisclosureOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{disclosure.title}</DialogTitle>
+          </DialogHeader>
+          <DialogBody className="space-y-6 text-sm leading-relaxed text-ink-600">
+            {disclosure.intro ? <p>{disclosure.intro}</p> : null}
+            {disclosure.sections.map((section) => (
+              <section key={section.heading}>
+                <h3 className="font-heading text-base font-medium text-navy-900">
+                  {section.heading}
+                </h3>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className="mt-2">
+                    {paragraph}
+                  </p>
+                ))}
+              </section>
+            ))}
+          </DialogBody>
+          <DialogFooter className="flex flex-wrap items-center justify-between gap-3">
+            <Link
+              href={privacyHref}
+              className="text-sm font-semibold text-navy-800 underline underline-offset-2"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {disclosureOpenFull}
+            </Link>
+            <DialogClose
+              render={
+                <button
+                  type="button"
+                  className={cn(ctaVariants({ variant: "primary", size: "md" }))}
+                />
+              }
+            >
+              {disclosureClose}
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </form>
   );
 }

@@ -52,6 +52,16 @@ export async function createSignedDownloadUrl(storageKey: string, expiresInSec =
   return data.signedUrl;
 }
 
+export async function createSignedDownloadUrls(storageKeys: string[], expiresInSec = 120) {
+  if (!storageKeys.length) return [];
+  const admin = createAdminClient();
+  const { data, error } = await admin.storage
+    .from(REQUEST_FILES_BUCKET)
+    .createSignedUrls(storageKeys, expiresInSec);
+  if (error || !data) return storageKeys.map(() => null);
+  return data.map((item) => item.signedUrl ?? null);
+}
+
 export async function deleteStorageObjects(keys: string[]) {
   if (!keys.length) return;
   const admin = createAdminClient();

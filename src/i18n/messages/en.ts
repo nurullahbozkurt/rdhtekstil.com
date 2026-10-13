@@ -131,7 +131,7 @@ const en: Messages = {
       invalidDate: "Choose a valid date.",
       pastDate: "Delivery date cannot be in the past.",
     },
-    submit: "Send My Project",
+    submit: "Get in Touch",
     successTitle: "We've received your message.",
     successText: "Our team will review it and get in touch with you.",
   },

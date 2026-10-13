@@ -12,10 +12,10 @@ export const siteSettings: ContentStoreInput["siteSettings"] = {
   logo: { light: "/logo-rdh-light.png", dark: "/logo-rdh-dark.png" },
   defaultOgImage: "/product-images/setler/rdh/2.jpg",
   contact: {
-    // TODO(content): Gerçek telefon, WhatsApp, e-posta, adres ve harita bağlantısı RDH'den gelecek.
-    phone: "+902120000000",
-    phoneDisplay: "+90 (212) 000 00 00",
-    whatsapp: "902120000000",
+    // TODO(content): Adres ve harita bağlantısı RDH'den gelecek.
+    phone: "+905414641009",
+    phoneDisplay: "+90 541 464 10 09",
+    whatsapp: "905414641009",
     email: "info@rdhtekstil.com",
     address: {
       tr: "Adres bilgisi yakında eklenecek. Türkiye",
@@ -25,9 +25,9 @@ export const siteSettings: ContentStoreInput["siteSettings"] = {
     country: "TR",
     contentStatus: "placeholder",
   },
-  // TODO(content): Gerçek sosyal medya hesap bağlantıları.
+  // TODO(content): LinkedIn hesap bağlantısı RDH'den gelecek.
   social: [
-    { platform: "instagram", label: "Instagram", url: "https://www.instagram.com/" },
+    { platform: "instagram", label: "Instagram", url: "https://www.instagram.com/rdhtekstil/" },
     { platform: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/" },
   ],
   navigation: {

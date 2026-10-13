@@ -180,15 +180,17 @@ export async function AboutView({ locale }: { locale: Locale }) {
 
 export async function ContactView({ locale }: { locale: Locale }) {
   const messages = getMessages(locale);
-  const [page, seo, settings, countries, products, quantities, links] = await Promise.all([
-    getPage("contact", locale),
-    getSeo({ type: "page", id: "contact" }, locale),
-    getSiteSettings(locale),
-    getDbFormOptions("country", locale),
-    getFormOptions("productInterest", locale),
-    getDbFormOptions("quantity", locale),
-    getLinks(locale),
-  ]);
+  const [page, seo, settings, countries, products, quantities, links, disclosure] =
+    await Promise.all([
+      getPage("contact", locale),
+      getSeo({ type: "page", id: "contact" }, locale),
+      getSiteSettings(locale),
+      getDbFormOptions("country", locale),
+      getFormOptions("productInterest", locale),
+      getDbFormOptions("quantity", locale),
+      getLinks(locale),
+      getLegalPage("disclosure", locale),
+    ]);
   const { contact } = settings;
   const toOptions = (items: { value: string; label: string }[]) =>
     items.map(({ value, label }) => ({ value, label }));
@@ -219,6 +221,13 @@ export async function ContactView({ locale }: { locale: Locale }) {
               }}
               privacyHref={links.legal("disclosure")}
               submitLabel={messages.form.submit}
+              disclosure={{
+                title: disclosure?.seo.h1 ?? messages.form.fields.privacyConsentLink,
+                intro: disclosure?.intro,
+                sections: disclosure?.sections ?? [],
+              }}
+              disclosureClose={messages.request.disclosureClose}
+              disclosureOpenFull={messages.request.disclosureOpenFull}
             />
           </div>
           <aside className="space-y-6">
