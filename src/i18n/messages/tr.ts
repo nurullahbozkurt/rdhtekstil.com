@@ -240,6 +240,7 @@ const tr = {
   footer: {
     rights: "Tüm hakları saklıdır.",
     language: "Dil",
+    developedBy: "Developed by",
   },
   notFound: {
     title: "Aradığınız sayfayı bulamadık.",

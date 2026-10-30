@@ -239,6 +239,7 @@ const en: Messages = {
   footer: {
     rights: "All rights reserved.",
     language: "Language",
+    developedBy: "Developed by",
   },
   notFound: {
     title: "We couldn't find that page.",

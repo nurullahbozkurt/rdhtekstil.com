@@ -25,10 +25,8 @@ export const siteSettings: ContentStoreInput["siteSettings"] = {
     country: "TR",
     contentStatus: "placeholder",
   },
-  // TODO(content): LinkedIn hesap bağlantısı RDH'den gelecek.
   social: [
     { platform: "instagram", label: "Instagram", url: "https://www.instagram.com/rdhtekstil/" },
-    { platform: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/" },
   ],
   navigation: {
     tr: {

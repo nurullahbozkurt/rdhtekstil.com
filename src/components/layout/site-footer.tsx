@@ -99,28 +99,44 @@ export function SiteFooter({
               tone="light"
             />
             <ul className="flex items-center gap-4">
-              {settings.social.map((social) => (
-                <li key={social.platform}>
-                  <a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={linkClass}
-                  >
-                    {social.label}
-                    <span className="sr-only"> ({messages.a11y.external})</span>
-                  </a>
-                </li>
-              ))}
+              {settings.social
+                .filter((social) => social.platform !== "linkedin")
+                .map((social) => (
+                  <li key={social.platform}>
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    >
+                      {social.label}
+                      <span className="sr-only"> ({messages.a11y.external})</span>
+                    </a>
+                  </li>
+                ))}
             </ul>
             <CookiePreferencesButton
               label={messages.consent.manage}
               className="text-cream-50/75 underline-offset-4 hover:text-cream-50 hover:underline"
             />
           </div>
-          <p className="text-cream-50/60">
-            © {year} {settings.legalName}. {messages.footer.rights}
-          </p>
+          <div className="flex flex-col gap-1 sm:items-end">
+            <p className="text-cream-50/60">
+              © {year} {settings.legalName}. {messages.footer.rights}
+            </p>
+            <p className="text-cream-50/60">
+              {messages.footer.developedBy}{" "}
+              <a
+                href="https://devnoty.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 hover:text-cream-50 hover:underline"
+              >
+                devnoty.com
+                <span className="sr-only"> ({messages.a11y.external})</span>
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
