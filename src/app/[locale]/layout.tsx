@@ -73,7 +73,17 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
             messages={messages}
             settings={settings}
           />
-          <StickyCta label={navigation.cta.label} href={navigation.requestPath} />
+          <StickyCta
+            label={navigation.cta.label}
+            href={navigation.requestPath}
+            hiddenHrefs={[
+              navigation.fairHref,
+              links.page("request"),
+              links.page("requestComplete"),
+              links.page("contact"),
+              links.page("fair"),
+            ]}
+          />
         </MotionProvider>
       </ConsentProvider>
       <JsonLd data={organizationJsonLd(settings, navigation.homeHref)} />

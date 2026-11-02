@@ -6,10 +6,31 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ctaVariants } from "../site/button-link";
 
-/** Mobilde ekranın altında sabit duran ana CTA. Talep ekranının kendisinde gösterilmez. */
-export function StickyCta({ label, href }: { label: string; href: string }) {
+function normalizePath(path: string) {
+  const bare = (path.split("?")[0] || path).replace(/\/+$/, "");
+  return bare || "/";
+}
+
+function pathMatches(pathname: string, href: string) {
+  const current = normalizePath(pathname);
+  const base = normalizePath(href);
+  return current === base || current.startsWith(`${base}/`);
+}
+
+/** Mobilde ekranın altında sabit duran ana CTA. Form/fuar ekranlarında gösterilmez. */
+export function StickyCta({
+  label,
+  href,
+  hiddenHrefs = [],
+}: {
+  label: string;
+  href: string;
+  /** Bu yollarda da gizlenir (fuar, talep, iletişim vb.). */
+  hiddenHrefs?: string[];
+}) {
   const pathname = usePathname();
-  if (pathname === href || pathname.startsWith(`${href}/`)) return null;
+  const hideOn = [href, ...hiddenHrefs];
+  if (hideOn.some((path) => pathMatches(pathname, path))) return null;
 
   return (
     <div
