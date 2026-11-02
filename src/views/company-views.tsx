@@ -4,6 +4,7 @@ import { TrackedLink } from "@/components/analytics/tracked-link";
 import { TrackEvent } from "@/components/analytics/track-event";
 import { ContactForm } from "@/components/forms/contact-form";
 import { FairBoothPanel } from "@/components/fair/fair-booth-panel";
+import { FairQrPanel } from "@/components/fair/fair-qr-panel";
 import QRCode from "qrcode";
 import { absoluteUrl } from "@/lib/site";
 import { ON_REQUEST_STYLE } from "@/lib/catalog/styles";
@@ -446,14 +447,6 @@ export async function FairView({ locale }: { locale: Locale }) {
     { name: messages.nav.home, href: links.home() },
     { name: messages.fair.navLabel, href: links.page("fair") },
   ];
-  const fairPath = links.to({ type: "page", id: "fair" }, { kaynak: "qr" });
-  const qrUrl = absoluteUrl(fairPath);
-  const qrDataUrl = await QRCode.toDataURL(qrUrl, {
-    errorCorrectionLevel: "M",
-    margin: 1,
-    width: 512,
-    color: { dark: "#0B1F3A", light: "#FFFFFF" },
-  });
   const formProps = {
     locale,
     formMessages: messages.form,
@@ -488,7 +481,47 @@ export async function FairView({ locale }: { locale: Locale }) {
       </section>
       <Section tone="cream" className="pt-4 pb-6 sm:pt-10 sm:pb-16 lg:pt-14 lg:pb-20">
         <div className="container-site max-w-3xl">
-          <FairBoothPanel formProps={formProps} qrDataUrl={qrDataUrl} qrUrl={qrUrl} />
+          <FairBoothPanel formProps={formProps} />
+        </div>
+      </Section>
+    </>
+  );
+}
+
+export async function FairQrView({ locale }: { locale: Locale }) {
+  const messages = getMessages(locale);
+  const [seo, links] = await Promise.all([
+    getSeo({ type: "page", id: "fairQr" }, locale),
+    getLinks(locale),
+  ]);
+  const breadcrumbs = [
+    { name: messages.nav.home, href: links.home() },
+    { name: messages.fair.qr.navLabel, href: links.page("fairQr") },
+  ];
+  const fairPath = links.to({ type: "page", id: "fair" }, { kaynak: "qr" });
+  const qrUrl = absoluteUrl(fairPath);
+  const qrDataUrl = await QRCode.toDataURL(qrUrl, {
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 512,
+    color: { dark: "#0B1F3A", light: "#FFFFFF" },
+  });
+
+  return (
+    <>
+      <section className="relative overflow-hidden border-b border-cream-300 bg-cream-100">
+        <div className="container-site relative py-6 sm:py-10 lg:py-14">
+          <Breadcrumbs items={breadcrumbs} label={messages.a11y.breadcrumb} />
+          <h1 className="mt-3 font-heading text-2xl font-medium tracking-tight text-navy-900 sm:mt-4 sm:text-4xl lg:text-5xl">
+            {seo.h1}
+          </h1>
+        </div>
+      </section>
+      <Section tone="cream" className="pt-4 pb-6 sm:pt-10 sm:pb-16 lg:pt-14 lg:pb-20">
+        <div className="container-site max-w-xl">
+          <div className="rounded-[1.25rem] border border-cream-300 bg-cream-50 p-4 sm:rounded-[1.75rem] sm:p-8 lg:p-10">
+            <FairQrPanel qrDataUrl={qrDataUrl} qrUrl={qrUrl} messages={messages.fair.qr} />
+          </div>
         </div>
       </Section>
     </>

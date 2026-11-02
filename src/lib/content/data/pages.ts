@@ -468,4 +468,30 @@ export const pages: ContentStoreInput["pages"] = {
       },
     },
   },
+  fairQr: {
+    seo: {
+      tr: {
+        slug: "fuar-qr",
+        title: "Fuar QR Formu | RDH Tekstil",
+        description: "Ziyaretçilerin kendi telefonlarından doldurabileceği fuar formu QR kodu.",
+        h1: "Fuar QR Formu",
+        noindex: true,
+      },
+      en: {
+        slug: "fair-qr",
+        title: "Fair QR Form | RDH Tekstil",
+        description: "QR code for the fair visitor form that guests can fill on their own phone.",
+        h1: "Fair QR Form",
+        noindex: true,
+      },
+    },
+    content: {
+      tr: {
+        text: "Ziyaretçi bu kodu okutarak formu kendi telefonundan doldurabilir.",
+      },
+      en: {
+        text: "Visitors can scan this code and fill the form on their own phone.",
+      },
+    },
+  },
 };

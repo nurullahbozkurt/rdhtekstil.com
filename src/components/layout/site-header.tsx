@@ -1,4 +1,4 @@
-import { Store } from "lucide-react";
+import { QrCode, Store } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/messages";
 import type { Navigation } from "@/lib/navigation";
@@ -9,6 +9,9 @@ import { LanguageSwitcher, type LanguageMap } from "./language-switcher";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
 import Link from "next/link";
+
+const headerIconClass =
+  "inline-flex size-10 items-center justify-center rounded-xl border border-cream-300 bg-cream-50 text-navy-900 transition-colors hover:border-navy-800/30 hover:bg-cream-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800";
 
 export function SiteHeader({
   locale,
@@ -50,9 +53,18 @@ export function SiteHeader({
             data-testid="header-fair"
             aria-label={messages.fair.iconLabel}
             title={messages.fair.iconLabel}
-            className="inline-flex size-10 items-center justify-center rounded-xl border border-cream-300 bg-cream-50 text-navy-900 transition-colors hover:border-navy-800/30 hover:bg-cream-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800"
+            className={headerIconClass}
           >
             <Store className="size-5" aria-hidden />
+          </Link>
+          <Link
+            href={navigation.fairQrHref}
+            data-testid="header-fair-qr"
+            aria-label={messages.fair.qr.iconLabel}
+            title={messages.fair.qr.iconLabel}
+            className={headerIconClass}
+          >
+            <QrCode className="size-5" aria-hidden />
           </Link>
           <MobileNav
             items={navigation.main}

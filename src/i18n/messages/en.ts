@@ -138,12 +138,9 @@ const en: Messages = {
   fair: {
     navLabel: "Fair",
     iconLabel: "Fair visitor form",
-    tabsLabel: "Fair screen tabs",
-    tabs: {
-      staff: "Booth form",
-      qr: "QR Form",
-    },
     qr: {
+      navLabel: "Fair QR",
+      iconLabel: "Fair QR form",
       title: "Visitor form via QR",
       text: "Visitors can scan this code and fill the form on their own phone.",
       imageAlt: "Fair visitor form QR code",

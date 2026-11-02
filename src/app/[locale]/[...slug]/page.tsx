@@ -9,6 +9,7 @@ import {
   AboutView,
   ContactView,
   CustomProductionView,
+  FairQrView,
   FairView,
   FaqView,
   LegalView,
@@ -83,6 +84,8 @@ function render(locale: Locale, key: RouteKey): ReactNode {
           return <RequestCompleteView locale={locale} />;
         case "fair":
           return <FairView locale={locale} />;
+        case "fairQr":
+          return <FairQrView locale={locale} />;
       }
   }
 }

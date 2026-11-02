@@ -78,10 +78,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
             href={navigation.requestPath}
             hiddenHrefs={[
               navigation.fairHref,
+              navigation.fairQrHref,
               links.page("request"),
               links.page("requestComplete"),
               links.page("contact"),
               links.page("fair"),
+              links.page("fairQr"),
             ]}
           />
         </MotionProvider>

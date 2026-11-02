@@ -140,12 +140,9 @@ const tr = {
   fair: {
     navLabel: "Fuar",
     iconLabel: "Fuar ziyaretçi formu",
-    tabsLabel: "Fuar ekranı sekmeleri",
-    tabs: {
-      staff: "Stand formu",
-      qr: "QR Form",
-    },
     qr: {
+      navLabel: "Fuar QR",
+      iconLabel: "Fuar QR formu",
       title: "QR ile ziyaretçi formu",
       text: "Ziyaretçi bu kodu okutarak formu kendi telefonundan doldurabilir.",
       imageAlt: "Fuar ziyaretçi formu QR kodu",

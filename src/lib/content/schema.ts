@@ -352,6 +352,10 @@ export const pagesSchema = z.object({
     ...pageBase,
     content: localized(z.object({ text: text, submitLabel: text })),
   }),
+  fairQr: z.object({
+    ...pageBase,
+    content: localized(z.object({ text: text })),
+  }),
 });
 
 export type Category = z.infer<typeof categorySchema>;
