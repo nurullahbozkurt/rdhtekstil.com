@@ -1,4 +1,3 @@
-import ExcelJS from "exceljs";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/admin";
 import {
@@ -9,10 +8,57 @@ import {
 import { formatCountryLabel } from "@/lib/admin/countries";
 import {
   listAllFairVisitorsForExport,
+  type FairVisitorDetail,
   type FairVisitorStatus,
 } from "@/lib/admin/fair-visitors";
+import { exportTableResponse, parseExportFormat, type ExportColumn } from "@/lib/admin/export-table";
 import { assertSameOrigin } from "@/lib/security/origin";
 import type { FairVisitorSource } from "@/lib/validation/fair-visitor";
+
+const columns: ExportColumn<FairVisitorDetail>[] = [
+  { header: "Tarih", key: "createdAt", width: 20, value: (row) => row.created_at },
+  { header: "Ad Soyad", key: "fullName", width: 22, value: (row) => row.full_name },
+  { header: "Firma", key: "company", width: 22, value: (row) => row.company },
+  { header: "Görev", key: "jobTitle", width: 18, value: (row) => row.job_title },
+  { header: "Ülke", key: "country", width: 18, value: (row) => formatCountryLabel(row.country) },
+  { header: "E-posta", key: "email", width: 28, value: (row) => row.email },
+  { header: "Telefon", key: "phone", width: 18, value: (row) => row.phone },
+  {
+    header: "Ürün grubu",
+    key: "productGroup",
+    width: 16,
+    value: (row) => FAIR_PRODUCT_GROUP_LABEL[row.product_group] ?? row.product_group,
+  },
+  { header: "Tahmini adet", key: "quantityRange", width: 14, value: (row) => row.quantity_range },
+  { header: "Hedef teslim", key: "desiredDate", width: 14, value: (row) => row.desired_date },
+  { header: "Görüşme notu", key: "notes", width: 36, value: (row) => row.notes },
+  {
+    header: "Kaynak",
+    key: "source",
+    width: 12,
+    value: (row) => FAIR_VISITOR_SOURCE_LABEL[row.source] ?? row.source,
+  },
+  {
+    header: "Durum",
+    key: "status",
+    width: 18,
+    value: (row) => FAIR_VISITOR_STATUS_LABEL[row.status] ?? row.status,
+  },
+  { header: "Dil", key: "locale", width: 8, value: (row) => row.locale.toUpperCase() },
+  {
+    header: "KVKK onay zamanı",
+    key: "privacyConsentAt",
+    width: 22,
+    value: (row) => row.privacy_consent_at,
+  },
+  {
+    header: "KVKK sürüm",
+    key: "privacyConsentVersion",
+    width: 16,
+    value: (row) => row.privacy_consent_version,
+  },
+  { header: "İç not", key: "internalNote", width: 28, value: (row) => row.internal_note },
+];
 
 export async function GET(request: Request) {
   if (!assertSameOrigin(request)) {
@@ -28,67 +74,16 @@ export async function GET(request: Request) {
   const q = url.searchParams.get("q") ?? "";
   const status = (url.searchParams.get("status") ?? "") as FairVisitorStatus | "";
   const source = (url.searchParams.get("source") ?? "") as FairVisitorSource | "";
+  const format = parseExportFormat(url.searchParams.get("format"));
 
   try {
     const rows = await listAllFairVisitorsForExport({ q, status, source });
-    const workbook = new ExcelJS.Workbook();
-    workbook.creator = "RDH Tekstil";
-    workbook.created = new Date();
-    const sheet = workbook.addWorksheet("Fuar ziyaretçileri");
-
-    sheet.columns = [
-      { header: "Tarih", key: "createdAt", width: 20 },
-      { header: "Ad Soyad", key: "fullName", width: 22 },
-      { header: "Firma", key: "company", width: 22 },
-      { header: "Görev", key: "jobTitle", width: 18 },
-      { header: "Ülke", key: "country", width: 18 },
-      { header: "E-posta", key: "email", width: 28 },
-      { header: "Telefon", key: "phone", width: 18 },
-      { header: "Ürün grubu", key: "productGroup", width: 16 },
-      { header: "Tahmini adet", key: "quantityRange", width: 14 },
-      { header: "Hedef teslim", key: "desiredDate", width: 14 },
-      { header: "Görüşme notu", key: "notes", width: 36 },
-      { header: "Kaynak", key: "source", width: 12 },
-      { header: "Durum", key: "status", width: 18 },
-      { header: "Dil", key: "locale", width: 8 },
-      { header: "KVKK onay zamanı", key: "privacyConsentAt", width: 22 },
-      { header: "KVKK sürüm", key: "privacyConsentVersion", width: 16 },
-      { header: "İç not", key: "internalNote", width: 28 },
-    ];
-
-    sheet.getRow(1).font = { bold: true };
-
-    for (const row of rows) {
-      sheet.addRow({
-        createdAt: row.created_at,
-        fullName: row.full_name,
-        company: row.company,
-        jobTitle: row.job_title,
-        country: formatCountryLabel(row.country),
-        email: row.email,
-        phone: row.phone,
-        productGroup: FAIR_PRODUCT_GROUP_LABEL[row.product_group] ?? row.product_group,
-        quantityRange: row.quantity_range,
-        desiredDate: row.desired_date ?? "",
-        notes: row.notes ?? "",
-        source: FAIR_VISITOR_SOURCE_LABEL[row.source] ?? row.source,
-        status: FAIR_VISITOR_STATUS_LABEL[row.status] ?? row.status,
-        locale: row.locale.toUpperCase(),
-        privacyConsentAt: row.privacy_consent_at,
-        privacyConsentVersion: row.privacy_consent_version,
-        internalNote: row.internal_note ?? "",
-      });
-    }
-
-    const buffer = Buffer.from(await workbook.xlsx.writeBuffer());
-    const stamp = new Date().toISOString().slice(0, 10);
-    return new NextResponse(buffer, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="fuar-ziyaretcileri-${stamp}.xlsx"`,
-        "Cache-Control": "no-store",
-      },
+    return exportTableResponse({
+      format,
+      filenameBase: "fuar-ziyaretcileri",
+      sheetName: "Fuar ziyaretçileri",
+      columns,
+      rows,
     });
   } catch (e) {
     return NextResponse.json(

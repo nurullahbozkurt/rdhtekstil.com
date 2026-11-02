@@ -227,9 +227,12 @@ export default async function AdminRequestDetailPage({
                 {request.color3 ? <ColorSwatch label="Üçüncü renk" value={request.color3} /> : null}
               </dd>
             </div>
-            {request.slogan ? (
-              <div className="sm:col-span-2">
-                <Field label="Slogan">{request.slogan}</Field>
+            {request.slogan || request.slogan_color ? (
+              <div className="sm:col-span-2 space-y-3">
+                {request.slogan ? <Field label="Slogan">{request.slogan}</Field> : null}
+                {request.slogan_color ? (
+                  <ColorSwatch label="Slogan rengi" value={request.slogan_color} />
+                ) : null}
               </div>
             ) : null}
             {request.note ? (

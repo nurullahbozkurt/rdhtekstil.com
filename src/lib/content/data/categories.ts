@@ -13,8 +13,8 @@ export const categories: ContentStoreInput["categories"] = [
     },
     cardCta: { tr: "Bereleri İncele", en: "Browse Beanies" },
     intro: {
-      tr: "Klasik katlamalı, ponponlu, katlamasız uzun, yüksek tepeli ve kulaklıklı bereler üretiyoruz. Renk, desen, logo ve etiket detaylarını markanıza göre belirliyoruz.",
-      en: "We produce classic cuffed, pom-pom, uncuffed, high-top and earflap beanies, with colours, patterns, logos and labels shaped around your brand.",
+      tr: "Klasik katlamalı, ponponlu, katlamasız uzun ve yüksek tepeli bereler üretiyoruz. Renk, desen, logo ve etiket detaylarını markanıza göre belirliyoruz.",
+      en: "We produce classic cuffed, pom-pom, uncuffed and high-top beanies, with colours, patterns, logos and labels shaped around your brand.",
     },
     image: img(
       `${P}/bereler/jets/1.jpg`,
@@ -45,14 +45,6 @@ export const categories: ContentStoreInput["categories"] = [
         label: { tr: "Yüksek tepeli bere", en: "High-Top Beanie" },
         description: { tr: "Tepesi dik ve uzun durur.", en: "The crown stands tall." },
       },
-      {
-        id: "earflap",
-        label: { tr: "Kulaklıklı bere", en: "Earflap Beanie" },
-        description: {
-          tr: "Yanlarda kulakları kapatan parçalar bulunur.",
-          en: "Side pieces cover the ears.",
-        },
-      },
     ],
     faqIds: ["beanie-models", "beanie-logo", "min-order", "own-logo"],
     seo: {
@@ -60,14 +52,14 @@ export const categories: ContentStoreInput["categories"] = [
         slug: "bere-uretimi",
         title: "Özel Tasarım Bere Üretimi | RDH Tekstil",
         description:
-          "Klasik katlamalı, ponponlu, katlamasız, yüksek tepeli ve kulaklıklı bere üretimi. Kulüpler, markalar ve kurumlar için düşük minimum adetle özel tasarım bereler.",
+          "Klasik katlamalı, ponponlu, katlamasız ve yüksek tepeli bere üretimi. Kulüpler, markalar ve kurumlar için düşük minimum adetle özel tasarım bereler.",
         h1: "Markanıza Özel Bere Üretimi",
       },
       en: {
         slug: "beanie-manufacturing",
         title: "Custom Beanie Manufacturing | RDH Tekstil",
         description:
-          "Classic cuffed, pom-pom, uncuffed, high-top and earflap beanie manufacturing for clubs, brands and organisations, with low minimum order quantities.",
+          "Classic cuffed, pom-pom, uncuffed and high-top beanie manufacturing for clubs, brands and organisations, with low minimum order quantities.",
         h1: "Custom Beanie Manufacturing for Your Brand",
       },
     },

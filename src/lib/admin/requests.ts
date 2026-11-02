@@ -42,6 +42,7 @@ export type RequestDetail = RequestListItem & {
   color2: string | null;
   color3: string | null;
   slogan: string | null;
+  slogan_color: string | null;
   desired_date: string | null;
   note: string | null;
   phone: string;
@@ -51,6 +52,8 @@ export type RequestDetail = RequestListItem & {
   internal_note: string | null;
   files: RequestFile[];
 };
+
+export type RequestExportRow = Omit<RequestDetail, "previewUrl" | "hasFiles" | "files">;
 
 export type RequestFilters = {
   q?: string;
@@ -62,6 +65,32 @@ export type RequestFilters = {
   page?: number;
   pageSize?: number;
 };
+
+export async function listAllRequestsForExport(
+  filters: Omit<RequestFilters, "page" | "pageSize"> = {},
+): Promise<RequestExportRow[]> {
+  const admin = createAdminClient();
+  let query = admin
+    .from("requests")
+    .select(
+      "id, number, created_at, locale, product_type, product_slug, model_slug, style_slug, industry, quantity_range, full_name, company, email, phone, country, status, read_at, color1, color2, color3, slogan, slogan_color, desired_date, note, privacy_consent_at, privacy_consent_version, marketing_consent, internal_note",
+    )
+    .order("created_at", { ascending: false });
+
+  if (filters.status) query = query.eq("status", filters.status);
+  if (filters.productType) query = query.eq("product_type", filters.productType);
+  if (filters.locale) query = query.eq("locale", filters.locale);
+  if (filters.from) query = query.gte("created_at", filters.from);
+  if (filters.to) query = query.lte("created_at", `${filters.to}T23:59:59.999Z`);
+  if (filters.q?.trim()) {
+    const q = `%${filters.q.trim()}%`;
+    query = query.or(`full_name.ilike.${q},company.ilike.${q},email.ilike.${q},number.ilike.${q}`);
+  }
+
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  return (data ?? []) as RequestExportRow[];
+}
 
 export async function listRequests(filters: RequestFilters = {}) {
   const admin = createAdminClient();

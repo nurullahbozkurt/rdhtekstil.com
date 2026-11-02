@@ -47,6 +47,7 @@ export async function createRequest(data: RequestFormData): Promise<CreateReques
     color2: data.color2 ?? null,
     color3: data.color3 ?? null,
     slogan: data.slogan ?? null,
+    slogan_color: data.sloganColor ?? null,
     quantity_range: data.quantityRange,
     desired_date: data.desiredDate ?? null,
     note: note ?? null,

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Download } from "lucide-react";
 import { RequestsList } from "@/components/admin/requests-list";
 import { listRequests, type RequestStatus, type ProductType } from "@/lib/admin/requests";
 
@@ -26,6 +27,13 @@ export default async function AdminRequestsPage({
   });
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const queryParams = { q, status, productType, locale };
+  const exportParams = new URLSearchParams();
+  if (q) exportParams.set("q", q);
+  if (status) exportParams.set("status", status);
+  if (productType) exportParams.set("productType", productType);
+  if (locale) exportParams.set("locale", locale);
+  const exportQuery = exportParams.toString();
+  const exportBase = `/api/admin/requests/export${exportQuery ? `?${exportQuery}&` : "?"}`;
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -35,6 +43,22 @@ export default async function AdminRequestsPage({
             Talepler
           </h1>
           <p className="mt-1 text-sm text-ink-600">{total} kayıt</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <a
+            href={`${exportBase}format=xlsx`}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cream-300 bg-white px-4 text-sm font-semibold text-navy-900 hover:bg-cream-50"
+          >
+            <Download className="size-4" aria-hidden />
+            Excel
+          </a>
+          <a
+            href={`${exportBase}format=csv`}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cream-300 bg-white px-4 text-sm font-semibold text-navy-900 hover:bg-cream-50"
+          >
+            <Download className="size-4" aria-hidden />
+            CSV
+          </a>
         </div>
       </div>
 

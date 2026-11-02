@@ -47,6 +47,7 @@ type Draft = {
   color2?: string;
   color3?: string;
   slogan?: string;
+  sloganColor?: string;
   quantityRange?: string;
   desiredDate?: string;
   note?: string;
@@ -276,6 +277,7 @@ export function RequestForm({
       color2: draft.color2,
       color3: draft.color3,
       slogan: draft.slogan,
+      sloganColor: draft.sloganColor,
       quantityRange: draft.quantityRange ?? "",
       desiredDate: draft.desiredDate,
       note: draft.note,
@@ -590,16 +592,49 @@ export function RequestForm({
               />
             </div>
 
-            <label className="block space-y-2">
-              <span className="text-sm font-semibold text-navy-900">{messages.fields.slogan}</span>
-              <input
-                type="text"
-                maxLength={200}
-                className={inputClass}
-                value={draft.slogan ?? ""}
-                onChange={(e) => patch({ slogan: e.target.value })}
-              />
-            </label>
+            <div className="space-y-4">
+              <label className="block space-y-2">
+                <span className="text-sm font-semibold text-navy-900">{messages.fields.slogan}</span>
+                <input
+                  type="text"
+                  maxLength={200}
+                  className={inputClass}
+                  value={draft.slogan ?? ""}
+                  onChange={(e) => patch({ slogan: e.target.value })}
+                />
+              </label>
+              <div className="block space-y-2">
+                <span className="text-sm font-semibold text-navy-900">
+                  {messages.fields.sloganColor}
+                </span>
+                <div className="flex gap-3">
+                  <input
+                    type="color"
+                    aria-label={messages.fields.sloganColor}
+                    className={cn(
+                      "h-12 w-14 cursor-pointer rounded-xl border border-cream-300 bg-cream-100",
+                      !draft.sloganColor?.trim() && "opacity-60",
+                    )}
+                    value={
+                      draft.sloganColor?.startsWith("#") && draft.sloganColor.length >= 4
+                        ? draft.sloganColor.slice(0, 7)
+                        : "#ffffff"
+                    }
+                    onChange={(e) => {
+                      patch({ sloganColor: e.target.value });
+                      track("select_color");
+                    }}
+                  />
+                  <input
+                    type="text"
+                    className={cn(inputClass, "flex-1")}
+                    placeholder="#1A2744 / Pantone"
+                    value={draft.sloganColor ?? ""}
+                    onChange={(e) => patch({ sloganColor: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         ) : null}
 

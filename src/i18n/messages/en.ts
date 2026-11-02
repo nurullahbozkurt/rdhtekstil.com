@@ -194,7 +194,7 @@ const en: Messages = {
     onRequestDescription:
       "The model, size and details are finalised together, based on your request.",
     styleNoteHelp: "Describe the shape, size or model details you need.",
-    styleNotePlaceholder: "e.g. high crown, custom size, earflaps…",
+    styleNotePlaceholder: "e.g. high crown, custom size…",
     disclosureClose: "Close",
     disclosureOpenFull: "Open full notice",
     fileHelp: "For best results, upload a high-resolution or vector logo.",
@@ -225,6 +225,7 @@ const en: Messages = {
       color3: "Third colour",
       logo: "Logo",
       slogan: "Slogan / text",
+      sloganColor: "Slogan colour",
       references: "Design reference",
       quantityRange: "Estimated quantity",
       desiredDate: "Desired delivery date",

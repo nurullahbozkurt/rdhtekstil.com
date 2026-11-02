@@ -45,6 +45,7 @@ create table public.requests (
   color2 text,
   color3 text,
   slogan text,
+  slogan_color text,
   quantity_range text not null,
   desired_date date,
   note text,

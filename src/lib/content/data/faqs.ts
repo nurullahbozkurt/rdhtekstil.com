@@ -84,8 +84,8 @@ export const faqs: ContentStoreInput["faqs"] = [
       en: "Which beanie models do you produce?",
     },
     answer: {
-      tr: "Klasik katlamalı bere, ponponlu bere, katlamasız uzun bere, yüksek tepeli bere ve kulaklıklı bere üretiyoruz. Model seçimi kullanım alanına ve tasarıma göre birlikte netleştirilir.",
-      en: "We produce classic cuffed, pom-pom, uncuffed, high-top and earflap beanies. The model is finalised together, based on use and design.",
+      tr: "Klasik katlamalı bere, ponponlu bere, katlamasız uzun bere ve yüksek tepeli bere üretiyoruz. Model seçimi kullanım alanına ve tasarıma göre birlikte netleştirilir.",
+      en: "We produce classic cuffed, pom-pom, uncuffed and high-top beanies. The model is finalised together, based on use and design.",
     },
   },
   {

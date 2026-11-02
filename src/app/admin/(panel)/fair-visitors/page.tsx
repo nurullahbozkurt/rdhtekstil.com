@@ -23,7 +23,8 @@ export default async function AdminFairVisitorsPage({
   if (q) exportParams.set("q", q);
   if (status) exportParams.set("status", status);
   if (source) exportParams.set("source", source);
-  const exportHref = `/api/admin/fair-visitors/export${exportParams.toString() ? `?${exportParams}` : ""}`;
+  const exportQuery = exportParams.toString();
+  const exportBase = `/api/admin/fair-visitors/export${exportQuery ? `?${exportQuery}&` : "?"}`;
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -34,13 +35,22 @@ export default async function AdminFairVisitorsPage({
           </h1>
           <p className="mt-1 text-sm text-ink-600">{total} kayıt</p>
         </div>
-        <a
-          href={exportHref}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cream-300 bg-white px-4 text-sm font-semibold text-navy-900 hover:bg-cream-50"
-        >
-          <Download className="size-4" aria-hidden />
-          Excel&apos;e aktar
-        </a>
+        <div className="flex flex-wrap gap-2">
+          <a
+            href={`${exportBase}format=xlsx`}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cream-300 bg-white px-4 text-sm font-semibold text-navy-900 hover:bg-cream-50"
+          >
+            <Download className="size-4" aria-hidden />
+            Excel
+          </a>
+          <a
+            href={`${exportBase}format=csv`}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cream-300 bg-white px-4 text-sm font-semibold text-navy-900 hover:bg-cream-50"
+          >
+            <Download className="size-4" aria-hidden />
+            CSV
+          </a>
+        </div>
       </div>
 
       <form className="grid gap-3 rounded-2xl border border-cream-300 bg-cream-50 p-3 sm:p-4 md:grid-cols-6">

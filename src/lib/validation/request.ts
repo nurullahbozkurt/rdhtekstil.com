@@ -53,6 +53,7 @@ export const requestFormSchema = z
     color2: optionalColor,
     color3: optionalColor,
     slogan: optionalText(200),
+    sloganColor: optionalColor,
     quantityRange: z.string().trim().min(1, { error: "required" }).max(40),
     desiredDate: z
       .string()
