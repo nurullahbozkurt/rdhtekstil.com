@@ -37,7 +37,7 @@ import type { LegalPageId } from "@/lib/content/schema";
 import { getDbFormOptions } from "@/lib/form-options";
 import { ClearRequestSuccessCookie } from "@/components/forms/clear-request-success-cookie";
 import { getRequestSuccessEmail } from "@/lib/requests/success-cookie";
-import { getLinks, getSeo } from "@/lib/routing";
+import { getLanguageMap, getLinks, getSeo } from "@/lib/routing";
 import { faqJsonLd } from "@/lib/seo/jsonld";
 
 export async function CustomProductionView({ locale }: { locale: Locale }) {
@@ -490,7 +490,11 @@ export async function FairView({ locale }: { locale: Locale }) {
 
 export async function FairQrView({ locale }: { locale: Locale }) {
   const messages = getMessages(locale);
-  const [settings, links] = await Promise.all([getSiteSettings(locale), getLinks(locale)]);
+  const [settings, links, languageMap] = await Promise.all([
+    getSiteSettings(locale),
+    getLinks(locale),
+    getLanguageMap(),
+  ]);
   const fairPath = links.to({ type: "page", id: "fair" }, { kaynak: "qr" });
   const qrUrl = absoluteUrl(fairPath);
   const qrDataUrl = await QRCode.toDataURL(qrUrl, {
@@ -502,6 +506,9 @@ export async function FairQrView({ locale }: { locale: Locale }) {
 
   return (
     <FairQrDisplay
+      locale={locale}
+      languageMap={languageMap}
+      languageLabel={messages.a11y.languageSwitcher}
       qrDataUrl={qrDataUrl}
       qrUrl={qrUrl}
       brandName={settings.brandName}
