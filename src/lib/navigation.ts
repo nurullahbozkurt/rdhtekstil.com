@@ -96,6 +96,7 @@ export async function getNavigation(
     main,
     footer,
     cta: { label: settings.ctas.designRequest, href: links.request() },
+    fairHref: links.page("fair"),
     requestPath: links.request(),
     homeHref: links.home(),
   };

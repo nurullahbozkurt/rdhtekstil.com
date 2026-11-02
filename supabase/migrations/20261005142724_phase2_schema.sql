@@ -175,6 +175,7 @@ on conflict (id) do nothing;
 -- Seed: form_options
 -- ---------------------------------------------------------------------------
 insert into public.form_options (type, value, label_tr, label_en, sort_order) values
+  ('quantity', '30-50', '30–50', '30–50', 5),
   ('quantity', '50-99', '50–99', '50–99', 10),
   ('quantity', '100-249', '100–249', '100–249', 20),
   ('quantity', '250-499', '250–499', '250–499', 30),

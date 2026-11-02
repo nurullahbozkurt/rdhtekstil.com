@@ -438,4 +438,34 @@ export const pages: ContentStoreInput["pages"] = {
       },
     },
   },
+  fair: {
+    seo: {
+      tr: {
+        slug: "fuar",
+        title: "Fuar Ziyaretçi Formu | RDH Tekstil",
+        description:
+          "Fuar standında görüşme bilgilerinizi paylaşın; ekibimiz ürün grubu ve adet ihtiyacınıza göre sizinle iletişime geçsin.",
+        h1: "Fuar Ziyaretçi Formu",
+        noindex: true,
+      },
+      en: {
+        slug: "fair",
+        title: "Fair Visitor Form | RDH Tekstil",
+        description:
+          "Share your meeting details at our fair stand; our team will follow up based on your product group and quantity needs.",
+        h1: "Fair Visitor Form",
+        noindex: true,
+      },
+    },
+    content: {
+      tr: {
+        text: "Görüşme bilgilerinizi paylaşın. Ekibimiz ilgilendiğiniz ürün grubunu ve adet ihtiyacınızı değerlendirerek sizinle iletişime geçsin.",
+        submitLabel: "Bilgilerimi Kaydet",
+      },
+      en: {
+        text: "Share your meeting details. Our team will review the product group and quantity you are interested in and get in touch.",
+        submitLabel: "Save My Details",
+      },
+    },
+  },
 };

@@ -11,6 +11,20 @@ function localSeedStore(): ContentStore {
   return contentStoreSchema.parse(seed);
 }
 
+/** Mevcut CMS kaydına yeni seed anahtarlarını (ör. pages.fair) ekler. */
+function mergeCmsWithSeed(raw: unknown): ContentStore {
+  const base = localSeedStore();
+  if (!raw || typeof raw !== "object") return base;
+  const data = raw as Record<string, unknown>;
+  const rawPages =
+    data.pages && typeof data.pages === "object" ? (data.pages as Record<string, unknown>) : {};
+  return contentStoreSchema.parse({
+    ...base,
+    ...data,
+    pages: { ...base.pages, ...rawPages },
+  });
+}
+
 export async function readCmsStore(): Promise<ContentStore | null> {
   if (!hasSupabaseConfig()) return null;
   try {
@@ -21,7 +35,7 @@ export async function readCmsStore(): Promise<ContentStore | null> {
       .eq("id", CMS_ID)
       .maybeSingle();
     if (error || !data?.data) return null;
-    return contentStoreSchema.parse(data.data);
+    return mergeCmsWithSeed(data.data);
   } catch {
     return null;
   }

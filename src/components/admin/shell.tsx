@@ -34,7 +34,16 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
-          <Suspense fallback={<AdminNav unreadRequests={0} unreadMessages={0} variant="bottom" />}>
+          <Suspense
+            fallback={
+              <AdminNav
+                unreadRequests={0}
+                unreadMessages={0}
+                unreadFairVisitors={0}
+                variant="bottom"
+              />
+            }
+          >
             <AdminBottomChrome />
           </Suspense>
         </div>

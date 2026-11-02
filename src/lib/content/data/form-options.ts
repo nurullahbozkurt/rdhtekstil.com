@@ -3,6 +3,7 @@ import type { ContentStoreInput } from "../schema";
 type Options = ContentStoreInput["formOptions"];
 
 const quantity: Options = [
+  ["30-50", "30–50", "30–50"],
   ["50-99", "50–99", "50–99"],
   ["100-249", "100–249", "100–249"],
   ["250-499", "250–499", "250–499"],
@@ -13,7 +14,7 @@ const quantity: Options = [
   type: "quantity" as const,
   value: value as string,
   label: { tr: tr as string, en: en as string },
-  sortOrder: index + 1,
+  sortOrder: (index + 1) * 10,
 }));
 
 const productInterest: Options = [

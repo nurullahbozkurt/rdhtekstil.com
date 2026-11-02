@@ -1,3 +1,4 @@
+import { Store } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Messages } from "@/i18n/messages";
 import type { Navigation } from "@/lib/navigation";
@@ -43,6 +44,15 @@ export function SiteHeader({
             )}
           >
             {navigation.cta.label}
+          </Link>
+          <Link
+            href={navigation.fairHref}
+            data-testid="header-fair"
+            aria-label={messages.fair.iconLabel}
+            title={messages.fair.iconLabel}
+            className="inline-flex size-10 items-center justify-center rounded-xl border border-cream-300 bg-cream-50 text-navy-900 transition-colors hover:border-navy-800/30 hover:bg-cream-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800"
+          >
+            <Store className="size-5" aria-hidden />
           </Link>
           <MobileNav
             items={navigation.main}

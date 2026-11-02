@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ClipboardList, FileText, Mail, Users } from "lucide-react";
+import { ClipboardList, FileText, Mail, Store, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/admin/requests", label: "Talepler", icon: ClipboardList },
   { href: "/admin/messages", label: "İletişim", icon: Mail },
+  { href: "/admin/fair-visitors", label: "Fuar", icon: Store },
   { href: "/admin/users", label: "Kullanıcılar", icon: Users },
   { href: "/admin/content", label: "İçerik", icon: FileText },
 ] as const;
@@ -15,10 +16,12 @@ const links = [
 export function AdminNav({
   unreadRequests,
   unreadMessages,
+  unreadFairVisitors,
   variant,
 }: {
   unreadRequests: number;
   unreadMessages: number;
+  unreadFairVisitors: number;
   variant: "side" | "bottom";
 }) {
   const pathname = usePathname();
@@ -29,7 +32,7 @@ export function AdminNav({
       className={cn(
         variant === "side" && "flex flex-col gap-1 px-3 pb-4",
         variant === "bottom" &&
-          "grid grid-cols-4 border-t border-cream-300 bg-cream-50/95 px-1 pt-1 backdrop-blur-md supports-backdrop-filter:bg-cream-50/85",
+          "grid grid-cols-5 border-t border-cream-300 bg-cream-50/95 px-1 pt-1 backdrop-blur-md supports-backdrop-filter:bg-cream-50/85",
       )}
       style={
         variant === "bottom"
@@ -44,7 +47,9 @@ export function AdminNav({
             ? unreadRequests
             : link.href === "/admin/messages"
               ? unreadMessages
-              : 0;
+              : link.href === "/admin/fair-visitors"
+                ? unreadFairVisitors
+                : 0;
         const Icon = link.icon;
 
         if (variant === "bottom") {

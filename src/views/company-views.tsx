@@ -3,12 +3,16 @@ import { Suspense } from "react";
 import { TrackedLink } from "@/components/analytics/tracked-link";
 import { TrackEvent } from "@/components/analytics/track-event";
 import { ContactForm } from "@/components/forms/contact-form";
+import { FairBoothPanel } from "@/components/fair/fair-booth-panel";
+import QRCode from "qrcode";
+import { absoluteUrl } from "@/lib/site";
 import { ON_REQUEST_STYLE } from "@/lib/catalog/styles";
 import { RequestForm } from "@/components/forms/request-form";
 import { RequestPrefill } from "@/components/forms/request-prefill";
 import { CtaBand } from "@/components/sections/cta-band";
 import { FaqList, FaqSection } from "@/components/sections/faq-section";
 import { PageHero } from "@/components/sections/page-hero";
+import { Breadcrumbs } from "@/components/site/breadcrumbs";
 import { ValueProps } from "@/components/sections/value-props";
 import { ButtonLink } from "@/components/site/button-link";
 import { ContentImage } from "@/components/site/content-image";
@@ -421,6 +425,71 @@ export async function LegalView({ locale, id }: { locale: Locale; id: LegalPageI
             </section>
           ))}
         </article>
+      </Section>
+    </>
+  );
+}
+
+export async function FairView({ locale }: { locale: Locale }) {
+  const messages = getMessages(locale);
+  const [page, seo, countries, quantities, links, disclosure] = await Promise.all([
+    getPage("fair", locale),
+    getSeo({ type: "page", id: "fair" }, locale),
+    getDbFormOptions("country", locale),
+    getDbFormOptions("quantity", locale),
+    getLinks(locale),
+    getLegalPage("disclosure", locale),
+  ]);
+  const toOptions = (items: { value: string; label: string }[]) =>
+    items.map(({ value, label }) => ({ value, label }));
+  const breadcrumbs = [
+    { name: messages.nav.home, href: links.home() },
+    { name: messages.fair.navLabel, href: links.page("fair") },
+  ];
+  const fairPath = links.to({ type: "page", id: "fair" }, { kaynak: "qr" });
+  const qrUrl = absoluteUrl(fairPath);
+  const qrDataUrl = await QRCode.toDataURL(qrUrl, {
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 512,
+    color: { dark: "#0B1F3A", light: "#FFFFFF" },
+  });
+  const formProps = {
+    locale,
+    formMessages: messages.form,
+    fairMessages: messages.fair,
+    options: {
+      countries: toOptions(countries),
+      quantities: toOptions(quantities),
+    },
+    privacyHref: links.legal("disclosure"),
+    submitLabel: page.content.submitLabel,
+    disclosure: {
+      title: disclosure?.seo.h1 ?? messages.form.fields.privacyConsentLink,
+      intro: disclosure?.intro,
+      sections: disclosure?.sections ?? [],
+    },
+    disclosureClose: messages.request.disclosureClose,
+    disclosureOpenFull: messages.request.disclosureOpenFull,
+  };
+
+  return (
+    <>
+      <section className="relative overflow-hidden border-b border-cream-300 bg-cream-100">
+        <div className="container-site relative py-6 sm:py-10 lg:py-14">
+          <Breadcrumbs items={breadcrumbs} label={messages.a11y.breadcrumb} />
+          <h1 className="mt-3 font-heading text-2xl font-medium tracking-tight text-navy-900 sm:mt-4 sm:text-4xl lg:text-5xl">
+            {seo.h1}
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-600 sm:mt-4 sm:text-lg">
+            {page.content.text}
+          </p>
+        </div>
+      </section>
+      <Section tone="cream" className="pt-4 pb-6 sm:pt-10 sm:pb-16 lg:pt-14 lg:pb-20">
+        <div className="container-site max-w-3xl">
+          <FairBoothPanel formProps={formProps} qrDataUrl={qrDataUrl} qrUrl={qrUrl} />
+        </div>
       </Section>
     </>
   );
