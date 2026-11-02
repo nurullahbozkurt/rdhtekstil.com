@@ -64,11 +64,19 @@ export const references: ContentStoreInput["references"] = [
     sortOrder: 7,
   },
   {
+    id: "check24",
+    name: "CHECK24",
+    logo: null,
+    categories: ["corporate"],
+    permissionConfirmed: false,
+    sortOrder: 8,
+  },
+  {
     id: "es",
     name: "ES",
     logo: null,
     categories: ["private-label"],
     permissionConfirmed: false,
-    sortOrder: 8,
+    sortOrder: 9,
   },
 ];
