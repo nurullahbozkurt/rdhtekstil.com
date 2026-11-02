@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Messages } from "@/i18n/messages";
 import { Logo } from "@/components/layout/logo";
+import { cn } from "@/lib/utils";
 
 /** Fuar standında yansıtmak için tam ekran QR gösterimi. */
 export function FairQrDisplay({
   qrDataUrl,
+  qrUrl,
   brandName,
   tagline,
   homeHref,
@@ -15,12 +17,15 @@ export function FairQrDisplay({
   messages,
 }: {
   qrDataUrl: string;
+  qrUrl: string;
   brandName: string;
   tagline: string;
   homeHref: string;
   homeLabel: string;
   messages: Messages["fair"]["qr"];
 }) {
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -33,6 +38,16 @@ export function FairQrDisplay({
       body.style.overflow = previousBodyOverflow;
     };
   }, []);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(qrUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[70] overflow-hidden bg-cream-100 text-navy-900">
@@ -64,7 +79,7 @@ export function FairQrDisplay({
             </p>
           </div>
 
-          <div className="aspect-square w-[min(58vmin,52vh,28rem)] shrink-0 rounded-[1.5rem] border border-cream-300 bg-white p-3 shadow-sm sm:rounded-[1.75rem] sm:p-4">
+          <div className="aspect-square w-[min(52vmin,46vh,26rem)] shrink-0 rounded-[1.5rem] border border-cream-300 bg-white p-3 shadow-sm sm:rounded-[1.75rem] sm:p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={qrDataUrl}
@@ -75,12 +90,34 @@ export function FairQrDisplay({
             />
           </div>
 
-          <Link
-            href={homeHref}
-            className="shrink-0 pt-1 text-sm font-semibold text-navy-800 underline decoration-gold-500 decoration-2 underline-offset-[6px] transition-colors hover:decoration-navy-800 sm:text-base"
-          >
-            {homeLabel}
-          </Link>
+          <div className="flex w-full max-w-xl shrink-0 flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={() => void copy()}
+              title={copied ? messages.copied : messages.copy}
+              aria-label={copied ? messages.copied : messages.copy}
+              className={cn(
+                "w-full max-w-full rounded-2xl border px-3 py-2.5 text-center transition-colors",
+                copied
+                  ? "border-gold-500/50 bg-gold-200/40 text-navy-900"
+                  : "border-cream-300 bg-white text-navy-900 hover:border-navy-800/30",
+              )}
+            >
+              <span className="block truncate font-mono text-[clamp(0.7rem,1.6vh,0.95rem)]">
+                {qrUrl}
+              </span>
+              <span className="mt-1 block text-[0.7rem] font-semibold tracking-wide text-ink-500 uppercase">
+                {copied ? messages.copied : messages.copy}
+              </span>
+            </button>
+
+            <Link
+              href={homeHref}
+              className="pt-1 text-sm font-semibold text-navy-800 underline decoration-gold-500 decoration-2 underline-offset-[6px] transition-colors hover:decoration-navy-800 sm:text-base"
+            >
+              {homeLabel}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

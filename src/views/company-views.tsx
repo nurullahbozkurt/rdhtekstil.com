@@ -503,6 +503,7 @@ export async function FairQrView({ locale }: { locale: Locale }) {
   return (
     <FairQrDisplay
       qrDataUrl={qrDataUrl}
+      qrUrl={qrUrl}
       brandName={settings.brandName}
       tagline={settings.tagline}
       homeHref={links.home()}
