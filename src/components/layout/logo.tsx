@@ -3,8 +3,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const LOGOS = {
-  dark: { src: "/logo-rdh-dark.png", width: 1662, height: 553 },
-  light: { src: "/logo-rdh-light.png", width: 2482, height: 741 },
+  dark: { src: "/logo-rdh-dark.png", width: 902, height: 319 },
+  light: { src: "/logo-rdh-light.png", width: 902, height: 319 },
 } as const;
 
 export function Logo({
