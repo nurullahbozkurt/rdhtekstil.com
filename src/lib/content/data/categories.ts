@@ -17,9 +17,9 @@ export const categories: ContentStoreInput["categories"] = [
       en: "We produce classic cuffed, pom-pom, uncuffed and high-top beanies, with colours, patterns, logos and labels shaped around your brand.",
     },
     image: img(
-      `${P}/bereler/jets/1.jpg`,
-      "Bordo-sarı ponponlu jakarlı Troisdorf Jets beresi",
-      "Burgundy and gold pompom jacquard Troisdorf Jets beanie",
+      `${P}/bereler/hero.jpg`,
+      "Kulüp renklerinde ponponlu özel üretim bereler",
+      "Custom pompom beanies in club colours",
     ),
     types: [
       {
@@ -79,9 +79,9 @@ export const categories: ContentStoreInput["categories"] = [
       en: "We produce classic knit, fringed, straight-end, ribbed and fleece scarves, and shape colours, lettering, crests and labels around your project.",
     },
     image: img(
-      `${P}/atkilar/warriors/1.jpg`,
-      "Yeşil-sarı jakarlı Warriors Football atkısı",
-      "Green and gold jacquard Warriors Football scarf",
+      `${P}/atkilar/hero.jpg`,
+      "Kulüp renklerinde özel üretim örgü atkı",
+      "Custom knitted scarf in club colours",
     ),
     types: [
       {
@@ -149,9 +149,9 @@ export const categories: ContentStoreInput["categories"] = [
       en: "We bring beanies and scarves together in one design language, producing club, fan, corporate and kids' sets in your brand colours and details.",
     },
     image: img(
-      `${P}/setler/jets/2.jpg`,
-      "Troisdorf Jets bere ve atkı seti",
-      "Troisdorf Jets beanie and scarf set",
+      `${P}/setler/hero.jpg`,
+      "Kulüp renklerinde özel üretim bere ve atkı seti",
+      "Custom beanie and scarf set in club colours",
     ),
     types: [
       {

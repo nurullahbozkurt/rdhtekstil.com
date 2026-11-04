@@ -38,8 +38,8 @@ export const pages: ContentStoreInput["pages"] = {
     ],
     storyImage: img(
       `${P}/shop/2.jpg`,
-      "RDH Tekstil üretimi kulüp atkılarının raflarda sergilendiği alan",
-      "RDH Tekstil club scarves displayed on shelves",
+      "Tasarım masasında bere, atkı ve teknik çizimlerle üretim süreci",
+      "Beanies, scarves and tech drawings on a design table in the production process",
     ),
     requestImage: img(
       `${P}/setler/tinder/3.jpg`,
