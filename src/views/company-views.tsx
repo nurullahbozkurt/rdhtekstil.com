@@ -565,7 +565,7 @@ export async function RequestView({ locale }: { locale: Locale }) {
   );
 
   return (
-    <section className="relative overflow-hidden bg-cream-100 py-16 sm:py-24">
+    <section className="relative overflow-hidden bg-cream-100 py-10 sm:py-24">
       <div
         aria-hidden
         className="bg-weave pointer-events-none absolute -top-10 -right-20 h-80 w-80 [mask-image:radial-gradient(closest-side,black,transparent)] opacity-[0.12]"
@@ -573,7 +573,9 @@ export async function RequestView({ locale }: { locale: Locale }) {
       <div className="container-site relative max-w-3xl">
         <TrackEvent event="start_request" />
         <h1 className="text-display font-medium tracking-tight text-navy-900">{seo.h1}</h1>
-        <p className="mt-6 text-lg leading-relaxed text-ink-600">{page.content.text}</p>
+        <p className="mt-4 text-base leading-relaxed text-ink-600 sm:mt-6 sm:text-lg">
+          {page.content.text}
+        </p>
         <Suspense fallback={null}>
           <RequestPrefill
             products={Object.fromEntries(products.map((p) => [p.id, p.name]))}

@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useId, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { CircleAlert } from "lucide-react";
 import type { Messages } from "@/i18n/messages";
 import { track } from "@/lib/analytics/events";
@@ -82,7 +82,10 @@ const ALL_STEPS = ["product", "brand", "project", "contact"] as const;
 type StepKey = (typeof ALL_STEPS)[number];
 
 const inputClass =
-  "h-12 w-full rounded-xl border border-cream-300 bg-cream-100 px-4 transition-colors focus-visible:border-navy-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-navy-700 aria-invalid:border-destructive aria-invalid:bg-destructive/5";
+  "h-12 w-full touch-manipulation rounded-xl border border-cream-300 bg-cream-100 px-4 text-base transition-colors focus-visible:border-navy-700 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-navy-700 aria-invalid:border-destructive aria-invalid:bg-destructive/5 sm:text-sm";
+
+const colorSwatchClass =
+  "h-12 w-14 shrink-0 touch-manipulation cursor-pointer rounded-xl border border-cream-300 bg-cream-100 sm:h-12 sm:w-14";
 
 function categoryToType(categoryId: string): Draft["productType"] {
   if (categoryId === "scarves") return "SCARF";
@@ -172,6 +175,7 @@ export function RequestForm({
   const [filesWarned, setFilesWarned] = useState(false);
   const [initKey, setInitKey] = useState("");
   const [disclosureOpen, setDisclosureOpen] = useState(false);
+  const formTopRef = useRef<HTMLDivElement>(null);
 
   const prefilledProduct = urun ? products.find((p) => p.id === urun) : undefined;
   const skipProductStep = Boolean(prefilledProduct);
@@ -228,6 +232,16 @@ export function RequestForm({
     if (!hydrated || !initKey) return;
     saveDraft(draft);
   }, [draft, hydrated, initKey]);
+
+  const didScrollSteps = useRef(false);
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!didScrollSteps.current) {
+      didScrollSteps.current = true;
+      return;
+    }
+    formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [step, hydrated]);
 
   const shapeKey =
     draft.productType === "SCARF" ? "scarves" : draft.productType === "SET" ? "sets" : "beanies";
@@ -354,8 +368,20 @@ export function RequestForm({
     setStep((s) => s - 1);
   };
 
+  const scrollToFirstError = () => {
+    window.requestAnimationFrame(() => {
+      const target = formTopRef.current?.querySelector<HTMLElement>(
+        "[aria-invalid='true'], [role='alert']",
+      );
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  };
+
   const onNext = () => {
-    if (!validateStep()) return;
+    if (!validateStep()) {
+      scrollToFirstError();
+      return;
+    }
     setFieldErrors({});
     if (step < steps.length - 1) {
       setStep((s) => s + 1);
@@ -404,26 +430,45 @@ export function RequestForm({
   const [consentBefore, consentAfter] = formMessages.fields.privacyConsent.split("{link}");
 
   return (
-    <div className="mt-10">
+    <div ref={formTopRef} className="mt-8 scroll-mt-24 sm:mt-10">
       {filesWarned ? (
-        <p className="mb-6 rounded-xl border border-gold-500/40 bg-gold-200/30 px-4 py-3 text-sm text-navy-900">
+        <p className="mb-5 rounded-xl border border-gold-500/40 bg-gold-200/30 px-4 py-3 text-sm text-navy-900">
           {messages.filesPersistWarning}
         </p>
       ) : null}
 
-      <ol className="mb-8 flex gap-1 overflow-x-auto" aria-label={messages.stepsLabel}>
-        {steps.map((key, index) => (
-          <li key={key} className="min-w-8 flex-1">
-            <div
-              className={cn("h-1.5 rounded-full", index <= step ? "bg-navy-800" : "bg-cream-300")}
-              title={messages.steps[key]}
-            />
-          </li>
-        ))}
-      </ol>
+      <div className="mb-5 space-y-3 sm:mb-8">
+        <p className="text-xs font-semibold tracking-[0.14em] text-ink-500 uppercase">
+          {interpolate(messages.stepOf, {
+            current: String(step + 1),
+            total: String(steps.length),
+          })}
+        </p>
+        <ol className="flex gap-1.5" aria-label={messages.stepsLabel}>
+          {steps.map((key, index) => (
+            <li key={key} className="min-w-0 flex-1">
+              <div
+                className={cn(
+                  "h-2 rounded-full transition-colors",
+                  index < step ? "bg-navy-800" : index === step ? "bg-gold-400" : "bg-cream-300",
+                )}
+                title={messages.steps[key]}
+              />
+              <span
+                className={cn(
+                  "mt-2 hidden truncate text-[0.7rem] font-medium sm:block",
+                  index === step ? "text-navy-900" : "text-ink-500",
+                )}
+              >
+                {messages.steps[key]}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
 
-      <div className="space-y-6 rounded-[1.75rem] border border-cream-300 bg-cream-50 p-6 sm:p-8">
-        <h2 className="font-heading text-xl font-medium text-navy-900">
+      <div className="space-y-6 rounded-[1.5rem] border border-cream-300 bg-cream-50 p-4 pb-28 sm:rounded-[1.75rem] sm:p-8 sm:pb-8">
+        <h2 className="font-heading text-xl font-medium text-navy-900 sm:text-[1.35rem]">
           {messages.steps[stepKey]}
         </h2>
 
@@ -433,7 +478,7 @@ export function RequestForm({
               <legend className="mb-4 text-sm font-semibold text-navy-900">
                 {messages.fields.productType} *
               </legend>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-2.5 sm:grid-cols-3 sm:gap-3">
                 {(["BEANIE", "SCARF", "SET"] as const).map((type) => (
                   <button
                     key={type}
@@ -441,12 +486,12 @@ export function RequestForm({
                     aria-pressed={draft.productType === type}
                     aria-invalid={fieldErrors.productType ? true : undefined}
                     className={cn(
-                      "min-h-14 rounded-2xl border px-4 py-3 text-left font-semibold transition-colors",
+                      "min-h-14 touch-manipulation rounded-2xl border px-4 py-3.5 text-left text-[0.95rem] font-semibold transition-colors",
                       draft.productType === type
                         ? "border-navy-800 bg-navy-800 text-cream-50"
                         : fieldErrors.productType
                           ? "border-destructive bg-destructive/5 text-navy-900"
-                          : "border-cream-300 bg-cream-100 text-navy-900 hover:border-navy-700/40",
+                          : "border-cream-300 bg-cream-100 text-navy-900 active:bg-cream-200 hover:border-navy-700/40",
                     )}
                     onClick={() => {
                       const nextKey =
@@ -547,7 +592,7 @@ export function RequestForm({
                         type="color"
                         aria-label={label}
                         className={cn(
-                          "h-12 w-14 cursor-pointer rounded-xl border border-cream-300 bg-cream-100",
+                          colorSwatchClass,
                           !hasColor && "opacity-60",
                           showError && "border-destructive",
                         )}
@@ -559,8 +604,12 @@ export function RequestForm({
                       />
                       <input
                         type="text"
+                        inputMode="text"
+                        autoCapitalize="characters"
+                        autoCorrect="off"
+                        spellCheck={false}
                         aria-invalid={showError ? true : undefined}
-                        className={cn(inputClass, "flex-1")}
+                        className={cn(inputClass, "min-w-0 flex-1")}
                         placeholder="#1A2744 / Pantone"
                         value={draft[key] ?? ""}
                         onChange={(e) => patch({ [key]: e.target.value })}
@@ -583,11 +632,15 @@ export function RequestForm({
                 }}
                 labels={{
                   drop: messages.fileDrop,
+                  hint: messages.fileDropHint,
                   uploading: messages.fileUploading,
                   remove: messages.fileRemove,
                   retry: messages.fileRetry,
                   help: messages.fileHelp,
                   privacy: messages.filePrivacy,
+                  errorTooLarge: messages.fileErrorTooLarge,
+                  errorType: messages.fileErrorType,
+                  errorUpload: messages.fileErrorUpload,
                 }}
               />
             </div>
@@ -598,6 +651,7 @@ export function RequestForm({
                 <input
                   type="text"
                   maxLength={200}
+                  enterKeyHint="next"
                   className={inputClass}
                   value={draft.slogan ?? ""}
                   onChange={(e) => patch({ slogan: e.target.value })}
@@ -612,7 +666,7 @@ export function RequestForm({
                     type="color"
                     aria-label={messages.fields.sloganColor}
                     className={cn(
-                      "h-12 w-14 cursor-pointer rounded-xl border border-cream-300 bg-cream-100",
+                      colorSwatchClass,
                       !draft.sloganColor?.trim() && "opacity-60",
                     )}
                     value={
@@ -627,7 +681,11 @@ export function RequestForm({
                   />
                   <input
                     type="text"
-                    className={cn(inputClass, "flex-1")}
+                    inputMode="text"
+                    autoCapitalize="characters"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    className={cn(inputClass, "min-w-0 flex-1")}
                     placeholder="#1A2744 / Pantone"
                     value={draft.sloganColor ?? ""}
                     onChange={(e) => patch({ sloganColor: e.target.value })}
@@ -654,33 +712,48 @@ export function RequestForm({
                 }}
                 labels={{
                   drop: messages.fileDrop,
+                  hint: messages.fileDropHint,
                   uploading: messages.fileUploading,
                   remove: messages.fileRemove,
                   retry: messages.fileRetry,
                   privacy: messages.filePrivacy,
+                  errorTooLarge: messages.fileErrorTooLarge,
+                  errorType: messages.fileErrorType,
+                  errorUpload: messages.fileErrorUpload,
                 }}
               />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-sm font-semibold text-navy-900">
+            <fieldset className="space-y-3">
+              <legend className="text-sm font-semibold text-navy-900">
                 {messages.fields.quantityRange} *
-              </span>
-              <select
-                aria-invalid={fieldErrors.quantityRange ? true : undefined}
-                className={inputClass}
-                value={draft.quantityRange ?? ""}
-                onChange={(e) => patch({ quantityRange: e.target.value })}
-              >
-                <option value="">{formMessages.selectPlaceholder}</option>
-                {quantities.map((q) => (
-                  <option key={q.value} value={q.value}>
-                    {q.label}
-                  </option>
-                ))}
-              </select>
+              </legend>
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                {quantities.map((q) => {
+                  const selected = draft.quantityRange === q.value;
+                  return (
+                    <button
+                      key={q.value}
+                      type="button"
+                      aria-pressed={selected}
+                      aria-invalid={fieldErrors.quantityRange ? true : undefined}
+                      className={cn(
+                        "min-h-12 touch-manipulation rounded-xl border px-3 py-3 text-sm font-semibold transition-colors",
+                        selected
+                          ? "border-navy-800 bg-navy-800 text-cream-50"
+                          : fieldErrors.quantityRange
+                            ? "border-destructive bg-destructive/5 text-navy-900"
+                            : "border-cream-300 bg-cream-100 text-navy-900 active:bg-cream-200 hover:border-navy-700/40",
+                      )}
+                      onClick={() => patch({ quantityRange: q.value })}
+                    >
+                      {q.label}
+                    </button>
+                  );
+                })}
+              </div>
               <FieldError message={fieldErrors.quantityRange} />
-            </div>
+            </fieldset>
 
             <div className="space-y-2">
               <span className="text-sm font-semibold text-navy-900">
@@ -714,12 +787,12 @@ export function RequestForm({
           <div className="space-y-4">
             {(
               [
-                ["fullName", messages.fields.fullName, "text", true],
-                ["company", messages.fields.company, "text", false],
-                ["email", messages.fields.email, "email", true],
-                ["phone", messages.fields.phone, "tel", true],
+                ["fullName", messages.fields.fullName, "text", "name", true],
+                ["company", messages.fields.company, "text", "organization", false],
+                ["email", messages.fields.email, "email", "email", true],
+                ["phone", messages.fields.phone, "tel", "tel", true],
               ] as const
-            ).map(([key, label, type, required]) => (
+            ).map(([key, label, type, autoComplete, required]) => (
               <div key={key} className="space-y-2">
                 <span className="text-sm font-semibold text-navy-900">
                   {label}
@@ -728,6 +801,10 @@ export function RequestForm({
                 <input
                   type={type}
                   required={required}
+                  autoComplete={autoComplete}
+                  inputMode={type === "tel" ? "tel" : type === "email" ? "email" : undefined}
+                  enterKeyHint="next"
+                  autoCapitalize={key === "fullName" || key === "company" ? "words" : "off"}
                   aria-invalid={fieldErrors[key] ? true : undefined}
                   className={inputClass}
                   value={draft[key] ?? ""}
@@ -758,14 +835,14 @@ export function RequestForm({
             <div className="space-y-2">
               <label
                 className={cn(
-                  "flex gap-3 rounded-xl text-sm leading-relaxed text-navy-900",
+                  "flex min-h-12 touch-manipulation gap-3 rounded-xl text-sm leading-relaxed text-navy-900",
                   fieldErrors.privacyConsent &&
                     "rounded-xl border border-destructive/30 bg-destructive/5 p-3",
                 )}
               >
                 <input
                   type="checkbox"
-                  className="mt-1 size-4"
+                  className="mt-0.5 size-5 shrink-0 accent-navy-800"
                   aria-invalid={fieldErrors.privacyConsent ? true : undefined}
                   checked={draft.privacyConsent === true}
                   onChange={(e) => patch({ privacyConsent: e.target.checked })}
@@ -788,10 +865,10 @@ export function RequestForm({
               </label>
               <FieldError message={fieldErrors.privacyConsent} />
             </div>
-            <label className="flex gap-3 text-sm leading-relaxed text-ink-600">
+            <label className="flex min-h-12 touch-manipulation gap-3 text-sm leading-relaxed text-ink-600">
               <input
                 type="checkbox"
-                className="mt-1 size-4"
+                className="mt-0.5 size-5 shrink-0 accent-navy-800"
                 checked={draft.marketingConsent === true}
                 onChange={(e) => patch({ marketingConsent: e.target.checked })}
               />
@@ -813,7 +890,8 @@ export function RequestForm({
           </div>
         ) : null}
 
-        <div className="flex flex-wrap gap-3 pt-2">
+        {/* Masaüstü aksiyonlar; mobilde sabit alt bar kullanılır */}
+        <div className="hidden flex-wrap gap-3 pt-2 sm:flex">
           {step > 0 ? (
             <button
               type="button"
@@ -827,6 +905,39 @@ export function RequestForm({
           <button
             type="button"
             className={cn(ctaVariants({ variant: "primary", size: "md" }))}
+            onClick={onNext}
+            disabled={pending}
+          >
+            {pending
+              ? messages.submitting
+              : step === steps.length - 1
+                ? submitLabel
+                : messages.next}
+          </button>
+        </div>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-cream-300 bg-cream-50/95 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] backdrop-blur sm:hidden">
+        <div className="mx-auto flex max-w-3xl gap-3">
+          {step > 0 ? (
+            <button
+              type="button"
+              className={cn(
+                ctaVariants({ variant: "outline", size: "md" }),
+                "min-w-24 touch-manipulation",
+              )}
+              onClick={goBack}
+              disabled={pending}
+            >
+              {messages.back}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className={cn(
+              ctaVariants({ variant: "primary", size: "md" }),
+              "min-h-12 flex-1 touch-manipulation",
+            )}
             onClick={onNext}
             disabled={pending}
           >
